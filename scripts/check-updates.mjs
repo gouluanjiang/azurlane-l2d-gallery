@@ -6,7 +6,7 @@ import { validateCatalog, serializeCatalog, isValidDate } from './lib/catalog.mj
 import { fetchImage, sha256 } from './lib/transport.mjs';
 import { atomicWrite, jsonText, readJson, safePath, syncCatalog, checkCompatibility } from './lib/sync-engine.mjs';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = process.env.L2D_DATA_ROOT ? path.resolve(process.env.L2D_DATA_ROOT) : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
 const dataFile = path.join(root,'data/catalog.json'), reportFile = path.join(root,'data/update-report.json');
 let result;

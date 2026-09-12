@@ -3,6 +3,9 @@ assets/
 .local-tools/
 local-config.json
 node_modules/
+.desktop/
+.desktop-data/
+碧蓝航线图鉴.exe
 verification/
 *.log
 *-优化前备份-*.html

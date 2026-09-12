@@ -2,7 +2,24 @@
 
 可离线使用的皮肤原图与玩法图解图鉴，收录 L2D、L2D+ 和双形态换装。页面提供搜索、年份/状态筛选、排序、缺图清单、原图/图解查看和缩放；本项目展示图片与玩法入口，不播放或模拟 L2D 动画。
 
-## 日常使用
+## 桌面版日常使用
+
+双击 **`碧蓝航线图鉴.exe`**，或桌面上的“碧蓝航线图鉴”快捷方式。软件会打开独立窗口，无需命令窗口、额外安装 Node.js 或登录 GitHub。桌面入口及随附运行环境保存在本机，GitHub 仓库保存可重建的源码。
+
+窗口上方提供：
+
+- **同步云端**：接收云端已发布的数据并下载新原图。
+- **检查最新资料**：立即读取官方公告与 WIKI，不等待定时检查。
+- **更新过程**：查看进度和错误原因；操作进行中会防止重复启动更新。
+- **设置**：打开软件文件夹，或确认后回退上次更新。
+
+更新成功后窗口自动刷新。搜索、筛选、原图/图解查看和缩放沿用已验收的图鉴功能。原图与图解继续使用当前 `assets` 中的高清文件，不重复保存一套图片。
+
+这是免安装的文件夹版软件：`碧蓝航线图鉴.exe` 是图形入口，`.desktop` 是随附运行环境，`data`、`assets` 是可更新资料。搬迁时请移动整个项目文件夹，不能只拷贝入口 exe。`.desktop-data` 保存窗口运行缓存，`.l2d-update` 保存更新与回退资料。
+
+桌面版同步优先读取公开仓库的一份完整 JSON 快照并记录 SHA-256；公开数据直读不可用时尝试 GitHub API 的确定提交。无需本机 GitHub CLI。当前只更新图鉴数据与图片，程序本身升级另行维护。
+
+## 浏览器与维护入口
 
 - **打开图鉴**：双击 [打开图鉴.cmd](./打开图鉴.cmd)，或直接打开 [index-信浓泳装起.html](./index-信浓泳装起.html)。完整保留 `data`、`assets` 与 HTML 的相对位置，查看已有内容无需联网。
 - **日常同步（推荐）**：双击 [一键更新.cmd](./一键更新.cmd)，同步云端已检查并发布的数据，将缺少的原图下载到本机。
@@ -26,7 +43,7 @@
 
 ## 更新环境
 
-打开图鉴只需要浏览器。执行本机检查、同步或回退需要 **Node.js 22 或更新版本**。“一键更新”目前通过本机已配置并登录的 GitHub CLI（`gh`）读取仓库；[项目仓库](https://github.com/gouluanjiang/azurlane-l2d-gallery)现已公开，可直接浏览代码和元数据。
+桌面版已经包含运行环境，无需额外配置。下列说明只适用于继续使用旧 CMD/PowerShell 入口或开发维护：打开 HTML 只需要浏览器；命令行检查、同步或回退需要 **Node.js 22 或更新版本**，旧“一键更新”还使用本机 GitHub CLI（`gh`）。[项目仓库](https://github.com/gouluanjiang/azurlane-l2d-gallery)已公开。
 
 本机已配置 GitHub CLI 路径。若迁移目录或换电脑，在项目目录执行以下命令检查并保存 CLI 路径；已有登录可以继续使用：
 
@@ -70,3 +87,11 @@ npm run preview
 `validate` 检查元数据，`validate:local` 还检查本地图片。预览服务只绑定 `127.0.0.1`；静态检查通过不代替浏览器验收。
 
 本次验证：35 项自动测试通过；170 个本地图像引用的文件/哈希及 JSON/JS 镜像一致；95 张旧原图与 68 张旧图解的路径、内容未变。7 张新原图均经浏览器确认 1000×1500，搜索、旧图解及手机布局抽查通过。详见 [验收记录](./verification/completion-report.json) 与 [浏览器报告](./verification/recent-update-ui.json)（这两个报告仅保存在本机）。
+
+## 桌面版构建与验收
+
+桌面版 1.1.0 使用 Electron 44.3.0；图形入口使用本机 Windows .NET 编译器构建。界面与后台更新进程分离，保留渲染沙箱、上下文隔离与受限页面/外链访问。实现依据：[Electron 进程接口](https://www.electronjs.org/docs/latest/api/utility-process)、[安全文档](https://www.electronjs.org/docs/latest/tutorial/security)。
+
+维护重建需要 Node.js/npm，执行 `npm ci`、`node node_modules/electron/install.js`、`npm run desktop:build`。普通使用无需安装这些开发工具。`desktop/` 是桌面源码，`package-lock.json` 固定构建依赖；构建产物不进入 Git。
+
+桌面版新增 6 项回归测试，总计 **41 项通过**。实际打包后的 Windows 程序已验证 102 个卡片、68 个图解入口、高清原图、图解、搜索、设置与过程窗口，以及使用随附运行时执行免登录云端同步。详见本机 `verification/desktop-acceptance.json` 与 `verification/desktop-preview.png`。

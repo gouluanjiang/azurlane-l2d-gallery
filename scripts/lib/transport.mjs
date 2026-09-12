@@ -67,3 +67,46 @@ export function getRemoteCatalog(rootDir, config) {
   const catalog = JSON.parse(Buffer.from(response.content, 'base64').toString('utf8'));
   return { catalog, commit: commit.sha };
 }
+
+// Desktop editions read this public repository directly; no external CLI or
+// stored account credentials are required. Both requests pin the same commit.
+export async function getPublicRemoteCatalog(config, { fetchImpl = fetch } = {}) {
+  if (!/^[\w.-]+\/[\w.-]+$/.test(config.repository) || !/^[\w./-]+$/.test(config.branch)) throw new Error('更新仓库配置格式错误');
+  async function request(endpoint) {
+    const response = await fetchImpl(`https://api.github.com/repos/${config.repository}/${endpoint}`, {
+      redirect: 'error', signal: AbortSignal.timeout(30000),
+      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'AzurLaneL2DGallery/1.1', 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (!response.ok) throw new Error(response.status === 403 || response.status === 429 ? '云端访问暂时受限，请稍后重试，或使用“检查最新资料”。' : `云端服务器返回 HTTP ${response.status}`);
+    const chunks = []; let size = 0;
+    for await (const chunk of response.body) {
+      size += chunk.length;
+      if (size > 16 * 1024 * 1024) throw new Error('云端数据超过大小限制');
+      chunks.push(Buffer.from(chunk));
+    }
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  }
+  const commit = await request(`commits/${encodeURIComponent(config.branch)}`);
+  if (!/^[0-9a-f]{40}$/.test(commit.sha)) throw new Error('GitHub 未返回有效版本');
+  const response = await request(`contents/data/catalog.json?ref=${commit.sha}`);
+  if (response.encoding !== 'base64' || typeof response.content !== 'string') throw new Error('更新数据格式错误');
+  return { catalog: JSON.parse(Buffer.from(response.content, 'base64').toString('utf8')), commit: commit.sha };
+}
+
+export async function getPublicSnapshot(config, { fetchImpl = fetch } = {}) {
+  if (!/^[\w.-]+\/[\w.-]+$/.test(config.repository) || !/^[\w./-]+$/.test(config.branch)) throw new Error('更新仓库配置格式错误');
+  try {
+    // One complete JSON response is one atomic published snapshot. Record its
+    // digest instead of inventing a Git commit when using the public CDN.
+    const url = `https://raw.githubusercontent.com/${config.repository}/${encodeURIComponent(config.branch)}/data/catalog.json`;
+    const response = await fetchImpl(url, { redirect:'error', signal:AbortSignal.timeout(30000), headers:{'User-Agent':'AzurLaneL2DGallery/1.1','Cache-Control':'no-cache'} });
+    if (!response.ok) throw new Error(`公开数据返回 HTTP ${response.status}`);
+    const chunks=[];let size=0;
+    for await(const chunk of response.body){size+=chunk.length;if(size>16*1024*1024)throw new Error('云端数据超过大小限制');chunks.push(Buffer.from(chunk));}
+    const bytes=Buffer.concat(chunks);
+    return {catalog:JSON.parse(bytes.toString('utf8')),commit:null,snapshotSha256:sha256(bytes),transport:'github-public-snapshot'};
+  } catch (primaryError) {
+    try { return await getPublicRemoteCatalog(config,{fetchImpl}); }
+    catch (fallbackError) { throw new Error(`无法读取云端图鉴：${primaryError.message}；备用接口：${fallbackError.message}`); }
+  }
+}
