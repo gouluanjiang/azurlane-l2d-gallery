@@ -1,6 +1,6 @@
 {
   "status": "success",
-  "checkedAt": "2026-09-12T08:52:28.244Z",
+  "checkedAt": "2026-09-12T09:04:25.699Z",
   "since": "2026-07-29",
   "sources": [
     {
@@ -66,7 +66,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 414539,
       "revisionTimestamp": "2026-09-12T04:27:20Z",
       "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
@@ -74,7 +74,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 414539,
       "revisionTimestamp": "2026-09-12T04:27:20Z",
       "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
