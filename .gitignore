@@ -1,0 +1,12 @@
+assets/
+.l2d-update/
+.local-tools/
+local-config.json
+node_modules/
+verification/
+*.log
+*-优化前备份-*.html
+data/update-attempt.json
+data/sync-status.json
+tests/fixtures/live-*
+tests/fixtures/sources/live-verification.json

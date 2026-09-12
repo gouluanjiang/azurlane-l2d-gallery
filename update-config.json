@@ -1,0 +1,8 @@
+{
+  "repository": "gouluanjiang/azurlane-l2d-gallery",
+  "branch": "main",
+  "timezone": "Asia/Shanghai",
+  "schedule": "17 2 * * 3,6",
+  "scheduleLabel": "每周三、周六 北京时间 10:17",
+  "minimumReleaseDate": "2023-09-21"
+}

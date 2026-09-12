@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>碧蓝航线 L2D 玩法合集</title>
+  <style>
+    :root { color-scheme:dark; --bg:#07111f; --panel:#101d31; --panel-2:#14243b; --line:#263c5f; --blue:#68b5ff; --cyan:#62e4ef; --muted:#9eb2cf; --red:#ff7f9b; --green:#64dda0; --amber:#ffc66d; --purple:#bd9cff; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { min-height:100vh; margin:0; background:radial-gradient(circle at 50% -10%,#1d3d66 0,#0c1a2c 32%,var(--bg) 68%); color:#eef6ff; font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
+    body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(120deg,rgba(53,136,218,.08),transparent 42%),radial-gradient(circle at 85% 18%,rgba(98,228,239,.08),transparent 25%); }
+    main { width:min(1540px,94vw); margin:auto; padding:38px 0 72px; }
+    .site-header { margin-bottom:20px; }
+    h1 { margin:0 0 10px; font-size:clamp(28px,4vw,48px); letter-spacing:.02em; text-wrap:balance; }
+    h2 { margin:0; font-size:24px; }
+    .subtitle { margin:0; color:var(--muted); line-height:1.75; }
+    [hidden] { display:none!important; }
+    .update-status { padding:14px 17px; border:1px solid var(--line); border-radius:14px; background:rgba(16,29,49,.72); color:var(--muted); line-height:1.7; }
+    .update-status strong { color:#e8f3ff; }
+    .update-meta { display:flex; flex-wrap:wrap; gap:4px 24px; margin-top:4px; overflow-wrap:anywhere; }
+    .update-status details { margin-top:6px; }
+    .update-status summary { width:fit-content; color:var(--blue); cursor:pointer; }
+    .update-status p { margin:6px 0 0; }
+    .data-error { margin:18px 0; padding:20px; border:1px solid var(--red); border-radius:14px; background:#331c2c; line-height:1.7; }
+    .data-error strong { color:#ffb0c2; }
+    .data-error p { margin:6px 0 12px; }
+    .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:20px 0 22px; }
+    .stat { position:relative; overflow:hidden; padding:16px 17px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(145deg,rgba(20,36,59,.96),rgba(12,25,43,.96)); box-shadow:0 12px 30px rgba(0,0,0,.14); }
+    .stat::after { content:""; position:absolute; right:-24px; bottom:-34px; width:90px; height:90px; border-radius:50%; background:currentColor; opacity:.06; }
+    .stat b { display:block; font-size:31px; line-height:1.1; color:var(--blue); }
+    .stat-ready b { color:var(--green); }
+    .stat-pending b { color:var(--amber); }
+    .stat-missing b { color:var(--red); }
+    .stat span { display:block; margin-top:5px; color:#c8d6eb; font-size:14px; }
+    .toolbar-shell { position:sticky; top:0; z-index:50; margin:0 -10px 18px; padding:10px; border:1px solid transparent; border-radius:16px; background:rgba(7,17,31,.83); backdrop-filter:blur(16px) saturate(135%); box-shadow:0 12px 30px rgba(0,0,0,.18); }
+    .toolbar { display:flex; gap:9px; align-items:center; }
+    .search-wrap { position:relative; flex:1 1 360px; min-width:220px; }
+    input,select,button { font:inherit; }
+    input,select { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:12px; outline:none; background:#0b182a; color:#fff; }
+    input { padding-right:42px; }
+    input:focus,select:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(104,181,255,.15); }
+    select { width:auto; min-width:180px; cursor:pointer; }
+    button { padding:10px 13px; border:1px solid var(--line); border-radius:11px; background:var(--panel); color:#edf6ff; cursor:pointer; transition:border-color .18s ease,background .18s ease,color .18s ease,transform .18s ease; }
+    button:hover { border-color:#527ab1; }
+    button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid rgba(104,181,255,.65); outline-offset:2px; }
+    button.active { border-color:#70baff; background:#1d66ad; color:#fff; }
+    .clear-search { position:absolute; top:50%; right:7px; width:32px; height:32px; padding:0; border:0; border-radius:50%; transform:translateY(-50%); background:transparent; color:var(--muted); font-size:22px; }
+    .clear-search:hover { transform:translateY(-50%); background:#172a45; color:#fff; }
+    .clear-search[hidden] { display:none; }
+    .filter-row { display:flex; gap:8px; margin-top:9px; overflow-x:auto; scrollbar-width:thin; }
+    .filter-row button { flex:0 0 auto; white-space:nowrap; }
+    .year-row { display:flex; gap:8px; margin-left:auto; padding-left:12px; border-left:1px solid var(--line); }
+    .results-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 2px 14px; color:var(--muted); font-size:14px; }
+    .results-bar strong { color:#eaf4ff; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; scroll-margin-top:140px; }
+    .card { position:relative; min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg,var(--panel-2),var(--panel)); box-shadow:0 10px 28px rgba(0,0,0,.18); content-visibility:auto; contain-intrinsic-size:440px; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+    .card:hover { transform:translateY(-4px); border-color:#4d78aa; box-shadow:0 18px 42px rgba(0,0,0,.3); }
+    .card.status-ready { border-color:rgba(100,221,160,.58); box-shadow:0 10px 30px rgba(52,182,122,.12); }
+    .media-trigger { position:relative; display:block; width:100%; padding:0; border:0; border-radius:0; background:transparent; color:inherit; text-decoration:none; cursor:pointer; overflow:hidden; }
+    .media-trigger[data-open-guide] { cursor:zoom-in; }
+    .media-trigger:focus-visible { outline:3px solid var(--blue); outline-offset:-3px; }
+    .thumb-frame { position:relative; height:330px; overflow:hidden; isolation:isolate; background:#08111e; }
+    .thumb-frame::before { content:""; position:absolute; inset:-28px; z-index:-2; background-image:var(--thumb-bg); background-size:cover; background-position:center; filter:blur(22px) brightness(.44) saturate(1.12); transform:scale(1.12); }
+    .thumb-frame::after { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,rgba(4,10,18,.05),rgba(4,10,18,.35)); }
+    .thumb { position:relative; width:100%; height:100%; display:block; padding:8px; object-fit:contain; object-position:center; filter:drop-shadow(0 8px 16px rgba(0,0,0,.42)); transition:transform .24s ease,filter .24s ease; }
+    .thumb-frame.thumb-frame-full-art { height:auto; aspect-ratio:2/3; }
+    .thumb-frame.thumb-frame-full-art .thumb { padding:0; object-fit:cover; filter:none; }
+    .card:hover .thumb { transform:scale(1.018); filter:drop-shadow(0 10px 20px rgba(0,0,0,.52)) brightness(1.04); }
+    .thumb-frame.image-failed::before { display:none; }
+    .fallback { position:absolute; inset:0; display:none; place-items:center; padding:25px; text-align:center; color:var(--muted); background:#091421; line-height:1.65; }
+    .thumb-frame.image-failed .fallback { display:grid; }
+    .info { display:flex; min-height:139px; flex-direction:column; padding:15px 16px 16px; }
+    .name { overflow:hidden; color:#fff; font-size:18px; font-weight:800; line-height:1.4; text-overflow:ellipsis; white-space:nowrap; }
+    .skin { display:-webkit-box; min-height:48px; margin-top:5px; overflow:hidden; color:#d8e8ff; line-height:1.5; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+    .meta { display:flex; gap:7px; flex-wrap:wrap; margin-top:auto; padding-top:11px; }
+    .tag { padding:4px 8px; border:1px solid transparent; border-radius:999px; background:#1c2a42; color:#c6d8f2; font-size:12px; line-height:1.3; }
+    .tag.type-l2d { border-color:rgba(104,181,255,.35); background:#173557; color:#9fd0ff; }
+    .tag.type-l2d-plus { border-color:rgba(189,156,255,.38); background:#342757; color:#d2baff; }
+    .tag.type-dual { border-color:rgba(255,198,109,.4); background:#4a351e; color:#ffd792; }
+    .tag.status-ready { border-color:rgba(100,221,160,.4); background:#173d2d; color:#8ff0b9; }
+    .artwork-chip { padding:4px 8px; border-color:rgba(100,221,160,.4); border-radius:999px; background:#173d2d; color:#8ff0b9; font-size:12px; line-height:1.3; }
+    .artwork-chip:hover { border-color:rgba(137,255,194,.82); background:#21543e; color:#d9ffeb; }
+    .tag.status-pending { border-color:rgba(255,198,109,.4); background:#47351f; color:#ffd18b; }
+    .tag.status-missing { border-color:rgba(255,127,155,.35); background:#482337; color:#ffabc0; }
+    .empty-state { display:none; padding:48px 20px; border:1px dashed var(--line); border-radius:18px; text-align:center; color:var(--muted); background:rgba(12,25,43,.65); }
+    .empty-state.visible { display:block; }
+    .empty-state button { margin-top:14px; }
+    .missing-details { margin-top:38px; border:1px solid var(--line); border-radius:16px; background:rgba(16,29,49,.72); }
+    .missing-details summary { padding:17px 19px; color:#e8f3ff; font-size:18px; font-weight:800; cursor:pointer; user-select:none; }
+    .missing-content { padding:0 19px 19px; border-top:1px solid var(--line); }
+    .missing-actions { display:flex; justify-content:flex-end; padding:12px 0; }
+    .copy-feedback { margin-right:auto; align-self:center; color:var(--green); font-size:13px; }
+    .missing-list { columns:3 290px; column-gap:28px; margin:0; padding-left:22px; }
+    .missing-list li { break-inside:avoid; margin:0 0 8px; color:#dbe9ff; }
+    body.guide-open { overflow:hidden; }
+    .guide-modal[hidden] { display:none; }
+    .guide-modal { position:fixed; inset:0; z-index:1000; display:grid; grid-template-rows:1fr auto; padding:12px; background:rgba(0,4,11,.95); backdrop-filter:blur(9px); }
+    .guide-stage { position:relative; min-width:0; min-height:0; overflow:hidden; border-radius:12px; cursor:grab; touch-action:none; }
+    .guide-stage.dragging { cursor:grabbing; }
+    .guide-stage img { position:absolute; left:50%; top:50%; display:block; max-width:none; max-height:none; transform-origin:center; user-select:none; -webkit-user-drag:none; will-change:transform; box-shadow:0 22px 70px rgba(0,0,0,.7); }
+    .guide-close { position:fixed; z-index:1002; top:16px; right:18px; width:44px; height:44px; padding:0; border:1px solid rgba(255,255,255,.55); border-radius:50%; background:rgba(5,10,18,.88); color:#fff; font-size:30px; line-height:1; }
+    .guide-tools { z-index:1001; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:7px; padding:9px; }
+    .guide-message { position:absolute; z-index:2; inset:0; display:grid; place-content:center; gap:12px; padding:24px; text-align:center; color:#dbe9ff; cursor:default; touch-action:auto; }
+    .guide-message p { margin:0; line-height:1.7; }
+    .guide-message-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
+    .guide-tools button:disabled { opacity:.45; cursor:default; }
+    .guide-tools button { min-width:42px; background:rgba(12,25,43,.94); }
+    .guide-tools .viewer-guide-button { border-color:rgba(100,221,160,.62); background:#173d2d; color:#baffd6; }
+    .guide-tools .viewer-guide-button[hidden] { display:none; }
+    .zoom-label { min-width:68px; color:#dcecff; text-align:center; font-variant-numeric:tabular-nums; }
+    footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); line-height:1.7; }
+    @media(max-width:980px){ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{flex-wrap:wrap}.search-wrap{flex-basis:100%}select{flex:1}.year-row{margin-left:0;padding-left:0;border-left:0} }
+    @media(max-width:700px){ main{width:min(94vw,560px);padding-top:24px}.stats{gap:8px}.stat{padding:12px}.stat b{font-size:25px}.stat span{font-size:12px}.toolbar-shell{top:0;margin-inline:-6px;padding:7px}.filter-row{padding-bottom:3px}.grid{grid-template-columns:1fr}.thumb-frame{height:min(126vw,520px)}.card{contain-intrinsic-size:610px}.missing-list{columns:1}.guide-modal{padding:4px}.guide-close{top:10px;right:10px}.guide-tools{padding:6px}.guide-tools button{padding:9px 11px}.results-bar{align-items:flex-start;flex-direction:column;gap:4px} }
+    @media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto}*,*::before,*::after{transition:none!important} }
+  </style>
+</head>
+<body>
+<main>
+  <header class="site-header">
+    <h1 id="pageTitle">碧蓝航线 L2D 玩法合集</h1>
+    <p class="subtitle">收录范围：<span id="rangeStart">—</span> 至 <span id="rangeEnd">—</span>；包含 L2D、L2D+ 与双形态换装。</p>
+  </header>
+  <section class="update-status" aria-label="本地更新状态">
+    <strong id="localUpdateState">正在读取本地数据…</strong>
+    <div class="update-meta"><span>数据版本：<span id="localVersion">—</span></span><span>上次检查：<span id="checkedAt">—</span></span></div>
+    <details><summary>如何更新</summary><p>双击同目录的“一键更新.cmd”，按窗口提示同步数据和原图；完成后刷新或重新打开本页。首次使用请按 README 配置更新来源。</p><p>本页只读取本地文件，打开页面不会联网检查更新。玩法搜索仅在点击对应入口时打开。</p></details>
+  </section>
+  <div id="dataError" class="data-error" role="alert" hidden><strong>本地数据无法读取</strong><p id="dataErrorDetail"></p><button id="reloadData" type="button">重新加载页面</button></div>
+  <noscript><div class="data-error">请启用浏览器 JavaScript，再重新打开本页以加载本地图鉴。</div></noscript>
+  <div class="stats">
+    <div class="stat"><b id="total">—</b><span>收录皮肤</span></div>
+    <div class="stat stat-ready"><b id="readyCount">—</b><span>本地可查看图解</span></div>
+    <div class="stat stat-pending"><b id="pendingCount">—</b><span>已确认待接入</span></div>
+    <div class="stat stat-missing"><b id="missingCount">—</b><span>仍缺同版式图解</span></div>
+  </div>
+
+  <section class="toolbar-shell" aria-label="皮肤筛选工具">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="search" type="search" autocomplete="off" placeholder="搜索角色名或皮肤名…" aria-label="搜索角色名或皮肤名">
+        <button id="clearSearch" class="clear-search" type="button" aria-label="清空搜索" hidden>×</button>
+      </div>
+      <select id="sortOrder" aria-label="皮肤排序方式">
+        <option value="date-asc">实装时间：从早到晚</option>
+        <option value="date-desc">实装时间：从新到旧</option>
+        <option value="name">角色名排序</option>
+      </select>
+    </div>
+    <div class="filter-row">
+      <button class="active" type="button" data-filter="all">全部</button>
+      <button type="button" data-filter="ready">可查看图解</button>
+      <button type="button" data-filter="pending">已确认待接入</button>
+      <button type="button" data-filter="missing">缺图解</button>
+      <div id="yearFilters" class="year-row" aria-label="按年份筛选">
+        <button class="active" type="button" data-year="all">全部年份</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="results-bar" aria-live="polite">
+    <span id="resultCount">正在读取本地数据…</span>
+    <span id="activeHint">按实装时间从早到晚排列</span>
+  </div>
+  <div id="grid" class="grid"></div>
+  <div id="emptyState" class="empty-state">
+    没有找到符合当前条件的皮肤。
+    <br><button id="resetFilters" type="button">清空搜索与筛选</button>
+  </div>
+
+  <details class="missing-details">
+    <summary>仍未检索到同版式图解的皮肤（<span id="missingListCount">—</span>）</summary>
+    <div class="missing-content">
+      <div class="missing-actions">
+        <span id="copyFeedback" class="copy-feedback" aria-live="polite"></span>
+        <button id="copyMissing" type="button">复制全部名字</button>
+      </div>
+      <ol id="missingList" class="missing-list"></ol>
+    </div>
+  </details>
+
+  <div id="guideModal" class="guide-modal" role="dialog" aria-modal="true" aria-label="图片查看器" hidden>
+    <button id="guideClose" class="guide-close" type="button" aria-label="关闭图片查看器">×</button>
+    <div id="guideStage" class="guide-stage">
+      <img id="guideImage" alt="" draggable="false">
+      <div id="guideMessage" class="guide-message" role="status" hidden>
+        <p id="guideMessageText"></p>
+        <div id="guideRecovery" class="guide-message-actions" hidden>
+          <button id="retryImage" type="button">重试加载</button>
+          <button id="fallbackArtwork" type="button" hidden>查看皮肤原图</button>
+          <button id="closeImageError" type="button">关闭查看器</button>
+        </div>
+      </div>
+    </div>
+    <div class="guide-tools" aria-label="图片查看工具">
+      <button id="viewGuideFromArtwork" class="viewer-guide-button" type="button" hidden>查看玩法图解</button>
+      <button id="zoomOut" type="button" aria-label="缩小图片">−</button>
+      <button id="zoomFit" type="button">适应窗口</button>
+      <span id="zoomLabel" class="zoom-label">适应</span>
+      <button id="zoomActual" type="button">100%</button>
+      <button id="zoomIn" type="button" aria-label="放大图片">＋</button>
+    </div>
+  </div>
+
+  <footer>
+    图片核对优先使用碧蓝航线 WIKI 的换装图；若图片未能载入，卡片仍保留角色名、正式皮肤名和玩法搜索链接。<br>
+    本页不把普通皮肤立绘、视频封面误报为“红圈操作说明图”。
+  </footer>
+</main>
+<script src="data/skins-data.js"></script>
+<script>
+'use strict';
+const grid=document.querySelector('#grid');
+const q=document.querySelector('#search');
+const sortOrder=document.querySelector('#sortOrder');
+const clearSearch=document.querySelector('#clearSearch');
+const emptyState=document.querySelector('#emptyState');
+const resultCount=document.querySelector('#resultCount');
+const activeHint=document.querySelector('#activeHint');
+const guideModal=document.querySelector('#guideModal');
+const guideStage=document.querySelector('#guideStage');
+const guideImage=document.querySelector('#guideImage');
+const guideClose=document.querySelector('#guideClose');
+const viewGuideFromArtwork=document.querySelector('#viewGuideFromArtwork');
+const guideMessage=document.querySelector('#guideMessage');
+const guideMessageText=document.querySelector('#guideMessageText');
+const guideRecovery=document.querySelector('#guideRecovery');
+const fallbackArtwork=document.querySelector('#fallbackArtwork');
+const zoomLabel=document.querySelector('#zoomLabel');
+const zoomButtons=['zoomOut','zoomIn','zoomFit','zoomActual'].map(id=>document.getElementById(id));
+const state={filter:'all',year:'all',sort:'date-asc'};
+let skins=[],skinById=new Map(),missingSkins=[];
+let guideReturnFocus=null,viewerMode='artwork',activeViewer=null,imageReady=false;
+let zoom=1,fitZoom=1,panX=0,panY=0,dragMoved=false;
+let pinchStartDistance=0,pinchStartZoom=1;
+const pointers=new Map();
+const searchUrl=(c,s)=>`https://search.bilibili.com/all?keyword=${encodeURIComponent('碧蓝航线 '+c+' '+s+' L2D 彩蛋 教程')}`;
+const hasLocalGuide=skin=>Boolean(skin.guidePath);
+const guideStatus=skin=>hasLocalGuide(skin)?'ready':skin.guideConfirmed===true||Boolean(skin.guideSource)?'pending':'missing';
+const typeClass=type=>type==='L2D+'?'type-l2d-plus':type==='双形态'?'type-dual':'type-l2d';
+const statusText={ready:'可查看图解',pending:'已确认，待接入',missing:'缺图解'};
+const statusClass={ready:'status-ready',pending:'status-pending',missing:'status-missing'};
+function element(tag,className,text){
+  const node=document.createElement(tag);
+  if(className) node.className=className;
+  if(text!==undefined) node.textContent=text;
+  return node;
+}
+function isDate(value){
+  if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed=new Date(value+'T00:00:00Z');
+  return Number.isFinite(parsed.getTime())&&parsed.toISOString().slice(0,10)===value;
+}
+function isLocalImagePath(value,folder){
+  if(typeof value!=='string'||!value.startsWith(`assets/${folder}/`)||/[\\:?#\u0000-\u001f\u007f]/.test(value)) return false;
+  return value.split('/').every(part=>part&&part!=='.'&&part!=='..'&&!part.includes('%'));
+}
+function validateData(data){
+  if(!data||typeof data!=='object'||Array.isArray(data)) throw new Error('未找到 data/skins-data.js，请保留完整目录，或运行同目录的“一键更新.cmd”恢复数据后重试。');
+  if(data.schemaVersion!==2) throw new Error('数据格式版本不匹配，请通过“一键更新.cmd”同步与本页配套的数据。');
+  if(typeof data.version!=='string'||!data.version.trim()||!isDate(data.updatedTo)) throw new Error('数据版本或更新日期无效，请重新同步数据。');
+  if(data.checkedAt!==null&&data.checkedAt!==undefined&&(typeof data.checkedAt!=='string'||!Number.isFinite(Date.parse(data.checkedAt)))) throw new Error('上次检查时间格式无效，请重新同步数据。');
+  if(!Array.isArray(data.skins)||!data.skins.length) throw new Error('皮肤数据为空或格式错误，请重新同步数据。');
+  const ids=new Set();
+  data.skins.forEach((skin,index)=>{
+    const label=`第 ${index+1} 条皮肤数据`;
+    if(!skin||typeof skin!=='object'||Array.isArray(skin)) throw new Error(label+'格式错误。');
+    for(const field of ['id','character','name','variant','type']){
+      if(typeof skin[field]!=='string'||!skin[field].trim()) throw new Error(label+'缺少有效的 '+field+' 字段。');
+    }
+    if(ids.has(skin.id)) throw new Error(label+'的稳定标识重复，请重新同步数据。');
+    ids.add(skin.id);
+    if(!['L2D','L2D+','双形态'].includes(skin.type)||!isDate(skin.releaseDate)) throw new Error(label+'的类型或实装日期无效。');
+    if(!isLocalImagePath(skin.artworkPath,'skins')||(skin.guidePath!==null&&!isLocalImagePath(skin.guidePath,'guides'))) throw new Error(label+'的本地图片路径无效，请重新同步数据。');
+  });
+  return data;
+}
+function showDataError(error){
+  document.querySelector('#dataError').hidden=false;
+  document.querySelector('#dataErrorDetail').textContent=error.message||'数据无法加载，请重新同步后重试。';
+  document.querySelector('#localUpdateState').textContent='本地数据不可用';
+  document.querySelectorAll('.stats,.toolbar-shell,.results-bar,.missing-details').forEach(node=>node.hidden=true);
+  grid.hidden=true;
+  emptyState.classList.remove('visible');
+}
+function updatePageMeta(data){
+  const dates=skins.map(skin=>skin.releaseDate).sort();
+  const title=`碧蓝航线 L2D 玩法合集（更新至 ${data.updatedTo}）`;
+  document.title=title;
+  document.querySelector('#pageTitle').textContent=title;
+  document.querySelector('#rangeStart').textContent=dates[0];
+  document.querySelector('#rangeEnd').textContent=dates[dates.length-1];
+  document.querySelector('#localUpdateState').textContent='本地数据已载入';
+  document.querySelector('#localVersion').textContent=data.version;
+  document.querySelector('#checkedAt').textContent=data.checkedAt?new Date(data.checkedAt).toLocaleString('zh-CN',{hour12:false}):'尚未记录';
+  const counts=skins.reduce((acc,skin)=>(acc[guideStatus(skin)]++,acc),{ready:0,pending:0,missing:0});
+  document.querySelector('#total').textContent=skins.length;
+  document.querySelector('#readyCount').textContent=counts.ready;
+  document.querySelector('#pendingCount').textContent=counts.pending;
+  document.querySelector('#missingCount').textContent=counts.missing;
+  document.querySelector('#missingListCount').textContent=counts.missing;
+  const yearFilters=document.querySelector('#yearFilters');
+  yearFilters.replaceChildren();
+  for(const year of ['all',...new Set(dates.map(date=>date.slice(0,4)))]){
+    const button=element('button',year==='all'?'active':'',year==='all'?'全部年份':year);
+    button.type='button'; button.dataset.year=year; yearFilters.appendChild(button);
+  }
+}
+function sortedView(){
+  const term=q.value.trim().toLocaleLowerCase('zh-CN');
+  const view=skins.filter(skin=>{
+    const matchesStatus=state.filter==='all'||guideStatus(skin)===state.filter;
+    const matchesYear=state.year==='all'||skin.releaseDate.startsWith(state.year+'-');
+    const haystack=(skin.character+' '+skin.name).toLocaleLowerCase('zh-CN');
+    return matchesStatus&&matchesYear&&haystack.includes(term);
+  });
+  return view.sort((a,b)=>{
+    if(state.sort==='date-desc') return b.releaseDate.localeCompare(a.releaseDate)||a.character.localeCompare(b.character,'zh-CN');
+    if(state.sort==='name') return a.character.localeCompare(b.character,'zh-CN')||a.releaseDate.localeCompare(b.releaseDate);
+    return a.releaseDate.localeCompare(b.releaseDate)||a.character.localeCompare(b.character,'zh-CN');
+  });
+}
+function createCard(skin){
+  const status=guideStatus(skin),hasGuide=hasLocalGuide(skin);
+  const card=element('article',`card status-${status}`); card.dataset.skinId=skin.id;
+  const media=element(hasGuide?'button':'a','media-trigger');
+  const label=`${skin.character}「${skin.name}」`;
+  if(hasGuide){ media.type='button'; media.dataset.openGuide=''; media.dataset.skinId=skin.id; media.setAttribute('aria-label',`查看${label}玩法图解`); }
+  else { media.href=searchUrl(skin.character,skin.name); media.target='_blank'; media.rel='noopener noreferrer'; media.setAttribute('aria-label',`搜索${label}玩法教程`); }
+  const isCherbourg=skin.character==='瑟堡'&&skin.name==='布偶熊里面的是……？';
+  const frame=element('div',`thumb-frame${isCherbourg?' thumb-frame-full-art':''}`);
+  const encodedPath=skin.artworkPath.split('/').map(encodeURIComponent).join('/');
+  frame.style.setProperty('--thumb-bg',`url("${encodedPath}")`);
+  const image=element('img','thumb');
+  image.alt=`${skin.character} ${skin.name}`; image.loading='lazy'; image.decoding='async';
+  image.addEventListener('error',()=>{ image.hidden=true; frame.classList.add('image-failed'); });
+  image.addEventListener('load',()=>{ image.hidden=false; frame.classList.remove('image-failed'); });
+  image.src=skin.artworkPath;
+  const fallback=element('div','fallback');
+  fallback.append('本地换装图未能载入',element('br'),hasGuide?'点击仍可查看玩法图解':'点击仍可检索玩法教程');
+  frame.append(image,fallback); media.appendChild(frame);
+  const info=element('div','info');
+  const name=element('div','name',skin.character); name.title=skin.character;
+  const title=element('div','skin',`「${skin.name}」`); title.title=`「${skin.name}」`;
+  const meta=element('div','meta');
+  const artwork=element('button','tag artwork-chip','查看原图');
+  artwork.type='button'; artwork.dataset.openArtwork=''; artwork.dataset.skinId=skin.id;
+  artwork.setAttribute('aria-label',`查看${label}皮肤原图`);
+  meta.append(element('span',`tag ${typeClass(skin.type)}`,skin.type),element('span','tag',skin.releaseDate),element('span',`tag ${statusClass[status]}`,statusText[status]),artwork);
+  info.append(name,title,meta); card.append(media,info);
+  return card;
+}
+function render(){
+  const view=sortedView();
+  grid.replaceChildren(...view.map(createCard));
+  resultCount.replaceChildren('显示 ',element('strong','',view.length),` / ${skins.length} 款皮肤`);
+  const labels={'date-asc':'按实装时间从早到晚排列','date-desc':'按实装时间从新到旧排列','name':'按角色名排列'};
+  activeHint.textContent=labels[state.sort];
+  emptyState.classList.toggle('visible',view.length===0);
+  grid.hidden=view.length===0; clearSearch.hidden=!q.value;
+}
+function resetFilters(){
+  state.filter='all'; state.year='all'; state.sort='date-asc'; q.value=''; sortOrder.value=state.sort;
+  document.querySelectorAll('[data-filter]').forEach(button=>button.classList.toggle('active',button.dataset.filter==='all'));
+  document.querySelectorAll('[data-year]').forEach(button=>button.classList.toggle('active',button.dataset.year==='all'));
+  render();
+}
+function renderMissingList(){
+  missingSkins=skins.filter(skin=>guideStatus(skin)==='missing').sort((a,b)=>a.releaseDate.localeCompare(b.releaseDate)||a.character.localeCompare(b.character,'zh-CN'));
+  document.querySelector('#missingList').replaceChildren(...missingSkins.map(skin=>element('li','',`${skin.character} —「${skin.name}」`)));
+}
+function applyGuideTransform(){
+  guideImage.style.transform=`translate(calc(-50% + ${panX}px),calc(-50% + ${panY}px)) scale(${zoom})`;
+  zoomLabel.textContent=Math.abs(zoom-fitZoom)<.005?'适应':`${Math.round(zoom*100)}%`;
+}
+function computeFitZoom(){
+  if(!imageReady||!guideImage.naturalWidth||!guideStage.clientWidth) return;
+  guideImage.style.width=guideImage.naturalWidth+'px'; guideImage.style.height=guideImage.naturalHeight+'px';
+  fitZoom=Math.min(Math.max(1,guideStage.clientWidth-24)/guideImage.naturalWidth,Math.max(1,guideStage.clientHeight-24)/guideImage.naturalHeight,1);
+}
+function setZoom(next,{resetPan=false}={}){
+  if(!imageReady) return;
+  computeFitZoom(); zoom=Math.max(fitZoom,Math.min(4,next));
+  if(resetPan){ panX=0; panY=0; }
+  applyGuideTransform();
+}
+function fitGuide(){ computeFitZoom(); setZoom(fitZoom,{resetPan:true}); }
+function actualGuide(){ setZoom(1,{resetPan:true}); }
+function updateImageState(status){
+  imageReady=status==='ready'; guideImage.hidden=!imageReady;
+  guideMessage.hidden=imageReady; guideRecovery.hidden=status!=='error';
+  zoomButtons.forEach(button=>button.disabled=!imageReady);
+  fallbackArtwork.hidden=viewerMode!=='guide';
+  if(status==='loading'){ guideMessageText.textContent='正在读取本地图片…'; zoomLabel.textContent='加载中'; }
+  if(status==='error'){
+    guideMessageText.textContent='本地图片未能载入。可重试加载，或关闭后运行“一键更新.cmd”修复，再重新打开本页。';
+    zoomLabel.textContent='加载失败';
+  }
+}
+function setViewerMode(mode,{retry=false}={}){
+  if(!activeViewer) return;
+  viewerMode=mode;
+  const isArtwork=mode==='artwork',source=isArtwork?activeViewer.artworkPath:activeViewer.guidePath;
+  if(!source) return;
+  const label=`${activeViewer.character}「${activeViewer.name}」${isArtwork?'皮肤原图':'玩法图解'}`;
+  guideModal.setAttribute('aria-label',label); guideImage.alt=label;
+  viewGuideFromArtwork.hidden=!isArtwork||!activeViewer.guidePath;
+  pointers.clear(); guideStage.classList.remove('dragging'); panX=0; panY=0; dragMoved=false;
+  updateImageState('loading');
+  if(retry) guideImage.removeAttribute('src');
+  if(guideImage.getAttribute('src')!==source) guideImage.src=source;
+  if(guideImage.complete){
+    if(guideImage.naturalWidth){ updateImageState('ready'); requestAnimationFrame(fitGuide); }
+    else updateImageState('error');
+  }
+}
+function openViewer(trigger,mode){
+  activeViewer=skinById.get(trigger.dataset.skinId);
+  if(!activeViewer||(mode==='guide'&&!activeViewer.guidePath)) return;
+  if(guideModal.hidden) guideReturnFocus=trigger||document.activeElement;
+  guideModal.hidden=false; document.body.classList.add('guide-open');
+  setViewerMode(mode); guideClose.focus();
+}
+function closeGuide(){
+  guideModal.hidden=true; document.body.classList.remove('guide-open'); pointers.clear(); guideStage.classList.remove('dragging');
+  if(guideReturnFocus&&guideReturnFocus.isConnected) guideReturnFocus.focus();
+}
+grid.addEventListener('click',event=>{
+  const artwork=event.target.closest('[data-open-artwork]');
+  if(artwork){ openViewer(artwork,'artwork'); return; }
+  const guide=event.target.closest('[data-open-guide]'); if(guide) openViewer(guide,'guide');
+});
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
+  state.filter=button.dataset.filter;
+  document.querySelectorAll('[data-filter]').forEach(node=>node.classList.toggle('active',node===button)); render();
+}));
+document.querySelector('#yearFilters').addEventListener('click',event=>{
+  const button=event.target.closest('[data-year]'); if(!button) return;
+  state.year=button.dataset.year;
+  document.querySelectorAll('[data-year]').forEach(node=>node.classList.toggle('active',node===button)); render();
+});
+q.addEventListener('input',render);
+clearSearch.addEventListener('click',()=>{ q.value=''; q.focus(); render(); });
+sortOrder.addEventListener('change',()=>{ state.sort=sortOrder.value; render(); });
+document.querySelector('#resetFilters').addEventListener('click',resetFilters);
+document.querySelector('#reloadData').addEventListener('click',()=>window.location.reload());
+document.querySelector('#copyMissing').addEventListener('click',async()=>{
+  const text=missingSkins.map(skin=>`${skin.character} —「${skin.name}」`).join('\n');
+  const feedback=document.querySelector('#copyFeedback');
+  try{
+    if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(text);
+    else{
+      const area=element('textarea'); area.value=text; area.style.position='fixed'; area.style.opacity='0'; document.body.appendChild(area); area.select();
+      let copied; try{ copied=document.execCommand('copy'); }finally{ area.remove(); }
+      if(!copied) throw new Error('copy failed');
+    }
+    feedback.textContent='已复制全部名字';
+  }catch{ feedback.textContent='复制失败，请手动选择列表'; }
+  setTimeout(()=>feedback.textContent='',2200);
+});
+guideImage.addEventListener('load',()=>{ updateImageState('ready'); fitGuide(); });
+guideImage.addEventListener('error',()=>updateImageState('error'));
+guideClose.addEventListener('click',closeGuide);
+document.querySelector('#closeImageError').addEventListener('click',closeGuide);
+document.querySelector('#retryImage').addEventListener('click',()=>setViewerMode(viewerMode,{retry:true}));
+fallbackArtwork.addEventListener('click',()=>setViewerMode('artwork'));
+viewGuideFromArtwork.addEventListener('click',()=>setViewerMode('guide'));
+guideStage.addEventListener('click',event=>{ if(event.target===guideStage&&!dragMoved) closeGuide(); dragMoved=false; });
+guideStage.addEventListener('dblclick',event=>{ if(!imageReady) return; event.preventDefault(); Math.abs(zoom-fitZoom)<.01?actualGuide():fitGuide(); });
+guideStage.addEventListener('wheel',event=>{ if(!imageReady) return; event.preventDefault(); setZoom(zoom*(event.deltaY<0?1.14:.88)); },{passive:false});
+document.querySelector('#zoomOut').addEventListener('click',()=>setZoom(zoom*.82));
+document.querySelector('#zoomIn').addEventListener('click',()=>setZoom(zoom*1.22));
+document.querySelector('#zoomFit').addEventListener('click',fitGuide);
+document.querySelector('#zoomActual').addEventListener('click',actualGuide);
+guideStage.addEventListener('pointerdown',event=>{
+  if(!imageReady||event.target.closest('button')) return;
+  guideStage.setPointerCapture(event.pointerId);
+  pointers.set(event.pointerId,{x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY});
+  guideStage.classList.add('dragging'); dragMoved=false;
+  if(pointers.size===2){ const [a,b]=[...pointers.values()]; pinchStartDistance=Math.hypot(a.x-b.x,a.y-b.y); pinchStartZoom=zoom; }
+});
+guideStage.addEventListener('pointermove',event=>{
+  const pointer=pointers.get(event.pointerId); if(!pointer) return;
+  pointer.x=event.clientX; pointer.y=event.clientY;
+  if(pointers.size===2){
+    const [a,b]=[...pointers.values()]; const distance=Math.hypot(a.x-b.x,a.y-b.y);
+    if(pinchStartDistance) setZoom(pinchStartZoom*distance/pinchStartDistance); dragMoved=true;
+  }else if(zoom>fitZoom+.005){
+    const dx=event.clientX-pointer.lastX,dy=event.clientY-pointer.lastY;
+    if(Math.abs(dx)+Math.abs(dy)>1){ panX+=dx; panY+=dy; dragMoved=true; applyGuideTransform(); }
+  }
+  pointer.lastX=event.clientX; pointer.lastY=event.clientY;
+});
+function releasePointer(event){
+  pointers.delete(event.pointerId);
+  if(!pointers.size) guideStage.classList.remove('dragging');
+  else if(pointers.size===1){ const p=[...pointers.values()][0]; p.lastX=p.x; p.lastY=p.y; }
+}
+guideStage.addEventListener('pointerup',releasePointer);
+guideStage.addEventListener('pointercancel',releasePointer);
+window.addEventListener('resize',()=>{ if(!guideModal.hidden) fitGuide(); });
+document.addEventListener('keydown',event=>{
+  if(guideModal.hidden) return;
+  if(event.key==='Escape'){ event.preventDefault(); closeGuide(); }
+  else if(event.key==='+'||event.key==='=') setZoom(zoom*1.22);
+  else if(event.key==='-') setZoom(zoom*.82);
+  else if(event.key==='0') fitGuide();
+  else if(event.key==='1') actualGuide();
+  else if(event.key==='Tab'){
+    const buttons=[...guideModal.querySelectorAll('button')].filter(button=>!button.disabled&&!button.closest('[hidden]'));
+    const first=buttons[0],last=buttons[buttons.length-1];
+    if(event.shiftKey&&document.activeElement===first){ event.preventDefault(); last.focus(); }
+    else if(!event.shiftKey&&document.activeElement===last){ event.preventDefault(); first.focus(); }
+  }
+});
+try{
+  const data=validateData(window.L2D_SKINS_DATA);
+  skins=data.skins; skinById=new Map(skins.map(skin=>[skin.id,skin]));
+  updatePageMeta(data); renderMissingList(); render();
+}catch(error){ showDataError(error); }
+</script>
+</body>
+</html>
+

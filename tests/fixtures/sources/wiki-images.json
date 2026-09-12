@@ -1,0 +1,247 @@
+[
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:安土换装.jpg",
+            "to": "文件:安土换装.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 228888,
+            "ns": 6,
+            "title": "文件:安土换装.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 888758,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/1/1d/l13idri366pibxz3knyx28hp6l7f34o.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E5%AE%89%E5%9C%9F%E6%8D%A2%E8%A3%85.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=228888",
+                "sha1": "b409d0bdb5b362794314cc8151f88b62cd6d3898",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:安土换装.jpg"
+  },
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:腓特烈·卡尔换装3.jpg",
+            "to": "文件:腓特烈·卡尔换装3.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 228895,
+            "ns": 6,
+            "title": "文件:腓特烈·卡尔换装3.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 643933,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/f/fd/et48enpmad95x1n4379n70vvacfd7y4.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94%E6%8D%A2%E8%A3%853.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=228895",
+                "sha1": "7ec697c6152012d6786e1c96bf9e1b3e2038e87c",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:腓特烈·卡尔换装3.jpg"
+  },
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:狮换装2.jpg",
+            "to": "文件:狮换装2.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 228900,
+            "ns": 6,
+            "title": "文件:狮换装2.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 765669,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/4/46/2ulq17nvle6iw9q3z9p9jooe14ojuo5.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E7%8B%AE%E6%8D%A2%E8%A3%852.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=228900",
+                "sha1": "18662fe4e81367f3e248bf2150d868284dae5a05",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:狮换装2.jpg"
+  },
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:光辉换装8.jpg",
+            "to": "文件:光辉换装8.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 228896,
+            "ns": 6,
+            "title": "文件:光辉换装8.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 798358,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/6/66/5lpx8an6vfreuymg0bz2n0qi0bzv0o9.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E5%85%89%E8%BE%89%E6%8D%A2%E8%A3%858.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=228896",
+                "sha1": "2ff81c6540a37434dee673eeab9abbc6ef66a429",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:光辉换装8.jpg"
+  },
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:武藏换装3.jpg",
+            "to": "文件:武藏换装3.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 227286,
+            "ns": 6,
+            "title": "文件:武藏换装3.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 899998,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/2/22/3t4xs0dae24cv1m7qpx1h6igenahdxp.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E6%AD%A6%E8%97%8F%E6%8D%A2%E8%A3%853.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=227286",
+                "sha1": "209c7f7827dfc43ff3e7fff52fd7ed14d10246cd",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:武藏换装3.jpg"
+  },
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:本宁顿换装.jpg",
+            "to": "文件:本宁顿换装.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 227297,
+            "ns": 6,
+            "title": "文件:本宁顿换装.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 830466,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/0/04/2fh8fan3p73tzqkvlnyx2qebvtmbyxv.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E6%9C%AC%E5%AE%81%E9%A1%BF%E6%8D%A2%E8%A3%85.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=227297",
+                "sha1": "14cd70e7fc510b1d3e9535a09bea72158e069fa3",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:本宁顿换装.jpg"
+  },
+  {
+    "response": {
+      "batchcomplete": true,
+      "query": {
+        "normalized": [
+          {
+            "fromencoded": false,
+            "from": "File:不挠换装2.jpg",
+            "to": "文件:不挠换装2.jpg"
+          }
+        ],
+        "pages": [
+          {
+            "pageid": 227285,
+            "ns": 6,
+            "title": "文件:不挠换装2.jpg",
+            "imagerepository": "local",
+            "imageinfo": [
+              {
+                "size": 871729,
+                "width": 1000,
+                "height": 1500,
+                "url": "https://patchwiki.biligame.com/images/blhx/f/fd/nnzoh9o1plyq7iqf6yanrklp9dz2d8t.jpg",
+                "descriptionurl": "https://wiki.biligame.com/blhx/%E6%96%87%E4%BB%B6:%E4%B8%8D%E6%8C%A0%E6%8D%A2%E8%A3%852.jpg",
+                "descriptionshorturl": "https://wiki.biligame.com/blhx/index.php?curid=227285",
+                "sha1": "ca9aa6c382a02b1f1736cc9352de60b3bb5dd68d",
+                "mime": "image/jpeg"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "requestedTitle": "File:不挠换装2.jpg"
+  }
+]
