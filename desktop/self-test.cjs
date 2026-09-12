@@ -31,6 +31,7 @@ exports.run = async ({window,libraryRoot,errors,currentState,liveSync}) => {
   await evaluate("document.querySelector('#desktop-log-dialog [data-close]').click()");
   let synchronization;
   if(liveSync){
+    const reloaded = new Promise(resolve=>window.webContents.once('did-finish-load',resolve));
     await evaluate("document.querySelector('#desktop-sync').click()");
     await until(()=>currentState().job.phase==='running','软件内开始同步');
     assert.equal(await evaluate("document.querySelector('#desktop-sync').disabled"),true);
@@ -39,11 +40,13 @@ exports.run = async ({window,libraryRoot,errors,currentState,liveSync}) => {
     await until(()=>currentState().job.phase!=='running','真实云端同步',120000);
     synchronization = currentState().job;
     assert.equal(synchronization.phase,'success',JSON.stringify(synchronization));
+    await Promise.race([reloaded,wait(15000).then(()=>{throw new Error('同步后的页面未完成重载');})]);
     await until(()=>evaluate("document.documentElement.dataset.desktopReady === 'true' && !document.querySelector('#desktop-sync').disabled"),'同步后刷新');
   }
   const final = await evaluate("({cards:document.querySelectorAll('article.card').length,message:document.querySelector('#desktop-message').textContent,ready:document.documentElement.dataset.desktopReady})");
   assert.equal(final.cards,currentState().total);
   await until(()=>evaluate("[...document.querySelectorAll('img.thumb')].filter(i=>{const r=i.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0}).every(i=>i.complete&&i.naturalWidth>0)"),'首屏图片加载');
+  await until(()=>evaluate("document.querySelector('.desktop-brand img').complete && document.querySelector('.desktop-brand img').naturalWidth>0"),'应用图标');
   const verification=path.join(libraryRoot,'verification'); fs.mkdirSync(verification,{recursive:true});
   const capture = await window.webContents.capturePage();
   fs.writeFileSync(path.join(verification,'desktop-preview.png'),capture.toPNG());
