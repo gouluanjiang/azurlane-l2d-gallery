@@ -1,7 +1,7 @@
 # PROJECT HANDOFF — 碧蓝航线 L2D 玩法合集
 
 > 本次接续：2026-09-12。主工作目录：`C:\Users\choumodujiang\Documents\Codex\碧蓝航线L2D玩法图片检索`。  
-> **当前状态：本地功能已完成并验收，目录为 102/68/0/34；35 项测试、真实来源检查、原图同步、重复同步和浏览器验收通过。周三/周六北京时间 10:17 的云端排期已部署，但 GitHub 在 job 启动前因账号计费/额度限制拦截，云端执行仍待验收。**
+> **当前状态：本地与云端执行均已验收，目录为 102/68/0/34。用户已授权仓库公开；Windows/Linux 测试、真实云端公告检查、自动发布与本机同步通过。周三/周六北京时间 10:17 的排期已启用，同一流程已手动触发成功。**
 > 用户已选择继续自动更新路线，旧 27 款缺图解继续搁置。先看本文与实际证据，不重做已验收页面或现有 68 张图解。
 
 ## 1. 目标与正式交互
@@ -23,12 +23,12 @@
 | 历史图鉴基线 | 95 款，日期 2023-09-21 至 2026-07-23；95 张原图、68 张图解、0 款已确认待接入、27 款缺图解。 |
 | schema 2 迁移 | 已实现并完成真实浏览器回归。该次基线版本为 `2026-09-05-01-schema2`。 |
 | 最终前端验收 | `verification/recent-update-ui.json` 为 `passed`：102 个卡片/原图按钮、68 个图解入口、34 个搜索入口/缺图条目、0 待接入；7 款新原图与对应搜索正确。历史迁移回归另见 `verification/frontend-report.json`。 |
-| 云端首次运行 | 排期与工作流已部署；CI `34684108330` 和更新 `34684126812` 均被账号计费/支出额度限制阻止，job 未启动。云端执行未通过验收。 |
+| 云端实际运行 | 仓库公开后 CI `34684875936` 的 Windows/Linux 各 35 项测试通过，更新 `34684877551` 完成实时公告检查、去重和自动提交；新增 0、待核对 0。先前私有仓库的两次计费失败仅保留为历史。 |
 | 实际增量同步 | 隔离工作区运行同一 `check-updates.mjs` 新增 7 款：2026-08-13 的 3 款、2026-09-08 的 4 款；6 款返场排除。发布后主目录真实 PowerShell 入口新增/下载各 7，见 `verification/first-sync.json`；重复同步为 `unchanged`，见 `verification/repeat-sync.json`。 |
 | 当前目录与文件 | **102 款、102 张原图、68 款有图解、0 款待接入、34 款缺图解**，更新至 2026-09-08。170 个图片引用、文件大小/SHA-256、JSON/JS 镜像均通过；原有 95 张原图与 68 张图解全部保留。35 项单元测试通过。 |
-| 本机直接检查 | `本机检查更新.cmd` 对应的 PowerShell 入口已联网通过：新增 0、总数 102、待核对 0；不依赖 GitHub Actions 额度或 GitHub 登录。当前版本 `20260912T085228244Z-b101b7589b33`，`checkedAt=2026-09-12T08:52:28.244Z`。报告见 `data/update-report.json`、`data/review.json`。 |
+| 本机直接检查 | `本机检查更新.cmd` 对应的 PowerShell 入口已联网通过：新增 0、总数 102、待核对 0；不依赖 GitHub Actions 额度或 GitHub 登录。该次已验收版本为 `20260912T085228244Z-b101b7589b33`，检查时间 `2026-09-12T08:52:28.244Z`；证据保留在 `verification/completion-report.json` 的 `directLocalCheck`。 |
 
-本机实测和浏览器验收不能替代 Actions 运行验收；当前 `checkedAt` 来自本机检查，不能将其解释为云端成功。
+当前已同步的云端版本为 `20260912T090425699Z-b101b7589b33`，`checkedAt=2026-09-12T09:04:25.699Z`，提交 `250290057cb9d6619ef8ed7cac17e0528322586f`。云端产生的新版本已由实际 PowerShell 同步入口应用到本机，结果新增/下载均为 0；170 个文件及 JSON/JS 镜像校验通过。证据见 `verification/cloud-sync.json` 和 `verification/cloud-acceptance.json`。
 
 ## 3. 已实现的数据与更新工程
 
@@ -40,21 +40,21 @@
 
 ### 云端检查
 
-- 配置目标：私有仓库 [gouluanjiang/azurlane-l2d-gallery](https://github.com/gouluanjiang/azurlane-l2d-gallery)，`main` 分支。
+- 配置目标：公开仓库 [gouluanjiang/azurlane-l2d-gallery](https://github.com/gouluanjiang/azurlane-l2d-gallery)，`main` 分支；2026-09-12 用户明确授权公开后已执行。
 - 工作流：`.github/workflows/update.yml`，名称 `Check game updates`；每周三、周六北京时间 10:17，支持手动触发。
 - 读取官方维护公告**正文**，并结合碧蓝航线 WIKI 核对角色、换装及原图；识别 L2D、L2D+、双形态与返场，使用稳定身份去重。
 - 无法证明的候选进入 `data/review.json`；来源、公告与检查结果记录在 `data/update-report.json`。失败尝试使用 `data/update-attempt.json`，工作流保留失败证据。
 - 新原图通过格式与内容校验后才发布目录；云端提交只维护元数据与程序，`assets` 不进入 Git。
-- **真实阻碍：首次 CI 与更新工作流在任何 job 启动前即被账号计费/支出额度限制拦截，未执行测试或公告检查。没有更改权限、计费或仓库私有性。**
+- **云端验证通过**：[CI](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/runs/34684875936)、[更新任务](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/runs/34684877551)均为 success，更新任务自动发布了提交 `2502900`。本次是手动触发相同工作流，未把未来定时自然触发写成已观测结果。
 
-运行证据：[CI 34684108330](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/runs/34684108330)、[更新 34684126812](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/runs/34684126812)。GitHub 原始原因：`The job was not started because recent account payments have failed or your spending limit needs to be increased`。
+历史失败证据：[CI 34684108330](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/runs/34684108330)、[更新 34684126812](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/runs/34684126812)。它们发生在私有仓库阶段，被账号计费限制阻止。用户随后授权公开仓库，标准公共 runner 已正常执行；账号付款与预算设置未改变。
 
 已在隔离 worktree 运行同一检查脚本，成功新增 7 款并将验证元数据发布至私有仓库 `main`，提交 [77aa4b6aaf0aeb02cd193397cceee23bc40aaa10](https://github.com/gouluanjiang/azurlane-l2d-gallery/commit/77aa4b6aaf0aeb02cd193397cceee23bc40aaa10)。随后主目录经真实同步入口接入新增记录与原图；该过程在本机执行，不是 Actions 成功记录。
 
 ### 本地同步与回退
 
 - `一键更新.cmd` → `scripts/sync.ps1` → `scripts/sync.mjs`：读取远端确定提交的目录，暂存缺少的图片，核对格式/大小/SHA-256 后更新 JSON 与 JS 镜像。
-- `本机检查更新.cmd` → `scripts/sync.ps1 -CheckSources` → `scripts/check-updates.mjs --apply-local`：直接读取公开公告与 WIKI、核对新原图，再通过同一事务同步引擎应用到本地。云端受限期间日常使用此入口检查新资料，无需 GitHub 额度或登录。
+- `本机检查更新.cmd` → `scripts/sync.ps1 -CheckSources` → `scripts/check-updates.mjs --apply-local`：直接读取公开公告与 WIKI、核对新原图，再通过同一事务同步引擎应用到本地。需要立即查新、不等待云端排期时使用，无需 GitHub 登录。
 - `回退上次更新.cmd`：恢复最近一次成功同步前的数据；已下载图片保留，不删除原图。
 - 更新使用锁、事务记录与备份，校验失败或检测到已有记录/本地修改冲突时停止；不会静默覆盖手工修改。中断恢复和回退信息保存在 `.l2d-update`。
 - `data/sync-status.json` 记录仓库同步结果；本机直接检查结果在 `data/update-report.json`，失败尝试在 `data/update-attempt.json`。页面版本与 `checkedAt` 来自当前目录；页面本身不联网检查更新。
@@ -64,9 +64,9 @@
 ## 4. 本机使用和环境
 
 1. 双击 `打开图鉴.cmd`，或直接打开唯一主页面 `index-信浓泳装起.html`。查看已有图片只需浏览器与完整本地目录。
-2. 本机检查、同步和回退需要 Node.js 22+。仅私有仓库同步需要已登录的 GitHub CLI；本机 `local-config.json` 已保存 CLI 路径，不保存令牌，也不提交 Git。
+2. 本机检查、同步和回退需要 Node.js 22+。仓库同步入口目前仍使用本机已登录的 GitHub CLI；`local-config.json` 已保存 CLI 路径，不保存令牌，也不提交 Git。
 3. 换电脑或 CLI 路径变化时，从项目目录运行 `powershell -NoProfile -ExecutionPolicy Bypass -File .\配置更新.ps1`；不在 PATH 的 CLI 可使用 `-GhPath` 指定完整路径。脚本检查 `gh auth status`，已有登录直接使用。
-4. 当前联网检查最新资料用 `本机检查更新.cmd`；要同步私有仓库已发布版本用 `一键更新.cmd`。完成后刷新/重新打开图鉴；失败先看窗口及对应报告，修复网络或配置后重试。
+4. 日常使用 `一键更新.cmd` 同步云端已发布版本；需要立即查新时使用 `本机检查更新.cmd`。完成后刷新/重新打开图鉴；失败先看窗口及对应报告，修复网络或配置后重试。
 5. 需要恢复最近一次成功同步前的数据时双击 `回退上次更新.cmd`。保持 `.l2d-update` 备份，回退不会清除新增原图。
 
 开发常用命令：`npm test`、`npm run validate`（元数据）、`npm run validate:local`（含本地图片）、`npm run preview`。预览仅绑定 `127.0.0.1`；真实浏览器验收可用 localhost，不能以脚本语法/静态检查冒充浏览器结果。
@@ -107,5 +107,5 @@
 - 35 项自动测试通过，包含返场去重、更新失败保护、下载中本地修改保护、回退中断恢复、路径检查和重复同步；Windows PowerShell 5 的 Node 版本检查引号问题已修复并用实际入口验证。
 - 170 个本地图像引用全部通过文件/大小/SHA-256 校验；与旧基线比较，95 张原图和 68 张图解路径与内容不变。
 - 102 款浏览器验收通过：7 张新原图均为 1000×1500；唯一 ID、精确搜索与卡片路径对应；68 个图解入口保留，U-2501/瑟堡图解实际打开，390×844 手机布局无横向溢出，控制台无错误。未逐张打开全部 68 图解，文件校验覆盖全部。
-- **唯一工程验收余项：云端 runner。** 保留两个计费限制失败记录；需解除账号限制，或在用户明确同意仓库公开后再尝试标准公共 runner，然后重新运行 CI 与更新工作流。不要修改付款或仓库可见性而不取得相应授权。本机直接检查入口可持续使用。
+- **云端执行已通过验收**，记录见 `verification/cloud-acceptance.json`。定时计划已启用；未来自然触发和来源站变化属于后续运行观察，不需要重做现有迁移、浏览器验收或 68 张图解。
 - 原来 27 款补图继续暂停，本次新增 7 款暂用搜索。未来无法确认的候选先查看 `data/review.json` 和公告正文，不能猜测收录。

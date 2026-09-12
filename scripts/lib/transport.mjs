@@ -55,7 +55,7 @@ export function githubCommand(rootDir, args) {
   if (existsSync(configFile)) gh = JSON.parse(readFileSync(configFile, 'utf8').replace(/^\uFEFF/, '')).ghPath || gh;
   const result = spawnSync(gh, args, { encoding: 'utf8', windowsHide: true, maxBuffer: 16 * 1024 * 1024, timeout: 120000 });
   if (result.error) throw new Error(`无法运行 GitHub CLI：${result.error.message}。请运行“配置更新.ps1”或检查 local-config.json。`);
-  if (result.status !== 0) throw new Error(`读取私有更新仓库失败，请检查网络和 GitHub 登录。${String(result.stderr).slice(0, 700)}`);
+  if (result.status !== 0) throw new Error(`读取更新仓库失败，请检查网络和 GitHub 登录。${String(result.stderr).slice(0, 700)}`);
   return result.stdout;
 }
 export function getRemoteCatalog(rootDir, config) {
