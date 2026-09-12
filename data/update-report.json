@@ -1,0 +1,488 @@
+{
+  "status": "success",
+  "checkedAt": "2026-09-12T08:47:51.475Z",
+  "since": "2026-07-23",
+  "sources": [
+    {
+      "name": "碧蓝航线官网公告列表",
+      "url": "https://api.biligame.com/news/list?gameExtensionId=103&positionId=2&typeId=1&pageNum=1&pageSize=30",
+      "page": 1,
+      "items": 30
+    },
+    {
+      "name": "碧蓝航线官网公告列表",
+      "url": "https://api.biligame.com/news/list?gameExtensionId=103&positionId=2&typeId=1&pageNum=2&pageSize=30",
+      "page": 2,
+      "items": 30
+    },
+    {
+      "name": "换装图鉴",
+      "url": "https://wiki.biligame.com/blhx/%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4",
+      "revisionId": 412479,
+      "revisionTimestamp": "2026-09-02T05:45:05Z",
+      "bodySha256": "d57b3329fe0354f556343362a4ab3f2f614cb0281a64bb671148f9dc414070b5"
+    },
+    {
+      "name": "武藏",
+      "url": "https://wiki.biligame.com/blhx/%E6%AD%A6%E8%97%8F",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%AD%A6%E8%97%8F",
+      "revisionId": 411693,
+      "revisionTimestamp": "2026-08-21T03:09:52Z",
+      "bodySha256": "62c70b8d360fa8403e5bacd2b078774657b2cb6df7f5e73bc3515b140472057e"
+    },
+    {
+      "name": "武藏",
+      "url": "https://wiki.biligame.com/blhx/%E6%AD%A6%E8%97%8F",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E9%B3%84",
+      "revisionId": 411693,
+      "revisionTimestamp": "2026-08-21T03:09:52Z",
+      "bodySha256": "62c70b8d360fa8403e5bacd2b078774657b2cb6df7f5e73bc3515b140472057e"
+    },
+    {
+      "name": "2026年9月8日10:00港区改建",
+      "url": "https://wiki.biligame.com/blhx/2026%E5%B9%B49%E6%9C%888%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=2026%E5%B9%B49%E6%9C%888%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
+      "revisionId": 413404,
+      "revisionTimestamp": "2026-09-07T12:43:16Z",
+      "bodySha256": "95924a7560a9cf275162105f55d6a0cb4a2d48c605657d9700ea62166298cacb"
+    },
+    {
+      "name": "碧蓝海事局幽影迷城活动专题",
+      "url": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
+      "revisionId": 414509,
+      "revisionTimestamp": "2026-09-12T02:23:53Z",
+      "bodySha256": "0d9eb1277506eec7c2403b598d6673b11139a0333fb2f4ba9d22270f12d68014"
+    },
+    {
+      "name": "安土",
+      "url": "https://wiki.biligame.com/blhx/%E5%AE%89%E5%9C%9F",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E5%AE%89%E5%9C%9F",
+      "revisionId": 413535,
+      "revisionTimestamp": "2026-09-08T12:28:02Z",
+      "bodySha256": "9fabe25769171a77b297e1a90c75e1be5e3ec3797f082f0468665aae45f1f84a"
+    },
+    {
+      "name": "腓特烈·卡尔",
+      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
+      "revisionId": 414539,
+      "revisionTimestamp": "2026-09-12T04:27:20Z",
+      "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
+    },
+    {
+      "name": "腓特烈·卡尔",
+      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "revisionId": 414539,
+      "revisionTimestamp": "2026-09-12T04:27:20Z",
+      "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
+    }
+  ],
+  "announcements": [
+    {
+      "id": 18165,
+      "title": "2026维护公告（2026年7月23日10:00）",
+      "date": "2026-07-23",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18165",
+      "apiUrl": "https://api.biligame.com/news/18165",
+      "bodySha256": "89ae55c5acc334a51edbf5bb5ea15c8027f6dac4ed83b9735905f5ef49c5d1fa",
+      "bodyCharacters": 2471,
+      "newSkins": [
+        {
+          "announcedCharacter": "普利茅斯",
+          "name": "纯白天使的全身检查",
+          "type": "L2D+",
+          "releaseDate": "2026-07-23",
+          "kind": "new",
+          "announcementDate": "2026-07-23",
+          "announcementId": 18165,
+          "announcementTitle": "2026维护公告（2026年7月23日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18165",
+          "evidence": "普利茅斯-「纯白天使的全身检查」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "冈依沙瓦号",
+          "name": "真我的显影",
+          "type": "L2D",
+          "releaseDate": "2026-07-23",
+          "kind": "new",
+          "announcementDate": "2026-07-23",
+          "announcementId": 18165,
+          "announcementTitle": "2026维护公告（2026年7月23日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18165",
+          "evidence": "冈依沙瓦号-「真我的显影」【Live2D】"
+        }
+      ],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 0
+    },
+    {
+      "id": 18192,
+      "title": "2026维护公告（2026年7月30日10:00）",
+      "date": "2026-07-30",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18192",
+      "apiUrl": "https://api.biligame.com/news/18192",
+      "bodySha256": "b5b8e0fde0f4eab9181df5d97e74400b2c5fe0ae2357d9e7718f5b425c0e3749",
+      "bodyCharacters": 2002,
+      "newSkins": [],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 0
+    },
+    {
+      "id": 18214,
+      "title": "2026维护公告（2026年8月6日10:00）",
+      "date": "2026-08-06",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18214",
+      "apiUrl": "https://api.biligame.com/news/18214",
+      "bodySha256": "cc17ef50cab8695740f7b41365e4dc9bdc59ced72cd31b0acaac45df9acfb070",
+      "bodyCharacters": 2119,
+      "newSkins": [],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 0
+    },
+    {
+      "id": 18247,
+      "title": "2026维护公告（2026年8月13日10:00）",
+      "date": "2026-08-13",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+      "apiUrl": "https://api.biligame.com/news/18247",
+      "bodySha256": "f7d9b7aa2b04df69e0a1d100b13504bcb68d3d8c55ef8105f7638aad323348ba",
+      "bodyCharacters": 4609,
+      "newSkins": [
+        {
+          "announcedCharacter": "本宁顿",
+          "name": "全速！盛夏逐光企划",
+          "type": "L2D+",
+          "releaseDate": "2026-08-13",
+          "kind": "new",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "本宁顿-「全速！盛夏逐光企划」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "不挠",
+          "name": "慵懒的领航员小姐",
+          "type": "L2D+",
+          "releaseDate": "2026-08-13",
+          "kind": "new",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "不挠-「慵懒的领航员小姐」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "鳄",
+          "name": "只为你献上的应援",
+          "type": "L2D+",
+          "releaseDate": "2026-08-13",
+          "kind": "new",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "鳄-「只为你献上的应援」【Live2D+】"
+        }
+      ],
+      "returningSkins": [
+        {
+          "announcedCharacter": "贝劳森林",
+          "name": "水色疗愈",
+          "type": "L2D+",
+          "releaseDate": "2026-08-13",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "贝劳森林-「水色疗愈」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "安克雷奇",
+          "name": "香甜牛奶味之夜",
+          "type": "L2D+",
+          "releaseDate": "2026-08-13",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "安克雷奇-「香甜牛奶味之夜」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "马塞纳",
+          "name": "醉甜之泉",
+          "type": "L2D",
+          "releaseDate": "2026-08-13",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "马塞纳-「醉甜之泉」【Live2D】"
+        },
+        {
+          "announcedCharacter": "企业",
+          "name": "雨霁于心晴之时",
+          "type": "L2D",
+          "releaseDate": "2026-08-13",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "企业-「雨霁于心晴之时」【Live2D】"
+        },
+        {
+          "announcedCharacter": "匹兹堡",
+          "name": "斟酒女郎的赌局",
+          "type": "L2D",
+          "releaseDate": "2026-08-20",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "匹兹堡-「斟酒女郎的赌局」【Live2D】"
+        },
+        {
+          "announcedCharacter": "腓德雷卡大帝",
+          "name": "相会于盛夏之夜",
+          "type": "L2D",
+          "releaseDate": "2026-08-20",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "腓德雷卡大帝-「相会于盛夏之夜」【Live2D】"
+        },
+        {
+          "announcedCharacter": "伴尔维",
+          "name": "清凉的甜蜜滋味",
+          "type": "L2D",
+          "releaseDate": "2026-08-20",
+          "kind": "returning",
+          "announcementDate": "2026-08-13",
+          "announcementId": 18247,
+          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
+          "evidence": "伴尔维-「清凉的甜蜜滋味」【Live2D】"
+        }
+      ],
+      "acceptedIds": [
+        "azl-7647820b8626d38e",
+        "azl-f5598fefde5c7120",
+        "azl-de5397ce8eaa4a7b"
+      ],
+      "reviewCount": 0
+    },
+    {
+      "id": 18283,
+      "title": "2026维护公告（2026年8月27日10:00）",
+      "date": "2026-08-27",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18283",
+      "apiUrl": "https://api.biligame.com/news/18283",
+      "bodySha256": "845f9ebdda8b5e59119c5932bbbf90c5e649ffe40e143bcb4f5e6043040f5938",
+      "bodyCharacters": 3839,
+      "newSkins": [],
+      "returningSkins": [
+        {
+          "announcedCharacter": "光辉",
+          "name": "二人的学习时间",
+          "type": "L2D",
+          "releaseDate": "2026-08-27",
+          "kind": "returning",
+          "announcementDate": "2026-08-27",
+          "announcementId": 18283,
+          "announcementTitle": "2026维护公告（2026年8月27日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18283",
+          "evidence": "光辉-「二人的学习时间」【Live2D】"
+        }
+      ],
+      "acceptedIds": [],
+      "reviewCount": 0
+    },
+    {
+      "id": 18315,
+      "title": "2026维护公告（2026年9月4日10:00）",
+      "date": "2026-09-04",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18315",
+      "apiUrl": "https://api.biligame.com/news/18315",
+      "bodySha256": "708767bb91eb67e086bea29edb58899a587ad5ccda016f0e44c6308f664c3e17",
+      "bodyCharacters": 1826,
+      "newSkins": [],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 0
+    },
+    {
+      "id": 18328,
+      "title": "2026维护公告（2026年9月8日10:00）",
+      "date": "2026-09-08",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+      "apiUrl": "https://api.biligame.com/news/18328",
+      "bodySha256": "024e5602f54f80f6d99ca5671ddda819efd64293595744aff794c0674144b363",
+      "bodyCharacters": 6585,
+      "newSkins": [
+        {
+          "announcedCharacter": "鮟",
+          "name": "午夜的瑰色电梯",
+          "type": "双形态",
+          "releaseDate": "2026-09-08",
+          "kind": "new",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "鮟-「午夜的瑰色电梯」【双形态换装】"
+        },
+        {
+          "announcedCharacter": "腓德雷卡·卡尔",
+          "name": "午夜频道",
+          "type": "L2D+",
+          "releaseDate": "2026-09-08",
+          "kind": "new",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "腓德雷卡·卡尔-「午夜频道」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "狮",
+          "name": "夜巷中的诱引者",
+          "type": "L2D+",
+          "releaseDate": "2026-09-08",
+          "kind": "new",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "狮-「夜巷中的诱引者」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "光辉",
+          "name": "幽影徘徊之夜",
+          "type": "L2D+",
+          "releaseDate": "2026-09-08",
+          "kind": "new",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "光辉-「幽影徘徊之夜」【Live2D+】"
+        }
+      ],
+      "returningSkins": [
+        {
+          "announcedCharacter": "约克城II",
+          "name": "交错的温柔时光",
+          "type": "双形态",
+          "releaseDate": "2026-09-08",
+          "kind": "returning",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "约克城II-「交错的温柔时光」【双形态换装】"
+        },
+        {
+          "announcedCharacter": "䳆",
+          "name": "缭乱之花的忍者游戏",
+          "type": "L2D+",
+          "releaseDate": "2026-09-08",
+          "kind": "returning",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "䳆-「缭乱之花的忍者游戏」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "鳐（航空母舰）",
+          "name": "落于王座之花",
+          "type": "L2D",
+          "releaseDate": "2026-09-08",
+          "kind": "returning",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "鳐（航空母舰）-「落于王座之花」【Live2D】"
+        },
+        {
+          "announcedCharacter": "獭",
+          "name": "不会消失的换装魔法",
+          "type": "L2D",
+          "releaseDate": "2026-09-08",
+          "kind": "returning",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "獭-「不会消失的换装魔法」【Live2D】"
+        },
+        {
+          "announcedCharacter": "鳉",
+          "name": "逃脱失败……？",
+          "type": "L2D",
+          "releaseDate": "2026-09-08",
+          "kind": "returning",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "鳉-「逃脱失败……？」【Live2D】"
+        },
+        {
+          "announcedCharacter": "猏",
+          "name": "绽放于至深之夜",
+          "type": "L2D",
+          "releaseDate": "2026-09-08",
+          "kind": "returning",
+          "announcementDate": "2026-09-08",
+          "announcementId": 18328,
+          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+          "evidence": "猏-「绽放于至深之夜」【Live2D】"
+        }
+      ],
+      "acceptedIds": [
+        "azl-4ca72f96fc1f3915",
+        "azl-604a37a57691b511",
+        "azl-24a8b69272bcc3f0",
+        "azl-857e0640665c51ac"
+      ],
+      "reviewCount": 0
+    }
+  ],
+  "warnings": [
+    {
+      "id": "azl-24a8b69272bcc3f0",
+      "reason": "WIKI_TYPE_DIFFERS_FROM_OFFICIAL",
+      "officialType": "L2D+",
+      "wikiType": "L2D",
+      "officialSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+      "wikiSource": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98"
+    },
+    {
+      "id": "azl-857e0640665c51ac",
+      "reason": "WIKI_TYPE_DIFFERS_FROM_OFFICIAL",
+      "officialType": "L2D+",
+      "wikiType": "L2D",
+      "officialSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
+      "wikiSource": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98"
+    }
+  ],
+  "newCount": 7,
+  "reviewCount": 0,
+  "latestAnnouncement": "2026-09-08"
+}
