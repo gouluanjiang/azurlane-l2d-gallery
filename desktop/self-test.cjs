@@ -47,6 +47,7 @@ exports.run = async ({window,libraryRoot,errors,currentState,liveSync}) => {
   assert.equal(final.cards,currentState().total);
   await until(()=>evaluate("[...document.querySelectorAll('img.thumb')].filter(i=>{const r=i.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0}).every(i=>i.complete&&i.naturalWidth>0)"),'首屏图片加载');
   await until(()=>evaluate("document.querySelector('.desktop-brand img').complete && document.querySelector('.desktop-brand img').naturalWidth>0"),'应用图标');
+  await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve(true))))');
   const verification=path.join(libraryRoot,'verification'); fs.mkdirSync(verification,{recursive:true});
   const capture = await window.webContents.capturePage();
   fs.writeFileSync(path.join(verification,'desktop-preview.png'),capture.toPNG());
