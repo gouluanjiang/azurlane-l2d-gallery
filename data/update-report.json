@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-09-12T09:23:14.483Z",
-  "since": "2026-07-29",
+  "checkedAt": "2026-09-16T02:26:21.768Z",
+  "since": "2026-08-02",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -19,14 +19,14 @@
       "name": "换装图鉴",
       "url": "https://wiki.biligame.com/blhx/%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4",
-      "revisionId": 412479,
-      "revisionTimestamp": "2026-09-02T05:45:05Z",
-      "bodySha256": "d57b3329fe0354f556343362a4ab3f2f614cb0281a64bb671148f9dc414070b5"
+      "revisionId": 415071,
+      "revisionTimestamp": "2026-09-16T02:09:10Z",
+      "bodySha256": "f11702cb09549f9a10fae2bd0f6f0ea96c92affe282f130f64c1368a2528e803"
     },
     {
       "name": "武藏",
       "url": "https://wiki.biligame.com/blhx/%E6%AD%A6%E8%97%8F",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%AD%A6%E8%97%8F",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E9%B3%84",
       "revisionId": 411693,
       "revisionTimestamp": "2026-08-21T03:09:52Z",
       "bodySha256": "62c70b8d360fa8403e5bacd2b078774657b2cb6df7f5e73bc3515b140472057e"
@@ -34,7 +34,7 @@
     {
       "name": "武藏",
       "url": "https://wiki.biligame.com/blhx/%E6%AD%A6%E8%97%8F",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E9%B3%84",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%AD%A6%E8%97%8F",
       "revisionId": 411693,
       "revisionTimestamp": "2026-08-21T03:09:52Z",
       "bodySha256": "62c70b8d360fa8403e5bacd2b078774657b2cb6df7f5e73bc3515b140472057e"
@@ -51,25 +51,17 @@
       "name": "碧蓝海事局幽影迷城活动专题",
       "url": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
-      "revisionId": 414509,
-      "revisionTimestamp": "2026-09-12T02:23:53Z",
-      "bodySha256": "0d9eb1277506eec7c2403b598d6673b11139a0333fb2f4ba9d22270f12d68014"
+      "revisionId": 414783,
+      "revisionTimestamp": "2026-09-13T11:31:26Z",
+      "bodySha256": "c33e4645a26518aa4e2c52c670ef3ac40e5f58bd128623f63f17b67377bf38d7"
     },
     {
       "name": "安土",
       "url": "https://wiki.biligame.com/blhx/%E5%AE%89%E5%9C%9F",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E5%AE%89%E5%9C%9F",
-      "revisionId": 413535,
-      "revisionTimestamp": "2026-09-08T12:28:02Z",
-      "bodySha256": "9fabe25769171a77b297e1a90c75e1be5e3ec3797f082f0468665aae45f1f84a"
-    },
-    {
-      "name": "腓特烈·卡尔",
-      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
-      "revisionId": 414539,
-      "revisionTimestamp": "2026-09-12T04:27:20Z",
-      "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
+      "revisionId": 414904,
+      "revisionTimestamp": "2026-09-15T01:47:19Z",
+      "bodySha256": "06cfd4c1477f53fe52cfd6d0ebad9bc8e8599aab79c982f835c5b9acc0540ee9"
     },
     {
       "name": "腓特烈·卡尔",
@@ -78,22 +70,17 @@
       "revisionId": 414539,
       "revisionTimestamp": "2026-09-12T04:27:20Z",
       "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
+    },
+    {
+      "name": "腓特烈·卡尔",
+      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
+      "revisionId": 414539,
+      "revisionTimestamp": "2026-09-12T04:27:20Z",
+      "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
     }
   ],
   "announcements": [
-    {
-      "id": 18192,
-      "title": "2026维护公告（2026年7月30日10:00）",
-      "date": "2026-07-30",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18192",
-      "apiUrl": "https://api.biligame.com/news/18192",
-      "bodySha256": "b5b8e0fde0f4eab9181df5d97e74400b2c5fe0ae2357d9e7718f5b425c0e3749",
-      "bodyCharacters": 2002,
-      "newSkins": [],
-      "returningSkins": [],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
     {
       "id": 18214,
       "title": "2026维护公告（2026年8月6日10:00）",
@@ -413,34 +400,12 @@
           "evidence": "猏-「绽放于至深之夜」【Live2D】"
         }
       ],
-      "acceptedIds": [
-        "azl-4ca72f96fc1f3915",
-        "azl-604a37a57691b511",
-        "azl-24a8b69272bcc3f0",
-        "azl-857e0640665c51ac"
-      ],
+      "acceptedIds": [],
       "reviewCount": 0
     }
   ],
-  "warnings": [
-    {
-      "id": "azl-24a8b69272bcc3f0",
-      "reason": "WIKI_TYPE_DIFFERS_FROM_OFFICIAL",
-      "officialType": "L2D+",
-      "wikiType": "L2D",
-      "officialSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-      "wikiSource": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98"
-    },
-    {
-      "id": "azl-857e0640665c51ac",
-      "reason": "WIKI_TYPE_DIFFERS_FROM_OFFICIAL",
-      "officialType": "L2D+",
-      "wikiType": "L2D",
-      "officialSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-      "wikiSource": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98"
-    }
-  ],
-  "newCount": 4,
+  "warnings": [],
+  "newCount": 0,
   "reviewCount": 0,
   "latestAnnouncement": "2026-09-08"
 }
