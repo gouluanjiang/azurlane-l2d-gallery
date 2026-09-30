@@ -92,17 +92,48 @@ export function extractTemplates(wikitext, wanted) {
   return found;
 }
 
-export function parseWikiCatalog(text) {
+// Since September 2026 the overview loads named-field JSON through this script.
+// Follow only the observed source, never execute remote JS or fall back to the
+// frozen /旧版 page when the current format cannot be verified.
+const clothListTitle = '模块:ClothList/json';
+const usesClothList = text => extractTemplates(text, 'JS').some(fields => fields.length === 1 && fields[0] === 'ClothListPage.js');
+
+export function parseWikiCatalog(text, { clothListText } = {}) {
   const rows = [], review = [];
-  for (const fields of extractTemplates(text, '换装图鉴列表')) {
-    const type = normalizeType(fields[9]);
-    if (!type) continue;
-    const [character, , , name, variant] = fields.map(plain);
-    const releaseDate = dateFromText(plain(fields[13]));
-    if (fields.length !== 14 || !character || !name || !/^(?:换装(?:[2-9]|1\d)?|誓约)$/.test(variant) || !releaseDate || /[{}\[\]]/.test(character + name)) {
-      review.push({ reason: 'INVALID_WIKI_ROW', character, name, evidence: fields.join('|') }); continue;
+  let records, sourceTitle = '换装图鉴';
+  if (usesClothList(text)) {
+    sourceTitle = clothListTitle;
+    if (typeof clothListText !== 'string') throw new Error(`WIKI ${clothListTitle} 缺少正文；不能确认无更新`);
+    let data;
+    try { data = JSON.parse(clothListText); }
+    catch { throw new Error(`WIKI ${clothListTitle} JSON 解析失败；不能将格式变化当作无更新`); }
+    if (!Array.isArray(data) || !data.length) throw new Error(`WIKI ${clothListTitle} 格式未知：应为非空数组；不能确认无更新`);
+    const required = ['船名', '换装名称', '换装', '立绘类型', '实装时间'];
+    records = data.map((record, index) => {
+      if (!record || Array.isArray(record) || required.some(key => typeof record[key] !== 'string')) {
+        throw new Error(`WIKI ${clothListTitle} 第 ${index + 1} 行关键字段格式未知；不能确认无更新`);
+      }
+      return { character: record['船名'], name: record['换装名称'], variant: record['换装'], rawType: record['立绘类型'], rawDate: record['实装时间'], evidence: JSON.stringify(record) };
+    });
+  } else {
+    records = extractTemplates(text, '换装图鉴列表').map(fields => {
+      // Check layout before type: a shifted type column must not silently skip a row.
+      if (fields.length !== 14) throw new Error(`WIKI 换装模板字段布局未知：预期 14 项，实际 ${fields.length} 项；不能将格式变化当作无更新`);
+      return { character: fields[0], name: fields[3], variant: fields[4], rawType: fields[9], rawDate: fields[13], evidence: fields.join('|') };
+    });
+  }
+  for (const record of records) {
+    const type = normalizeType(record.rawType);
+    if (!type) {
+      if (['', '\\', '动态', '特殊动态'].includes(plain(record.rawType))) continue;
+      throw new Error(`WIKI ${sourceTitle} 立绘类型未知：${record.rawType}；不能将格式变化当作无更新`);
     }
-    rows.push({ character, name, variant, type, releaseDate, wikiImage: `File:${character}${variant}.jpg`, wikiSource: wikiUrl('换装图鉴') });
+    const [character, name, variant] = [record.character, record.name, record.variant].map(plain);
+    const releaseDate = dateFromText(plain(record.rawDate));
+    if (!character || !name || !/^(?:换装(?:[2-9]|1\d)?|誓约)$/.test(variant) || !releaseDate || /[{}\[\]]/.test(character + name)) {
+      review.push({ reason: 'INVALID_WIKI_ROW', character, name, evidence: record.evidence }); continue;
+    }
+    rows.push({ character, name, variant, type, releaseDate, wikiImage: `File:${character}${variant}.jpg`, wikiSource: wikiUrl(sourceTitle) });
   }
   if (!rows.length) throw new Error('WIKI 换装模板未识别到有效 L2D 记录；不能将格式变化当作无更新');
   return { rows, review };
@@ -195,7 +226,9 @@ export async function getUpdates(catalog, options = {}) {
   }
   if (!finished) throw new Error('达到公告分页上限，扫描未完成');
   if (!recognizableNotices) throw new Error('公告列表未包含可识别的维护日期，不能确认无更新');
-  const wiki = await wikiPage('换装图鉴'), table = parseWikiCatalog(wiki.text);
+  const wiki = await wikiPage('换装图鉴');
+  const clothList = usesClothList(wiki.text) ? await wikiPage(clothListTitle) : null;
+  const table = parseWikiCatalog(wiki.text, { clothListText: clothList?.text });
   review.push(...table.review);
   for (const article of [...listed.values()].sort((a, b) => dateFromText(a.title).localeCompare(dateFromText(b.title)))) {
     const api = `${OFFICIAL_API}/news/${article.id}`, detail = await request(api);
