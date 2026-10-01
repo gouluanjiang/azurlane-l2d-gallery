@@ -26,3 +26,35 @@ The overview `换装图鉴` does not yet include the September skins. The Septem
 The event gallery currently labels 狮 and 光辉 as `Live2D`, while the full official new-sale section explicitly labels both `Live2D+` (and the event gift-box section also says `Live2D+`). The official announcement determines type and first-release date. This difference is included in `report.warnings`, not silently overwritten.
 
 No original artwork bytes are stored in these fixtures. The update orchestrator downloads originals and computes its own SHA-256 before publishing.
+
+## 2026-09-30 catalog format regression
+
+`wiki-cloth-list-2026-09-30.json` preserves three full public API responses,
+their requested URLs, and capture timestamps (2026-09-30, Asia/Shanghai):
+
+| Page | Revision | Revision time (UTC) | Role |
+| --- | --- | --- | --- |
+| `换装图鉴` | 415755 | 2026-09-20 07:17:12 | Current overview; no `换装图鉴列表` records; loads `{{JS\|ClothListPage.js}}`. |
+| `MediaWiki:ClothListPage.js` | 415751 | 2026-09-20 07:11:07 | Declares `jsonPage: 'Module:ClothList/json'`; reads revision content as JSON and builds images from `船名` + `换装` + `.jpg`. |
+| `模块:ClothList/json` | 416119 | 2026-09-29 11:18:42 | JSON array of 1,453 records, including 204 L2D, 24 L2D+, and 8 dual-form records. |
+
+The change is a migration from positional wikitext templates to named-field
+JSON, not a renamed template or a shifted 14-column layout. The API reports
+the module's content model as `wikitext`, but its revision body is JSON. The
+five consumed keys are `船名`, `换装名称`, `换装`, `立绘类型`, and `实装时间`.
+Ordinary art has an empty type; `动态` and `特殊动态` remain excluded.
+
+The regression covers both historical templates and the current module,
+including exact image slots for the September 17 skins. Unknown loaders,
+missing/broken modules, missing or non-string keys, unknown types, empty
+results, and legacy column shifts must fail closed even beside valid records.
+Unprovable identity/date values remain review items; they are never accepted.
+The CLI regression also checks exit status 1, failure evidence, and byte-for-byte
+preservation of the catalog, JavaScript mirror, previous review, and report.
+The old overview at `/旧版` is not a fallback for a failed current source.
+
+The loader contract accepts only the recorded one-argument `FlourPackage`
+(legacy) and `ClothListPage.js` calls. Unknown scripts or extra loader arguments
+fail before source selection, even when valid legacy rows or the known module
+are also present. Regressions cover a would-be successful no-update scan and
+CLI failure evidence with all published files preserved byte-for-byte.

@@ -8,6 +8,10 @@ import { dateFromText, htmlToText, normalizeType, parseAnnouncement, parseWikiCa
 const fixture = name => JSON.parse(readFileSync(fileURLToPath(new URL(`./fixtures/sources/${name}`, import.meta.url)), 'utf8').replace(/^\uFEFF/, ''));
 const pageText = page => page.response.query.pages[0].revisions[0].slots.main.content;
 const pages = fixture('wiki-pages.json');
+const clothPages = fixture('wiki-cloth-list-2026-09-30.json');
+const clothOverview = pageText(clothPages[0]);
+const clothListText = pageText(clothPages[2]);
+const clothRecords = JSON.parse(clothListText);
 const baseCatalog = () => ({ updatedTo: '2026-07-23', skins: [{ id: stableSkinId('普利茅斯', '纯白天使的全身检查') }, { id: stableSkinId('冈依沙瓦号', '真我的显影') }] });
 const runOptions = { now: '2026-09-12T08:00:00.000Z', retries: 0, retryDelayMs: 0 };
 function fixtureFetch(mutate = (_url, data) => data) {
@@ -22,6 +26,13 @@ function fixtureFetch(mutate = (_url, data) => data) {
     data = mutate(parsed, data);
     return { ok: true, status: 200, json: async () => data };
   };
+}
+
+function clothListFixtureFetch(mutate = (_url, data) => data) {
+  return fixtureFetch((url, data) => {
+    const recorded = clothPages.find(page => page.requestedTitle === url.searchParams.get('titles'));
+    return mutate(url, recorded ? structuredClone(recorded.response) : data);
+  });
 }
 
 test('latest real official notice: four new skins, six returning, gift box repeats excluded', () => {
@@ -82,6 +93,119 @@ test('real WIKI template separates nested pipes and excludes incomplete fields',
   assert.equal(parseWikiCatalog(nested).rows.length, 1);
   assert.throws(() => parseWikiCatalog(nested.replace('2026年09月08日', '待补充')), /未识别到有效/);
   assert.throws(() => parseWikiCatalog('服务器繁忙'), /格式变化/);
+});
+
+test('September 30 WIKI JSON uses named fields and exact original image slots', () => {
+  assert.match(pageText(clothPages[1]), /jsonPage\s*:\s*'Module:ClothList\/json'/);
+  const parsed = parseWikiCatalog(clothOverview, { clothListText });
+  assert.equal(parsed.rows.length, 236);
+  assert.equal(parsed.review.length, 0);
+  assert.deepEqual(['L2D', 'L2D+', '双形态'].map(type => parsed.rows.filter(row => row.type === type).length), [204, 24, 8]);
+  assert.deepEqual(parsed.rows.find(row => row.name === '柴郡猫的童话书迷宫'), {
+    character: '柴郡', name: '柴郡猫的童话书迷宫', variant: '换装5', type: 'L2D+', releaseDate: '2026-09-17',
+    wikiImage: 'File:柴郡换装5.jpg', wikiSource: `https://wiki.biligame.com/blhx/${encodeURIComponent('模块:ClothList/json')}`,
+  });
+  assert.deepEqual(parsed.rows.find(row => row.name === '微笑的白色魅影'), {
+    character: '金鹿号', name: '微笑的白色魅影', variant: '换装2', type: '双形态', releaseDate: '2026-09-17',
+    wikiImage: 'File:金鹿号换装2.jpg', wikiSource: `https://wiki.biligame.com/blhx/${encodeURIComponent('模块:ClothList/json')}`,
+  });
+  const reordered = clothRecords.map(record => Object.fromEntries(Object.entries(record).reverse()));
+  assert.deepEqual(parseWikiCatalog(clothOverview, { clothListText: JSON.stringify(reordered) }), parsed);
+});
+
+test('unknown or unavailable WIKI formats fail closed, including mixed legacy/new pages', () => {
+  assert.throws(() => parseWikiCatalog(clothOverview), /缺少正文/);
+  assert.throws(() => parseWikiCatalog(clothOverview.replace('ClothListPage.js', 'FutureClothList.js'), { clothListText }), /格式变化/);
+  for (const loader of ['{{JS|FutureClothList.js}}', '{{JS|ClothListPage.js|source=FutureModule}}', '{{JS|FlourPackage|source=FutureModule}}']) {
+    // Neither a stale legacy table nor a recognized module can mask another loader.
+    assert.throws(() => parseWikiCatalog(loader + pageText(pages[0]), { clothListText }), /加载器格式未知/);
+    assert.throws(() => parseWikiCatalog(loader + clothOverview, { clothListText }), /加载器格式未知/);
+  }
+  assert.throws(() => parseWikiCatalog('<!-- {{JS|ClothListPage.js}} -->', { clothListText }), /格式变化/);
+  for (const bad of ['{', 'null', '{}', '[]', JSON.stringify({ data: clothRecords })]) {
+    assert.throws(() => parseWikiCatalog(clothOverview, { clothListText: bad }), /JSON 解析失败|格式未知/);
+    // A stale embedded template must not mask a broken current data source.
+    assert.throws(() => parseWikiCatalog(clothOverview + pageText(pages[0]), { clothListText: bad }), /JSON 解析失败|格式未知/);
+  }
+});
+
+test('an unknown WIKI loader cannot produce a successful no-update scan from stale templates', async () => {
+  const seen = { ...baseCatalog(), skins: clothRecords.map(row => ({ id: stableSkinId(row['船名'], row['换装名称']) })) };
+  await assert.rejects(() => getUpdates(seen, { ...runOptions, fetchImpl: clothListFixtureFetch((url, data) => {
+    if (url.searchParams.get('titles') === '换装图鉴') {
+      data.query.pages[0].revisions[0].slots.main.content = clothOverview.replace('ClothListPage.js', 'FutureClothList.js') + pageText(pages[0]);
+    }
+    return data;
+  }) }), /加载器格式未知/);
+});
+
+test('WIKI JSON validates every required key and type before excluding non-L2D rows', () => {
+  const valid = clothRecords.find(record => record['立绘类型'] === 'L2D+');
+  const ordinary = clothRecords.find(record => record['立绘类型'] === '');
+  const parse = records => parseWikiCatalog(clothOverview, { clothListText: JSON.stringify(records) });
+  for (const key of ['船名', '换装名称', '换装', '立绘类型', '实装时间']) {
+    for (const value of [undefined, null, 123, {}, []]) {
+      assert.throws(() => parse([valid, { ...ordinary, [key]: value }]), /关键字段格式未知/, `${key}: ${value}`);
+    }
+  }
+  for (const record of [null, [], 'invalid', { ...valid, '立绘类型': 'L2D++' }]) {
+    assert.throws(() => parse([valid, record]), /格式未知|类型未知/);
+  }
+  assert.throws(() => parse([{ ...valid, '立绘类型': '' }]), /未识别到有效/);
+});
+
+test('invalid WIKI JSON identities and dates stay in review, never become accepted rows', () => {
+  const valid = clothRecords.find(record => record['立绘类型'] === 'L2D+');
+  for (const change of [{ '船名': '' }, { '换装名称': '{{待补充}}' }, { '换装': '换装999' }, { '实装时间': '2026年02月30日' }]) {
+    const invalid = { ...valid, ...change };
+    const result = parseWikiCatalog(clothOverview, { clothListText: JSON.stringify([valid, invalid]) });
+    assert.equal(result.rows.length, 1);
+    assert.equal(result.review.length, 1);
+    assert.equal(result.review[0].reason, 'INVALID_WIKI_ROW');
+    assert.deepEqual(JSON.parse(result.review[0].evidence), invalid);
+    assert.throws(() => parseWikiCatalog(clothOverview, { clothListText: JSON.stringify([invalid]) }), /未识别到有效/);
+  }
+});
+
+test('legacy WIKI column shifts and unknown types cannot hide beside valid rows', () => {
+  const valid = '{{换装图鉴列表|角色|航母|皇家|皮肤|换装|主题|1200|商店|差分|L2D+|背景|挂件|备注|2026年09月08日}}';
+  for (const invalid of [valid.replace('|差分|', '|新增字段|差分|'), valid.replace('|差分|', '|'), valid.replace('|L2D+|', '|未知类型|')]) {
+    assert.throws(() => parseWikiCatalog(valid + invalid), /字段布局未知|类型未知/);
+  }
+});
+
+test('recorded scan follows current WIKI module and records its revision and digest', async () => {
+  const requested = [];
+  const fetchImpl = clothListFixtureFetch((url, data) => { requested.push(url.searchParams.get('titles')); return data; });
+  const result = await getUpdates(baseCatalog(), { ...runOptions, fetchImpl });
+  assert.deepEqual(result.candidates.map(s => s.character), ['本宁顿', '不挠', '武藏', '安土', '腓特烈·卡尔', '狮', '光辉']);
+  assert.equal(result.review.length, 0);
+  assert.equal(result.report.warnings.length, 0);
+  assert.equal(requested.filter(title => title === '模块:ClothList/json').length, 1);
+  assert.ok(!requested.includes('换装图鉴/旧版'));
+  const source = result.report.sources.find(source => source.name === '模块:ClothList/json');
+  assert.equal(source.revisionId, 416119);
+  assert.equal(source.revisionTimestamp, '2026-09-29T11:18:42Z');
+  assert.match(source.bodySha256, /^[a-f0-9]{64}$/);
+  assert.equal(result.candidates[0].wikiSource, source.url);
+  const rerun = await getUpdates({ ...baseCatalog(), skins: [...baseCatalog().skins, ...result.candidates] }, { ...runOptions, fetchImpl });
+  assert.equal(rerun.candidates.length, 0);
+  assert.equal(rerun.review.length, 0);
+});
+
+test('live-source orchestration rejects missing, corrupt and unknown WIKI JSON instead of no-update', async () => {
+  const seen = { ...baseCatalog(), skins: clothRecords.map(row => ({ id: stableSkinId(row['船名'], row['换装名称']) })) };
+  for (const mutate of [
+    page => { page.missing = true; delete page.revisions; },
+    page => { delete page.revisions[0].slots.main.content; },
+    page => { page.revisions[0].slots.main.content = '{'; },
+    page => { page.revisions[0].slots.main.content = JSON.stringify([{ ...clothRecords[0], '立绘类型': 'unknown' }]); },
+  ]) {
+    await assert.rejects(() => getUpdates(seen, { ...runOptions, fetchImpl: clothListFixtureFetch((url, data) => {
+      if (url.searchParams.get('titles') === '模块:ClothList/json') mutate(data.query.pages[0]);
+      return data;
+    }) }), /缺少正文|JSON 解析失败|类型未知/);
+  }
 });
 
 test('event gallery gives explicit image slots when overview is behind', () => {
