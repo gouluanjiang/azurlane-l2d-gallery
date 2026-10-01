@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-09-16T02:26:21.768Z",
-  "since": "2026-08-02",
+  "checkedAt": "2026-10-01T05:05:37.605Z",
+  "since": "2026-08-17",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -19,216 +19,52 @@
       "name": "换装图鉴",
       "url": "https://wiki.biligame.com/blhx/%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4",
-      "revisionId": 415071,
-      "revisionTimestamp": "2026-09-16T02:09:10Z",
-      "bodySha256": "f11702cb09549f9a10fae2bd0f6f0ea96c92affe282f130f64c1368a2528e803"
+      "revisionId": 415755,
+      "revisionTimestamp": "2026-09-20T07:17:12Z",
+      "bodySha256": "b0ebda5e59e7dfee9a72b71db582293b29e578611676d0a625a0781ee5e55c37"
     },
     {
-      "name": "武藏",
-      "url": "https://wiki.biligame.com/blhx/%E6%AD%A6%E8%97%8F",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E9%B3%84",
-      "revisionId": 411693,
-      "revisionTimestamp": "2026-08-21T03:09:52Z",
-      "bodySha256": "62c70b8d360fa8403e5bacd2b078774657b2cb6df7f5e73bc3515b140472057e"
-    },
-    {
-      "name": "武藏",
-      "url": "https://wiki.biligame.com/blhx/%E6%AD%A6%E8%97%8F",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%AD%A6%E8%97%8F",
-      "revisionId": 411693,
-      "revisionTimestamp": "2026-08-21T03:09:52Z",
-      "bodySha256": "62c70b8d360fa8403e5bacd2b078774657b2cb6df7f5e73bc3515b140472057e"
-    },
-    {
-      "name": "2026年9月8日10:00港区改建",
-      "url": "https://wiki.biligame.com/blhx/2026%E5%B9%B49%E6%9C%888%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=2026%E5%B9%B49%E6%9C%888%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
-      "revisionId": 413404,
-      "revisionTimestamp": "2026-09-07T12:43:16Z",
-      "bodySha256": "95924a7560a9cf275162105f55d6a0cb4a2d48c605657d9700ea62166298cacb"
-    },
-    {
-      "name": "碧蓝海事局幽影迷城活动专题",
-      "url": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E5%B9%BD%E5%BD%B1%E8%BF%B7%E5%9F%8E%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
-      "revisionId": 414783,
-      "revisionTimestamp": "2026-09-13T11:31:26Z",
-      "bodySha256": "c33e4645a26518aa4e2c52c670ef3ac40e5f58bd128623f63f17b67377bf38d7"
+      "name": "模块:ClothList/json",
+      "url": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
+      "revisionId": 416153,
+      "revisionTimestamp": "2026-09-30T12:18:44Z",
+      "bodySha256": "9139841e72617fb8fe54b8ad1a56de93f44d4912282cec435a8aac5abcdfbb7a"
     },
     {
       "name": "安土",
       "url": "https://wiki.biligame.com/blhx/%E5%AE%89%E5%9C%9F",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E5%AE%89%E5%9C%9F",
-      "revisionId": 414904,
-      "revisionTimestamp": "2026-09-15T01:47:19Z",
-      "bodySha256": "06cfd4c1477f53fe52cfd6d0ebad9bc8e8599aab79c982f835c5b9acc0540ee9"
-    },
-    {
-      "name": "腓特烈·卡尔",
-      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "revisionId": 414539,
-      "revisionTimestamp": "2026-09-12T04:27:20Z",
-      "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
+      "revisionId": 416092,
+      "revisionTimestamp": "2026-09-28T10:43:54Z",
+      "bodySha256": "bd8e6f1730dd702225f33ebe53fdc03c2f47e2909914ebaf66644303a2f0b4db"
     },
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
-      "revisionId": 414539,
-      "revisionTimestamp": "2026-09-12T04:27:20Z",
-      "bodySha256": "6db764f5764b982a35ddd39a4a640f625fe28d5e9943d7cd6a4e5f72ee79162b"
+      "revisionId": 415123,
+      "revisionTimestamp": "2026-09-16T08:26:36Z",
+      "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
+    },
+    {
+      "name": "腓特烈·卡尔",
+      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "revisionId": 415123,
+      "revisionTimestamp": "2026-09-16T08:26:36Z",
+      "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
+    },
+    {
+      "name": "白凤",
+      "url": "https://wiki.biligame.com/blhx/%E7%99%BD%E5%87%A4",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%99%BD%E5%87%A4",
+      "revisionId": 415831,
+      "revisionTimestamp": "2026-09-23T07:46:04Z",
+      "bodySha256": "d4c3869c4ecc0f8ac59f8a9737937f7e2133f641ec78c091d87b5bafc3f34f97"
     }
   ],
   "announcements": [
-    {
-      "id": 18214,
-      "title": "2026维护公告（2026年8月6日10:00）",
-      "date": "2026-08-06",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18214",
-      "apiUrl": "https://api.biligame.com/news/18214",
-      "bodySha256": "cc17ef50cab8695740f7b41365e4dc9bdc59ced72cd31b0acaac45df9acfb070",
-      "bodyCharacters": 2119,
-      "newSkins": [],
-      "returningSkins": [],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
-    {
-      "id": 18247,
-      "title": "2026维护公告（2026年8月13日10:00）",
-      "date": "2026-08-13",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-      "apiUrl": "https://api.biligame.com/news/18247",
-      "bodySha256": "f7d9b7aa2b04df69e0a1d100b13504bcb68d3d8c55ef8105f7638aad323348ba",
-      "bodyCharacters": 4609,
-      "newSkins": [
-        {
-          "announcedCharacter": "本宁顿",
-          "name": "全速！盛夏逐光企划",
-          "type": "L2D+",
-          "releaseDate": "2026-08-13",
-          "kind": "new",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "本宁顿-「全速！盛夏逐光企划」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "不挠",
-          "name": "慵懒的领航员小姐",
-          "type": "L2D+",
-          "releaseDate": "2026-08-13",
-          "kind": "new",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "不挠-「慵懒的领航员小姐」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "鳄",
-          "name": "只为你献上的应援",
-          "type": "L2D+",
-          "releaseDate": "2026-08-13",
-          "kind": "new",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "鳄-「只为你献上的应援」【Live2D+】"
-        }
-      ],
-      "returningSkins": [
-        {
-          "announcedCharacter": "贝劳森林",
-          "name": "水色疗愈",
-          "type": "L2D+",
-          "releaseDate": "2026-08-13",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "贝劳森林-「水色疗愈」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "安克雷奇",
-          "name": "香甜牛奶味之夜",
-          "type": "L2D+",
-          "releaseDate": "2026-08-13",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "安克雷奇-「香甜牛奶味之夜」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "马塞纳",
-          "name": "醉甜之泉",
-          "type": "L2D",
-          "releaseDate": "2026-08-13",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "马塞纳-「醉甜之泉」【Live2D】"
-        },
-        {
-          "announcedCharacter": "企业",
-          "name": "雨霁于心晴之时",
-          "type": "L2D",
-          "releaseDate": "2026-08-13",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "企业-「雨霁于心晴之时」【Live2D】"
-        },
-        {
-          "announcedCharacter": "匹兹堡",
-          "name": "斟酒女郎的赌局",
-          "type": "L2D",
-          "releaseDate": "2026-08-20",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "匹兹堡-「斟酒女郎的赌局」【Live2D】"
-        },
-        {
-          "announcedCharacter": "腓德雷卡大帝",
-          "name": "相会于盛夏之夜",
-          "type": "L2D",
-          "releaseDate": "2026-08-20",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "腓德雷卡大帝-「相会于盛夏之夜」【Live2D】"
-        },
-        {
-          "announcedCharacter": "伴尔维",
-          "name": "清凉的甜蜜滋味",
-          "type": "L2D",
-          "releaseDate": "2026-08-20",
-          "kind": "returning",
-          "announcementDate": "2026-08-13",
-          "announcementId": 18247,
-          "announcementTitle": "2026维护公告（2026年8月13日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18247",
-          "evidence": "伴尔维-「清凉的甜蜜滋味」【Live2D】"
-        }
-      ],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
     {
       "id": 18283,
       "title": "2026维护公告（2026年8月27日10:00）",
@@ -402,10 +238,138 @@
       ],
       "acceptedIds": [],
       "reviewCount": 0
+    },
+    {
+      "id": 18356,
+      "title": "2026维护公告（2026年9月17日10:00）",
+      "date": "2026-09-17",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+      "apiUrl": "https://api.biligame.com/news/18356",
+      "bodySha256": "deba046af00d90d1fba48047260916808de64bb332b56289a654cdcd669427f8",
+      "bodyCharacters": 2279,
+      "newSkins": [
+        {
+          "announcedCharacter": "金鹿号",
+          "name": "微笑的白色魅影",
+          "type": "双形态",
+          "releaseDate": "2026-09-17",
+          "kind": "new",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "金鹿号-「微笑的白色魅影」【双形态换装】"
+        },
+        {
+          "announcedCharacter": "䳆",
+          "name": "晴雨狐嫁",
+          "type": "L2D+",
+          "releaseDate": "2026-09-17",
+          "kind": "new",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "䳆-「晴雨狐嫁」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "柴郡",
+          "name": "柴郡猫的童话书迷宫",
+          "type": "L2D+",
+          "releaseDate": "2026-09-17",
+          "kind": "new",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "柴郡-「柴郡猫的童话书迷宫」【Live2D+】"
+        }
+      ],
+      "returningSkins": [
+        {
+          "announcedCharacter": "阿尔萨斯",
+          "name": "圣宵之鬼的微醺",
+          "type": "L2D",
+          "releaseDate": "2026-09-17",
+          "kind": "returning",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "阿尔萨斯-「圣宵之鬼的微醺」【Live2D】"
+        },
+        {
+          "announcedCharacter": "猃",
+          "name": "万船集怀",
+          "type": "L2D",
+          "releaseDate": "2026-09-17",
+          "kind": "returning",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "猃-「万船集怀」【Live2D】"
+        },
+        {
+          "announcedCharacter": "关岛",
+          "name": "女忍者的危险综艺秀",
+          "type": "L2D",
+          "releaseDate": "2026-09-17",
+          "kind": "returning",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "关岛-「女忍者的危险综艺秀」【Live2D】"
+        },
+        {
+          "announcedCharacter": "天狼星",
+          "name": "至高乐园的白兔",
+          "type": "L2D",
+          "releaseDate": "2026-09-17",
+          "kind": "returning",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "天狼星-「至高乐园的白兔」【Live2D】"
+        },
+        {
+          "announcedCharacter": "鳄",
+          "name": "堇色兔的狙击游戏",
+          "type": "L2D",
+          "releaseDate": "2026-09-17",
+          "kind": "returning",
+          "announcementDate": "2026-09-17",
+          "announcementId": 18356,
+          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
+          "evidence": "鳄-「堇色兔的狙击游戏」【Live2D】"
+        }
+      ],
+      "acceptedIds": [
+        "azl-a17232397b1db5bb",
+        "azl-42f27cdc76dd8814",
+        "azl-cc8c134f68d12096"
+      ],
+      "reviewCount": 0
+    },
+    {
+      "id": 18401,
+      "title": "2026维护公告（2026年9月24日10:00）",
+      "date": "2026-09-24",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18401",
+      "apiUrl": "https://api.biligame.com/news/18401",
+      "bodySha256": "10afc9b31f21e7c5968dd2d6fb87fd4bcaf96d246e46c2190c622953488b0060",
+      "bodyCharacters": 2584,
+      "newSkins": [],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 0
     }
   ],
   "warnings": [],
-  "newCount": 0,
+  "newCount": 3,
   "reviewCount": 0,
-  "latestAnnouncement": "2026-09-08"
+  "latestAnnouncement": "2026-09-24"
 }
