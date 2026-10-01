@@ -52,3 +52,9 @@ Unprovable identity/date values remain review items; they are never accepted.
 The CLI regression also checks exit status 1, failure evidence, and byte-for-byte
 preservation of the catalog, JavaScript mirror, previous review, and report.
 The old overview at `/旧版` is not a fallback for a failed current source.
+
+The loader contract accepts only the recorded one-argument `FlourPackage`
+(legacy) and `ClothListPage.js` calls. Unknown scripts or extra loader arguments
+fail before source selection, even when valid legacy rows or the known module
+are also present. Regressions cover a would-be successful no-update scan and
+CLI failure evidence with all published files preserved byte-for-byte.

@@ -116,12 +116,27 @@ test('September 30 WIKI JSON uses named fields and exact original image slots', 
 test('unknown or unavailable WIKI formats fail closed, including mixed legacy/new pages', () => {
   assert.throws(() => parseWikiCatalog(clothOverview), /缺少正文/);
   assert.throws(() => parseWikiCatalog(clothOverview.replace('ClothListPage.js', 'FutureClothList.js'), { clothListText }), /格式变化/);
+  for (const loader of ['{{JS|FutureClothList.js}}', '{{JS|ClothListPage.js|source=FutureModule}}', '{{JS|FlourPackage|source=FutureModule}}']) {
+    // Neither a stale legacy table nor a recognized module can mask another loader.
+    assert.throws(() => parseWikiCatalog(loader + pageText(pages[0]), { clothListText }), /加载器格式未知/);
+    assert.throws(() => parseWikiCatalog(loader + clothOverview, { clothListText }), /加载器格式未知/);
+  }
   assert.throws(() => parseWikiCatalog('<!-- {{JS|ClothListPage.js}} -->', { clothListText }), /格式变化/);
   for (const bad of ['{', 'null', '{}', '[]', JSON.stringify({ data: clothRecords })]) {
     assert.throws(() => parseWikiCatalog(clothOverview, { clothListText: bad }), /JSON 解析失败|格式未知/);
     // A stale embedded template must not mask a broken current data source.
     assert.throws(() => parseWikiCatalog(clothOverview + pageText(pages[0]), { clothListText: bad }), /JSON 解析失败|格式未知/);
   }
+});
+
+test('an unknown WIKI loader cannot produce a successful no-update scan from stale templates', async () => {
+  const seen = { ...baseCatalog(), skins: clothRecords.map(row => ({ id: stableSkinId(row['船名'], row['换装名称']) })) };
+  await assert.rejects(() => getUpdates(seen, { ...runOptions, fetchImpl: clothListFixtureFetch((url, data) => {
+    if (url.searchParams.get('titles') === '换装图鉴') {
+      data.query.pages[0].revisions[0].slots.main.content = clothOverview.replace('ClothListPage.js', 'FutureClothList.js') + pageText(pages[0]);
+    }
+    return data;
+  }) }), /加载器格式未知/);
 });
 
 test('WIKI JSON validates every required key and type before excluding non-L2D rows', () => {

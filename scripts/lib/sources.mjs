@@ -96,7 +96,15 @@ export function extractTemplates(wikitext, wanted) {
 // Follow only the observed source, never execute remote JS or fall back to the
 // frozen /旧版 page when the current format cannot be verified.
 const clothListTitle = '模块:ClothList/json';
-const usesClothList = text => extractTemplates(text, 'JS').some(fields => fields.length === 1 && fields[0] === 'ClothListPage.js');
+function usesClothList(text) {
+  const scripts = extractTemplates(text, 'JS');
+  // FlourPackage is present in the recorded legacy catalog. Reject other
+  // loaders before selecting a source: stale rows cannot prove completeness.
+  if (scripts.some(fields => fields.length !== 1 || !['FlourPackage', 'ClothListPage.js'].includes(fields[0]))) {
+    throw new Error('WIKI 换装图鉴 JS 加载器格式未知；不能将格式变化当作无更新');
+  }
+  return scripts.some(fields => fields[0] === 'ClothListPage.js');
+}
 
 export function parseWikiCatalog(text, { clothListText } = {}) {
   const rows = [], review = [];
