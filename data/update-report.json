@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-01T05:05:37.605Z",
-  "since": "2026-08-17",
+  "checkedAt": "2026-10-03T08:05:02.903Z",
+  "since": "2026-08-19",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -27,9 +27,9 @@
       "name": "模块:ClothList/json",
       "url": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
-      "revisionId": 416153,
-      "revisionTimestamp": "2026-09-30T12:18:44Z",
-      "bodySha256": "9139841e72617fb8fe54b8ad1a56de93f44d4912282cec435a8aac5abcdfbb7a"
+      "revisionId": 416441,
+      "revisionTimestamp": "2026-10-01T13:32:20Z",
+      "bodySha256": "926b3a95e0b04f931045d2a5957293f36a4221f6ee103c53182c7865fa77331c"
     },
     {
       "name": "安土",
@@ -42,7 +42,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 415123,
       "revisionTimestamp": "2026-09-16T08:26:36Z",
       "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
@@ -50,7 +50,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 415123,
       "revisionTimestamp": "2026-09-16T08:26:36Z",
       "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
@@ -347,11 +347,7 @@
           "evidence": "鳄-「堇色兔的狙击游戏」【Live2D】"
         }
       ],
-      "acceptedIds": [
-        "azl-a17232397b1db5bb",
-        "azl-42f27cdc76dd8814",
-        "azl-cc8c134f68d12096"
-      ],
+      "acceptedIds": [],
       "reviewCount": 0
     },
     {
@@ -369,7 +365,7 @@
     }
   ],
   "warnings": [],
-  "newCount": 3,
+  "newCount": 0,
   "reviewCount": 0,
   "latestAnnouncement": "2026-09-24"
 }
