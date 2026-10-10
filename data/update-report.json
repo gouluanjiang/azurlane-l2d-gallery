@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-07T08:37:46.225Z",
-  "since": "2026-08-23",
+  "checkedAt": "2026-10-10T08:28:33.419Z",
+  "since": "2026-08-26",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -42,7 +42,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 415123,
       "revisionTimestamp": "2026-09-16T08:26:36Z",
       "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
@@ -50,7 +50,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 415123,
       "revisionTimestamp": "2026-09-16T08:26:36Z",
       "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
@@ -362,10 +362,60 @@
       "returningSkins": [],
       "acceptedIds": [],
       "reviewCount": 0
+    },
+    {
+      "id": 18436,
+      "title": "2026维护公告（2026年10月8日10:00）",
+      "date": "2026-10-08",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18436",
+      "apiUrl": "https://api.biligame.com/news/18436",
+      "bodySha256": "c2a9484207d13f9c3891498372b13eb62d6f2913ae72c1928248d44e54fe56fb",
+      "bodyCharacters": 2050,
+      "newSkins": [],
+      "returningSkins": [
+        {
+          "announcedCharacter": "匹兹堡",
+          "name": "斟酒女郎的赌局",
+          "type": "L2D",
+          "releaseDate": "2026-10-08",
+          "kind": "returning",
+          "announcementDate": "2026-10-08",
+          "announcementId": 18436,
+          "announcementTitle": "2026维护公告（2026年10月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18436",
+          "evidence": "匹兹堡-「斟酒女郎的赌局」【Live2D】"
+        },
+        {
+          "announcedCharacter": "腓德雷卡大帝",
+          "name": "相会于盛夏之夜",
+          "type": "L2D",
+          "releaseDate": "2026-10-08",
+          "kind": "returning",
+          "announcementDate": "2026-10-08",
+          "announcementId": 18436,
+          "announcementTitle": "2026维护公告（2026年10月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18436",
+          "evidence": "腓德雷卡大帝-「相会于盛夏之夜」【Live2D】"
+        },
+        {
+          "announcedCharacter": "伴尔维",
+          "name": "清凉的甜蜜滋味",
+          "type": "L2D",
+          "releaseDate": "2026-10-08",
+          "kind": "returning",
+          "announcementDate": "2026-10-08",
+          "announcementId": 18436,
+          "announcementTitle": "2026维护公告（2026年10月8日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18436",
+          "evidence": "伴尔维-「清凉的甜蜜滋味」【Live2D】"
+        }
+      ],
+      "acceptedIds": [],
+      "reviewCount": 0
     }
   ],
   "warnings": [],
   "newCount": 0,
   "reviewCount": 0,
-  "latestAnnouncement": "2026-09-24"
+  "latestAnnouncement": "2026-10-08"
 }
