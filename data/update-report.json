@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-10T08:28:33.419Z",
-  "since": "2026-08-26",
+  "checkedAt": "2026-10-14T07:36:53.142Z",
+  "since": "2026-08-30",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -59,38 +59,12 @@
       "name": "白凤",
       "url": "https://wiki.biligame.com/blhx/%E7%99%BD%E5%87%A4",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%99%BD%E5%87%A4",
-      "revisionId": 415831,
-      "revisionTimestamp": "2026-09-23T07:46:04Z",
-      "bodySha256": "d4c3869c4ecc0f8ac59f8a9737937f7e2133f641ec78c091d87b5bafc3f34f97"
+      "revisionId": 417439,
+      "revisionTimestamp": "2026-10-11T15:35:26Z",
+      "bodySha256": "8f68ab5329989937fdc0725e802373062b1fc96c291c87fbeca1860c353e1cfb"
     }
   ],
   "announcements": [
-    {
-      "id": 18283,
-      "title": "2026维护公告（2026年8月27日10:00）",
-      "date": "2026-08-27",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18283",
-      "apiUrl": "https://api.biligame.com/news/18283",
-      "bodySha256": "845f9ebdda8b5e59119c5932bbbf90c5e649ffe40e143bcb4f5e6043040f5938",
-      "bodyCharacters": 3839,
-      "newSkins": [],
-      "returningSkins": [
-        {
-          "announcedCharacter": "光辉",
-          "name": "二人的学习时间",
-          "type": "L2D",
-          "releaseDate": "2026-08-27",
-          "kind": "returning",
-          "announcementDate": "2026-08-27",
-          "announcementId": 18283,
-          "announcementTitle": "2026维护公告（2026年8月27日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18283",
-          "evidence": "光辉-「二人的学习时间」【Live2D】"
-        }
-      ],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
     {
       "id": 18315,
       "title": "2026维护公告（2026年9月4日10:00）",
