@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-14T07:36:53.142Z",
-  "since": "2026-08-30",
+  "checkedAt": "2026-10-17T06:56:00.359Z",
+  "since": "2026-09-02",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -386,10 +386,60 @@
       ],
       "acceptedIds": [],
       "reviewCount": 0
+    },
+    {
+      "id": 18457,
+      "title": "2026维护公告（2026年10月15日10:00）",
+      "date": "2026-10-15",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18457",
+      "apiUrl": "https://api.biligame.com/news/18457",
+      "bodySha256": "88fc043cc20e0094b62abe40ed4364a75f14d50ab4e9378f4562523e94170305",
+      "bodyCharacters": 2319,
+      "newSkins": [],
+      "returningSkins": [
+        {
+          "announcedCharacter": "鳂",
+          "name": "愿望为“爱”",
+          "type": "L2D",
+          "releaseDate": "2026-10-15",
+          "kind": "returning",
+          "announcementDate": "2026-10-15",
+          "announcementId": 18457,
+          "announcementTitle": "2026维护公告（2026年10月15日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18457",
+          "evidence": "鳂-「愿望为“爱”」【Live2D】"
+        },
+        {
+          "announcedCharacter": "珍珠号",
+          "name": "魔堡中的堕天使",
+          "type": "L2D+",
+          "releaseDate": "2026-10-19",
+          "kind": "returning",
+          "announcementDate": "2026-10-15",
+          "announcementId": 18457,
+          "announcementTitle": "2026维护公告（2026年10月15日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18457",
+          "evidence": "珍珠号-「魔堡中的堕天使」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "安妮女王复仇号",
+          "name": "隐秘之拥的呼唤",
+          "type": "L2D",
+          "releaseDate": "2026-10-19",
+          "kind": "returning",
+          "announcementDate": "2026-10-15",
+          "announcementId": 18457,
+          "announcementTitle": "2026维护公告（2026年10月15日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18457",
+          "evidence": "安妮女王复仇号-「隐秘之拥的呼唤」【Live2D】"
+        }
+      ],
+      "acceptedIds": [],
+      "reviewCount": 0
     }
   ],
   "warnings": [],
   "newCount": 0,
   "reviewCount": 0,
-  "latestAnnouncement": "2026-10-08"
+  "latestAnnouncement": "2026-10-15"
 }
