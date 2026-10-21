@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-17T06:56:00.359Z",
-  "since": "2026-09-02",
+  "checkedAt": "2026-10-21T07:37:40.372Z",
+  "since": "2026-09-06",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -27,22 +27,22 @@
       "name": "模块:ClothList/json",
       "url": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
-      "revisionId": 416441,
-      "revisionTimestamp": "2026-10-01T13:32:20Z",
-      "bodySha256": "926b3a95e0b04f931045d2a5957293f36a4221f6ee103c53182c7865fa77331c"
+      "revisionId": 418272,
+      "revisionTimestamp": "2026-10-18T12:07:10Z",
+      "bodySha256": "0901f91ef3ed3d33a69d9e20ebe4c399f438fad35533a3ed45c6423cb6abc18b"
     },
     {
       "name": "安土",
       "url": "https://wiki.biligame.com/blhx/%E5%AE%89%E5%9C%9F",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E5%AE%89%E5%9C%9F",
-      "revisionId": 416092,
-      "revisionTimestamp": "2026-09-28T10:43:54Z",
-      "bodySha256": "bd8e6f1730dd702225f33ebe53fdc03c2f47e2909914ebaf66644303a2f0b4db"
+      "revisionId": 418358,
+      "revisionTimestamp": "2026-10-19T14:49:54Z",
+      "bodySha256": "510e0a775523c6d87edc9bf6b7fba59f6667c5963239359639b949946aa0af3f"
     },
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 415123,
       "revisionTimestamp": "2026-09-16T08:26:36Z",
       "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
@@ -50,7 +50,7 @@
     {
       "name": "腓特烈·卡尔",
       "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
       "revisionId": 415123,
       "revisionTimestamp": "2026-09-16T08:26:36Z",
       "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
@@ -65,19 +65,6 @@
     }
   ],
   "announcements": [
-    {
-      "id": 18315,
-      "title": "2026维护公告（2026年9月4日10:00）",
-      "date": "2026-09-04",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18315",
-      "apiUrl": "https://api.biligame.com/news/18315",
-      "bodySha256": "708767bb91eb67e086bea29edb58899a587ad5ccda016f0e44c6308f664c3e17",
-      "bodyCharacters": 1826,
-      "newSkins": [],
-      "returningSkins": [],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
     {
       "id": 18328,
       "title": "2026维护公告（2026年9月8日10:00）",

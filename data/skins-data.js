@@ -1,8 +1,8 @@
 window.L2D_SKINS_DATA = {
   "schemaVersion": 2,
-  "version": "20261017T065600359Z-865070dbe997",
+  "version": "20261021T073740372Z-865070dbe997",
   "updatedTo": "2026-09-17",
-  "checkedAt": "2026-10-17T06:56:00.359Z",
+  "checkedAt": "2026-10-21T07:37:40.372Z",
   "skins": [
     {
       "id": "azl-b36bfb850e2cff6f",
