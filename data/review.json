@@ -1,4 +1,31 @@
 {
-  "checkedAt": "2026-10-21T07:37:40.372Z",
-  "items": []
+  "checkedAt": "2026-10-24T07:16:35.896Z",
+  "items": [
+    {
+      "announcedCharacter": "水星号",
+      "name": "天使降临之日",
+      "type": "L2D+",
+      "releaseDate": "2026-10-22",
+      "kind": "new",
+      "announcementDate": "2026-10-22",
+      "announcementId": 18495,
+      "announcementTitle": "2026维护公告（2026年10月22日10:00）",
+      "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+      "evidence": "水星号-「天使降临之日」【Live2D+】",
+      "reason": "WIKI_SKIN_NOT_READY"
+    },
+    {
+      "announcedCharacter": "塞利米耶号",
+      "name": "自投罗网的预言家？",
+      "type": "L2D+",
+      "releaseDate": "2026-10-22",
+      "kind": "new",
+      "announcementDate": "2026-10-22",
+      "announcementId": 18495,
+      "announcementTitle": "2026维护公告（2026年10月22日10:00）",
+      "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+      "evidence": "塞利米耶号-「自投罗网的预言家？」【Live2D+】",
+      "reason": "WIKI_SKIN_NOT_READY"
+    }
+  ]
 }

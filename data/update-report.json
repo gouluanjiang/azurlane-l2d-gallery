@@ -1,7 +1,7 @@
 {
-  "status": "success",
-  "checkedAt": "2026-10-21T07:37:40.372Z",
-  "since": "2026-09-06",
+  "status": "review_required",
+  "checkedAt": "2026-10-24T07:16:35.896Z",
+  "since": "2026-09-09",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -32,174 +32,31 @@
       "bodySha256": "0901f91ef3ed3d33a69d9e20ebe4c399f438fad35533a3ed45c6423cb6abc18b"
     },
     {
-      "name": "安土",
-      "url": "https://wiki.biligame.com/blhx/%E5%AE%89%E5%9C%9F",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E5%AE%89%E5%9C%9F",
-      "revisionId": 418358,
-      "revisionTimestamp": "2026-10-19T14:49:54Z",
-      "bodySha256": "510e0a775523c6d87edc9bf6b7fba59f6667c5963239359639b949946aa0af3f"
-    },
-    {
-      "name": "腓特烈·卡尔",
-      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E5%BE%B7%E9%9B%B7%E5%8D%A1%C2%B7%E5%8D%A1%E5%B0%94",
-      "revisionId": 415123,
-      "revisionTimestamp": "2026-09-16T08:26:36Z",
-      "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
-    },
-    {
-      "name": "腓特烈·卡尔",
-      "url": "https://wiki.biligame.com/blhx/%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E8%85%93%E7%89%B9%E7%83%88%C2%B7%E5%8D%A1%E5%B0%94",
-      "revisionId": 415123,
-      "revisionTimestamp": "2026-09-16T08:26:36Z",
-      "bodySha256": "76094e6da72312a15c2d5dc98913dd5547ba9f21d28789271d6c1393c214572a"
-    },
-    {
       "name": "白凤",
       "url": "https://wiki.biligame.com/blhx/%E7%99%BD%E5%87%A4",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%99%BD%E5%87%A4",
       "revisionId": 417439,
       "revisionTimestamp": "2026-10-11T15:35:26Z",
       "bodySha256": "8f68ab5329989937fdc0725e802373062b1fc96c291c87fbeca1860c353e1cfb"
+    },
+    {
+      "name": "2026年10月22日10:00港区改建",
+      "url": "https://wiki.biligame.com/blhx/2026%E5%B9%B410%E6%9C%8822%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=2026%E5%B9%B410%E6%9C%8822%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
+      "revisionId": 418469,
+      "revisionTimestamp": "2026-10-20T13:32:34Z",
+      "bodySha256": "15c276b9c8bc205750f95d8b429700cb7cc926c5bd3442e3476a138680b1651b"
+    },
+    {
+      "name": "碧蓝海事局飓风与雾霭回廊活动专题",
+      "url": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E9%A3%93%E9%A3%8E%E4%B8%8E%E9%9B%BE%E9%9C%AD%E5%9B%9E%E5%BB%8A%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
+      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E9%A3%93%E9%A3%8E%E4%B8%8E%E9%9B%BE%E9%9C%AD%E5%9B%9E%E5%BB%8A%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
+      "revisionId": 418997,
+      "revisionTimestamp": "2026-10-23T11:09:06Z",
+      "bodySha256": "103952388c3203540b9115d25912885f8806d831dee9c19849360204fec68ba5"
     }
   ],
   "announcements": [
-    {
-      "id": 18328,
-      "title": "2026维护公告（2026年9月8日10:00）",
-      "date": "2026-09-08",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-      "apiUrl": "https://api.biligame.com/news/18328",
-      "bodySha256": "024e5602f54f80f6d99ca5671ddda819efd64293595744aff794c0674144b363",
-      "bodyCharacters": 6585,
-      "newSkins": [
-        {
-          "announcedCharacter": "鮟",
-          "name": "午夜的瑰色电梯",
-          "type": "双形态",
-          "releaseDate": "2026-09-08",
-          "kind": "new",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "鮟-「午夜的瑰色电梯」【双形态换装】"
-        },
-        {
-          "announcedCharacter": "腓德雷卡·卡尔",
-          "name": "午夜频道",
-          "type": "L2D+",
-          "releaseDate": "2026-09-08",
-          "kind": "new",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "腓德雷卡·卡尔-「午夜频道」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "狮",
-          "name": "夜巷中的诱引者",
-          "type": "L2D+",
-          "releaseDate": "2026-09-08",
-          "kind": "new",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "狮-「夜巷中的诱引者」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "光辉",
-          "name": "幽影徘徊之夜",
-          "type": "L2D+",
-          "releaseDate": "2026-09-08",
-          "kind": "new",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "光辉-「幽影徘徊之夜」【Live2D+】"
-        }
-      ],
-      "returningSkins": [
-        {
-          "announcedCharacter": "约克城II",
-          "name": "交错的温柔时光",
-          "type": "双形态",
-          "releaseDate": "2026-09-08",
-          "kind": "returning",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "约克城II-「交错的温柔时光」【双形态换装】"
-        },
-        {
-          "announcedCharacter": "䳆",
-          "name": "缭乱之花的忍者游戏",
-          "type": "L2D+",
-          "releaseDate": "2026-09-08",
-          "kind": "returning",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "䳆-「缭乱之花的忍者游戏」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "鳐（航空母舰）",
-          "name": "落于王座之花",
-          "type": "L2D",
-          "releaseDate": "2026-09-08",
-          "kind": "returning",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "鳐（航空母舰）-「落于王座之花」【Live2D】"
-        },
-        {
-          "announcedCharacter": "獭",
-          "name": "不会消失的换装魔法",
-          "type": "L2D",
-          "releaseDate": "2026-09-08",
-          "kind": "returning",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "獭-「不会消失的换装魔法」【Live2D】"
-        },
-        {
-          "announcedCharacter": "鳉",
-          "name": "逃脱失败……？",
-          "type": "L2D",
-          "releaseDate": "2026-09-08",
-          "kind": "returning",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "鳉-「逃脱失败……？」【Live2D】"
-        },
-        {
-          "announcedCharacter": "猏",
-          "name": "绽放于至深之夜",
-          "type": "L2D",
-          "releaseDate": "2026-09-08",
-          "kind": "returning",
-          "announcementDate": "2026-09-08",
-          "announcementId": 18328,
-          "announcementTitle": "2026维护公告（2026年9月8日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18328",
-          "evidence": "猏-「绽放于至深之夜」【Live2D】"
-        }
-      ],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
     {
       "id": 18356,
       "title": "2026维护公告（2026年9月17日10:00）",
@@ -423,10 +280,48 @@
       ],
       "acceptedIds": [],
       "reviewCount": 0
+    },
+    {
+      "id": 18495,
+      "title": "2026维护公告（2026年10月22日10:00）",
+      "date": "2026-10-22",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+      "apiUrl": "https://api.biligame.com/news/18495",
+      "bodySha256": "3f360731ad0cbd3585d250d99c4bb551cb60db9e5c4217ea2fd6ce16147274a0",
+      "bodyCharacters": 4141,
+      "newSkins": [
+        {
+          "announcedCharacter": "水星号",
+          "name": "天使降临之日",
+          "type": "L2D+",
+          "releaseDate": "2026-10-22",
+          "kind": "new",
+          "announcementDate": "2026-10-22",
+          "announcementId": 18495,
+          "announcementTitle": "2026维护公告（2026年10月22日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+          "evidence": "水星号-「天使降临之日」【Live2D+】"
+        },
+        {
+          "announcedCharacter": "塞利米耶号",
+          "name": "自投罗网的预言家？",
+          "type": "L2D+",
+          "releaseDate": "2026-10-22",
+          "kind": "new",
+          "announcementDate": "2026-10-22",
+          "announcementId": 18495,
+          "announcementTitle": "2026维护公告（2026年10月22日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+          "evidence": "塞利米耶号-「自投罗网的预言家？」【Live2D+】"
+        }
+      ],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 2
     }
   ],
   "warnings": [],
   "newCount": 0,
-  "reviewCount": 0,
-  "latestAnnouncement": "2026-10-15"
+  "reviewCount": 2,
+  "latestAnnouncement": "2026-10-22"
 }
