@@ -1,7 +1,7 @@
 {
-  "status": "review_required",
-  "checkedAt": "2026-10-24T07:16:35.896Z",
-  "since": "2026-09-09",
+  "status": "success",
+  "checkedAt": "2026-10-28T08:28:11.578Z",
+  "since": "2026-09-13",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -27,9 +27,9 @@
       "name": "模块:ClothList/json",
       "url": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
-      "revisionId": 418272,
-      "revisionTimestamp": "2026-10-18T12:07:10Z",
-      "bodySha256": "0901f91ef3ed3d33a69d9e20ebe4c399f438fad35533a3ed45c6423cb6abc18b"
+      "revisionId": 419540,
+      "revisionTimestamp": "2026-10-27T14:57:05Z",
+      "bodySha256": "d959baa55f7d99fdea7751e89f7901dfc5c1df97ace2df44873e7e7021af5377"
     },
     {
       "name": "白凤",
@@ -38,22 +38,6 @@
       "revisionId": 417439,
       "revisionTimestamp": "2026-10-11T15:35:26Z",
       "bodySha256": "8f68ab5329989937fdc0725e802373062b1fc96c291c87fbeca1860c353e1cfb"
-    },
-    {
-      "name": "2026年10月22日10:00港区改建",
-      "url": "https://wiki.biligame.com/blhx/2026%E5%B9%B410%E6%9C%8822%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=2026%E5%B9%B410%E6%9C%8822%E6%97%A510%3A00%E6%B8%AF%E5%8C%BA%E6%94%B9%E5%BB%BA",
-      "revisionId": 418469,
-      "revisionTimestamp": "2026-10-20T13:32:34Z",
-      "bodySha256": "15c276b9c8bc205750f95d8b429700cb7cc926c5bd3442e3476a138680b1651b"
-    },
-    {
-      "name": "碧蓝海事局飓风与雾霭回廊活动专题",
-      "url": "https://wiki.biligame.com/blhx/%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E9%A3%93%E9%A3%8E%E4%B8%8E%E9%9B%BE%E9%9C%AD%E5%9B%9E%E5%BB%8A%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%A2%A7%E8%93%9D%E6%B5%B7%E4%BA%8B%E5%B1%80%E9%A3%93%E9%A3%8E%E4%B8%8E%E9%9B%BE%E9%9C%AD%E5%9B%9E%E5%BB%8A%E6%B4%BB%E5%8A%A8%E4%B8%93%E9%A2%98",
-      "revisionId": 418997,
-      "revisionTimestamp": "2026-10-23T11:09:06Z",
-      "bodySha256": "103952388c3203540b9115d25912885f8806d831dee9c19849360204fec68ba5"
     }
   ],
   "announcements": [
@@ -316,12 +300,15 @@
         }
       ],
       "returningSkins": [],
-      "acceptedIds": [],
-      "reviewCount": 2
+      "acceptedIds": [
+        "azl-3df1e17fd1f33b21",
+        "azl-fe8c8b5b37f20850"
+      ],
+      "reviewCount": 0
     }
   ],
   "warnings": [],
-  "newCount": 0,
-  "reviewCount": 2,
+  "newCount": 2,
+  "reviewCount": 0,
   "latestAnnouncement": "2026-10-22"
 }

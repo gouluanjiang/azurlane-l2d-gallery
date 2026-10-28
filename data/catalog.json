@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "version": "20261024T071635896Z-865070dbe997",
-  "updatedTo": "2026-09-17",
-  "checkedAt": "2026-10-24T07:16:35.896Z",
+  "version": "20261028T082811578Z-461fe259c16b",
+  "updatedTo": "2026-10-22",
+  "checkedAt": "2026-10-28T08:28:11.578Z",
   "skins": [
     {
       "id": "azl-b36bfb850e2cff6f",
@@ -1774,7 +1774,49 @@
       "wikiImage": "File:柴郡换装5.jpg",
       "artworkSha256": "847258dc44af6f08a37df47e4b3fb455bf909ed7107e01c17195191dba8ab282",
       "artworkBytes": 659470
+    },
+    {
+      "id": "azl-3df1e17fd1f33b21",
+      "character": "水星号",
+      "name": "天使降临之日",
+      "variant": "换装",
+      "type": "L2D+",
+      "releaseDate": "2026-10-22",
+      "artworkPath": "assets/skins/azl-3df1e17fd1f33b21.jpg",
+      "guidePath": null,
+      "artworkSource": "https://patchwiki.biligame.com/images/blhx/c/c2/duhajfqnxclblgod4xlc18vua36lybn.jpg",
+      "guideSource": null,
+      "guideConfirmed": false,
+      "announcementSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+      "announcementApi": "https://api.biligame.com/news/18495",
+      "announcementBodySha256": "3f360731ad0cbd3585d250d99c4bb551cb60db9e5c4217ea2fd6ce16147274a0",
+      "announcedCharacter": "水星号",
+      "wikiSource": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
+      "wikiImage": "File:水星号换装.jpg",
+      "artworkSha256": "d440bfaf49fb039c48d1167df72b9a9174a5557f4f34188c23fa4793adb546e9",
+      "artworkBytes": 1060337
+    },
+    {
+      "id": "azl-fe8c8b5b37f20850",
+      "character": "塞利米耶号",
+      "name": "自投罗网的预言家？",
+      "variant": "换装",
+      "type": "L2D+",
+      "releaseDate": "2026-10-22",
+      "artworkPath": "assets/skins/azl-fe8c8b5b37f20850.jpg",
+      "guidePath": null,
+      "artworkSource": "https://patchwiki.biligame.com/images/blhx/e/ee/r08279mak0k8lyjvkjoujzy17mjvubc.jpg",
+      "guideSource": null,
+      "guideConfirmed": false,
+      "announcementSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18495",
+      "announcementApi": "https://api.biligame.com/news/18495",
+      "announcementBodySha256": "3f360731ad0cbd3585d250d99c4bb551cb60db9e5c4217ea2fd6ce16147274a0",
+      "announcedCharacter": "塞利米耶号",
+      "wikiSource": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
+      "wikiImage": "File:塞利米耶号换装.jpg",
+      "artworkSha256": "c91711c4b3be9f7ebee8146f73ca47a22aedb63698e5a8132b5dec64425142c3",
+      "artworkBytes": 1194516
     }
   ],
-  "reviewCount": 2
+  "reviewCount": 0
 }
