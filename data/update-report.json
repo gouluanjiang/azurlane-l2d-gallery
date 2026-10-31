@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-28T08:28:11.578Z",
-  "since": "2026-09-13",
+  "checkedAt": "2026-10-31T08:24:57.566Z",
+  "since": "2026-09-16",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -300,15 +300,12 @@
         }
       ],
       "returningSkins": [],
-      "acceptedIds": [
-        "azl-3df1e17fd1f33b21",
-        "azl-fe8c8b5b37f20850"
-      ],
+      "acceptedIds": [],
       "reviewCount": 0
     }
   ],
   "warnings": [],
-  "newCount": 2,
+  "newCount": 0,
   "reviewCount": 0,
   "latestAnnouncement": "2026-10-22"
 }
