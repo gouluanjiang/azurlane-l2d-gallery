@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-10-31T08:24:57.566Z",
-  "since": "2026-09-16",
+  "checkedAt": "2026-11-04T09:09:15.264Z",
+  "since": "2026-09-20",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -30,128 +30,9 @@
       "revisionId": 419540,
       "revisionTimestamp": "2026-10-27T14:57:05Z",
       "bodySha256": "d959baa55f7d99fdea7751e89f7901dfc5c1df97ace2df44873e7e7021af5377"
-    },
-    {
-      "name": "白凤",
-      "url": "https://wiki.biligame.com/blhx/%E7%99%BD%E5%87%A4",
-      "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E7%99%BD%E5%87%A4",
-      "revisionId": 417439,
-      "revisionTimestamp": "2026-10-11T15:35:26Z",
-      "bodySha256": "8f68ab5329989937fdc0725e802373062b1fc96c291c87fbeca1860c353e1cfb"
     }
   ],
   "announcements": [
-    {
-      "id": 18356,
-      "title": "2026维护公告（2026年9月17日10:00）",
-      "date": "2026-09-17",
-      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-      "apiUrl": "https://api.biligame.com/news/18356",
-      "bodySha256": "deba046af00d90d1fba48047260916808de64bb332b56289a654cdcd669427f8",
-      "bodyCharacters": 2279,
-      "newSkins": [
-        {
-          "announcedCharacter": "金鹿号",
-          "name": "微笑的白色魅影",
-          "type": "双形态",
-          "releaseDate": "2026-09-17",
-          "kind": "new",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "金鹿号-「微笑的白色魅影」【双形态换装】"
-        },
-        {
-          "announcedCharacter": "䳆",
-          "name": "晴雨狐嫁",
-          "type": "L2D+",
-          "releaseDate": "2026-09-17",
-          "kind": "new",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "䳆-「晴雨狐嫁」【Live2D+】"
-        },
-        {
-          "announcedCharacter": "柴郡",
-          "name": "柴郡猫的童话书迷宫",
-          "type": "L2D+",
-          "releaseDate": "2026-09-17",
-          "kind": "new",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "柴郡-「柴郡猫的童话书迷宫」【Live2D+】"
-        }
-      ],
-      "returningSkins": [
-        {
-          "announcedCharacter": "阿尔萨斯",
-          "name": "圣宵之鬼的微醺",
-          "type": "L2D",
-          "releaseDate": "2026-09-17",
-          "kind": "returning",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "阿尔萨斯-「圣宵之鬼的微醺」【Live2D】"
-        },
-        {
-          "announcedCharacter": "猃",
-          "name": "万船集怀",
-          "type": "L2D",
-          "releaseDate": "2026-09-17",
-          "kind": "returning",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "猃-「万船集怀」【Live2D】"
-        },
-        {
-          "announcedCharacter": "关岛",
-          "name": "女忍者的危险综艺秀",
-          "type": "L2D",
-          "releaseDate": "2026-09-17",
-          "kind": "returning",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "关岛-「女忍者的危险综艺秀」【Live2D】"
-        },
-        {
-          "announcedCharacter": "天狼星",
-          "name": "至高乐园的白兔",
-          "type": "L2D",
-          "releaseDate": "2026-09-17",
-          "kind": "returning",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "天狼星-「至高乐园的白兔」【Live2D】"
-        },
-        {
-          "announcedCharacter": "鳄",
-          "name": "堇色兔的狙击游戏",
-          "type": "L2D",
-          "releaseDate": "2026-09-17",
-          "kind": "returning",
-          "announcementDate": "2026-09-17",
-          "announcementId": 18356,
-          "announcementTitle": "2026维护公告（2026年9月17日10:00）",
-          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18356",
-          "evidence": "鳄-「堇色兔的狙击游戏」【Live2D】"
-        }
-      ],
-      "acceptedIds": [],
-      "reviewCount": 0
-    },
     {
       "id": 18401,
       "title": "2026维护公告（2026年9月24日10:00）",
