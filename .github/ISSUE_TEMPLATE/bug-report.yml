@@ -1,0 +1,39 @@
+name: 程序问题
+description: 程序打不开、同步失败、试玩加载不出来等
+title: "[问题] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: 提交前可以先看看 README 的“常见问题”。贴日志时请去掉电脑用户名、私人文件夹路径等个人信息。
+  - type: dropdown
+    id: area
+    attributes:
+      label: 出问题的地方
+      options:
+        - 启动 / 窗口
+        - 同步云端 / 检查最新资料 / 回退
+        - 自动更新
+        - 试玩台（模型加载、动作、语音、笔记）
+        - 图鉴页面（搜索、原图、图解）
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎么出现的
+      placeholder: 1. 打开图鉴 2. 点击…… 3. 看到……
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: 提示信息或“更新过程”中的内容
+      description: 可以复制窗口上方状态栏的提示，或“更新过程”里的最后几行。
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: “设置”里显示的“桌面版 x.y.z · N 款皮肤”

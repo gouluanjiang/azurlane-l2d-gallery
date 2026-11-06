@@ -14,6 +14,9 @@
     "sync": "node scripts/sync.mjs",
     "preview": "node scripts/preview.mjs",
     "desktop:build": "node desktop/build.mjs",
+    "desktop:sample": "node desktop/build-sample.mjs",
+    "desktop:batch": "node desktop/build-batch.mjs",
+    "audit:playable": "node scripts/audit-playable.mjs",
     "desktop:dev": "electron ."
   },
   "devDependencies": {

@@ -13,7 +13,8 @@ function localResource(value, libraryRoot, appRoot) {
   if (url.protocol !== 'l2d:' || url.hostname !== 'gallery' || url.username || url.password || url.port) throw new Error('无效页面');
   let relative = decodeURIComponent(url.pathname).replace(/^\//, '');
   if (!relative || relative === 'index.html') return path.join(appRoot, 'index.html');
-  if (relative === 'desktop/renderer.js' || relative === 'desktop/desktop.css' || relative === 'desktop/icon.png') return path.join(appRoot, relative);
+  const applicationFiles = new Set(['desktop/renderer.js','desktop/desktop.css','desktop/icon.png','desktop/tryout/index.html','desktop/tryout/player.css','desktop/tryout/player.js']);
+  if (applicationFiles.has(relative)) return path.join(appRoot, relative);
   if (relative !== 'data/skins-data.js' && !relative.startsWith('assets/')) throw new Error('文件不可访问');
   if (relative.split('/').some(part => !part || part === '.' || part === '..' || /[\\:\x00-\x1f]/.test(part) || /[. ]$/.test(part))) throw new Error('无效路径');
   if (relative.startsWith('assets/') && !/\.(?:png|jpe?g|webp|gif)$/i.test(relative)) throw new Error('不是图片');

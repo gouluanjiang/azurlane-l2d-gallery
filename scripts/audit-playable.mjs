@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import matching from '../desktop/tryout/matching.cjs';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const sourceFile=path.join(root,'verification/batch-1/sources/ships-CN.json');
+const bytes=fs.readFileSync(sourceFile);
+const source=JSON.parse(bytes);
+const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
+const records=matching.auditCatalog(catalog,source);
+const counts=Object.fromEntries(['matched','review','no-model'].map(status=>[status,records.filter(r=>r.status===status).length]));
+const manifest={schemaVersion:1,auditedAt:new Date().toISOString(),catalogVersion:catalog.version,source:{url:'https://l2d.su/data/ships-CN.json',retrievedAt:fs.statSync(sourceFile).mtime.toISOString(),generatedAt:source.generatedAt,version:source.version,sha256:createHash('sha256').update(bytes).digest('hex'),shipCount:source.ships.length},counts,records};
+fs.writeFileSync(path.join(root,'desktop/tryout/online-mapping.json'),JSON.stringify(manifest,null,2)+'\n');
+fs.writeFileSync(path.join(root,'verification/batch-1/matching-audit.json'),JSON.stringify(manifest,null,2)+'\n');
+console.log(JSON.stringify({total:records.length,...counts,review:records.filter(r=>r.status==='review').map(r=>`${r.character}「${r.name}」：${r.reason}`)},null,2));

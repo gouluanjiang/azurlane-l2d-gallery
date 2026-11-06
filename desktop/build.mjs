@@ -13,11 +13,21 @@ for (const name of ['desktop','scripts']) fs.cpSync(path.join(root,name),path.jo
 let html = fs.readFileSync(path.join(root,'index-信浓泳装起.html'),'utf8');
 html = html.replace('</head>','<link rel="stylesheet" href="desktop/desktop.css">\n</head>').replace('</body>','<script src="desktop/renderer.js"></script>\n</body>');
 fs.writeFileSync(path.join(staging,'index.html'),html);
-fs.writeFileSync(path.join(staging,'package.json'),JSON.stringify({name:'azurlane-l2d-desktop',productName:'碧蓝航线图鉴',version:'1.1.0',type:'module',main:'desktop/main.cjs',private:true}));
+// The official gallery carries the full tryout release (every verified skin).
+const { default: batch } = await import('./tryout/batch.cjs');
+const release = batch.releaseFrom(batch.fullRelease);
+const appVersion = release.version.split('-')[0];
+fs.writeFileSync(path.join(staging,'package.json'),JSON.stringify({name:'azurlane-l2d-desktop',productName:'碧蓝航线图鉴',version:appVersion,type:'module',main:'desktop/main.cjs',private:true,galleryTryout:release.number}));
 const electronVersion = JSON.parse(fs.readFileSync(path.join(root,'node_modules/electron/package.json'),'utf8')).version;
-const output = await packager({dir:staging,name:'碧蓝航线图鉴',platform:'win32',arch:'x64',electronVersion,out:path.join(buildRoot,'out'),overwrite:true,asar:false,prune:false,icon:path.join(root,'desktop/icon.ico'),appVersion:'1.1.0',appCopyright:'Local personal gallery',win32metadata:{CompanyName:'Personal software',FileDescription:'碧蓝航线 L2D 图鉴',ProductName:'碧蓝航线图鉴'}});
+const output = await packager({dir:staging,name:'碧蓝航线图鉴',platform:'win32',arch:'x64',electronVersion,out:path.join(buildRoot,'out'),overwrite:true,asar:false,prune:false,icon:path.join(root,'desktop/icon.ico'),appVersion,appCopyright:'Local personal gallery',win32metadata:{CompanyName:'Personal software',FileDescription:'碧蓝航线 L2D 图鉴',ProductName:'碧蓝航线图鉴'}});
 const destination = path.join(root,'.desktop');
 fs.mkdirSync(destination,{recursive:true});
 fs.cpSync(output[0],destination,{recursive:true});
 fs.writeFileSync(path.join(root,'verification/desktop-build.json'),JSON.stringify({builtAt:new Date().toISOString(),electronVersion,entry:path.join(root,'碧蓝航线图鉴.exe'),runtime:destination,libraryRoot:root,sharedOriginalAssets:true,requiresExternalNode:false,requiresGitHubCLI:false},null,2)+'\n');
-console.log(`完成：${path.join(root,'碧蓝航线图鉴.exe')}`);
+// Files the tryout self-test must leave untouched: earlier batch entries and every saved note.
+const protectedFiles=['data/catalog.json','data/skins-data.js','碧蓝航线试玩样例.exe','.desktop-data/tryout-notes/play-notes.v1.json',
+  ...[1,2,3,4].flatMap(n=>{const r=batch.releaseFrom(n);return [`碧蓝航线试玩台-${r.label}.exe`,`.desktop-data/${r.scope}/tryout-notes/play-notes.v1.json`];})]
+  .filter(file=>fs.existsSync(path.join(root,file))).map(file=>({file}));
+const scopeDir=path.join(root,'verification',release.scope);fs.mkdirSync(scopeDir,{recursive:true});
+fs.writeFileSync(path.join(scopeDir,'build.json'),JSON.stringify({version:release.version,batch:release.number,builtAt:new Date().toISOString(),entry:path.join(root,'碧蓝航线图鉴.exe'),runtime:destination,galleryTryout:true,samples:batch.batchFrom(JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8')),release.number).samples.map(s=>({id:s.id,character:s.character,name:s.name,forms:s.forms})),protectedFiles},null,2)+'\n');
+console.log(`完成：${path.join(root,'碧蓝航线图鉴.exe')}（含${release.label}试玩，${release.version}）`);
