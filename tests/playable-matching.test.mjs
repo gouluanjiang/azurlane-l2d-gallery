@@ -118,16 +118,20 @@ test('the full release opens every verified skin, keeps accepted order and adds 
   assert.equal(full.release.label,'全部皮肤');
   assert.deepEqual(full.samples.slice(0,44).map(s=>[s.id,s.onlineId]),fourth.samples.map(s=>[s.id,s.onlineId]));
   assert.equal(new Set(full.samples.map(s=>s.onlineId)).size,full.samples.length);
-  assert.equal(full.samples.length,catalog.skins.length);
+  // Every catalog skin is either playable or explicitly left in review with a reason.
+  assert.equal(full.samples.length,full.availability.filter(s=>s.status==='playable').length);
+  assert.equal(full.availability.length,catalog.skins.length);
+  for(const s of full.availability.filter(s=>s.status!=='playable'))assert(s.reason,s.id);
   for(const s of full.samples){assert.equal(s.forms[0].kind,'live2d');assert.equal(s.forms[0].onlineId,s.onlineId);assert(s.forms.length<=2);}
   const kinmu=full.samples.find(s=>s.id==='azl-a17232397b1db5bb');
   assert.deepEqual(kinmu.forms.map(f=>[f.onlineId,f.kind]),[['9600032','live2d'],['9600033','spine']]);
   // Frozen batches still read the September manifest only.
-  assert.equal(fourth.availability.filter(s=>s.status==='review').length,15);
+  assert.equal(fourth.availability.filter(s=>audited.has(s.id)&&s.status==='review').length,10);
+  assert.equal(fourth.availability.filter(s=>audited.has(s.id)&&s.status==='matched').length,48);
   // A skin synced later and not yet verified stays in review even in the full release.
   const synced=batch.batchFrom({...catalog,skins:[...catalog.skins,{...catalog.skins[0],id:'azl-not-verified-yet',name:'尚未核对'}]},batch.fullRelease);
   assert.equal(synced.availability.at(-1).status,'review');
-  assert.equal(synced.samples.length,catalog.skins.length);
+  assert.equal(synced.samples.length,full.samples.length);
 });
 test('form lists accept one Live2D plus at most one Spine and nothing else',()=>{
   const live={onlineId:'1',dynamicType:'live2d',isLive2dPlus:false},spine={onlineId:'2',dynamicType:'spine'};

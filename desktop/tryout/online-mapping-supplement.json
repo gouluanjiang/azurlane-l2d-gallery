@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "auditedAt": "2026-11-06T00:00:00.000Z",
-  "method": "Each l2d.su skin page opened by ID: title gives character and skin name, the model label gives LIVE2D or SPINE; Live2D+ from the site skin tile tag. The site catalog is encrypted since 2026-11 and was not decoded.",
-  "catalogVersion": "20261104T090915264Z-461fe259c16b",
+  "method": "Each l2d.su skin page opened by ID: title gives character and skin name, the model label gives LIVE2D or SPINE; Live2D+ from the site skin tile tag. The site catalog is encrypted since 2026-11 and was not decoded. Early skins (released before 2023-09-21, added from the WIKI on 2026-11-06) were found with desktop/tryout/site-lookup.cjs: the site search, the costume tile name and tag, and the model label shown after opening the tile.",
+  "catalogVersion": "20261106T055525999Z-92156e18d281",
   "records": [
     {
       "id": "azl-b6c280ddd51178af",
@@ -327,6 +327,2364 @@
           "dynamicType": "live2d",
           "isLive2d": true,
           "isLive2dPlus": true
+        }
+      ]
+    },
+    {
+      "id": "azl-3952c66d501a9c8b",
+      "character": "爱宕",
+      "name": "盛夏进行曲",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "爱宕",
+          "name": "盛夏进行曲",
+          "onlineId": "303121",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-443d0755b5620d4a",
+      "character": "圣路易斯",
+      "name": "春之华",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "圣路易斯",
+          "name": "春之华",
+          "onlineId": "102131",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-99f4a2f5daca3378",
+      "character": "齐柏林伯爵",
+      "name": "沙滩上的乌尔德",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "齐柏林伯爵",
+          "name": "沙滩上的乌尔德",
+          "onlineId": "407011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-819997dd24fc8419",
+      "character": "Z46",
+      "name": "夏之初体验",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "Z46",
+          "name": "夏之初体验",
+          "onlineId": "401461",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-46be05ba9235454b",
+      "character": "埃米尔·贝尔汀",
+      "name": "蓝色海岸",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃米尔·贝尔汀",
+          "name": "蓝色海岸",
+          "onlineId": "802011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-6673c448f0c6021d",
+      "character": "敦刻尔克",
+      "name": "甜蜜夏日",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "敦刻尔克",
+          "name": "甜蜜夏日",
+          "onlineId": "904011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2112ca4ec96518d4",
+      "character": "提尔比茨",
+      "name": "冰雪消融的夏日",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "提尔比茨",
+          "name": "冰雪消融的夏日",
+          "onlineId": "405021",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-13a5e0c4171101dd",
+      "character": "标枪",
+      "name": "沙滩野餐会",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "标枪",
+          "name": "沙滩野餐会",
+          "onlineId": "201212",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-1b6c9c240e0a00b4",
+      "character": "半人马",
+      "name": "沙滨的水之精灵",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "半人马",
+          "name": "沙滨的水之精灵",
+          "onlineId": "206041",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-e71f398843f58b25",
+      "character": "德意志",
+      "name": "艳阳下的“福利”时间",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "德意志",
+          "name": "艳阳下的“福利”时间",
+          "onlineId": "403042",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-260bd13dc6c7f573",
+      "character": "吹雪",
+      "name": "MusicPixy",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "吹雪",
+          "name": "MusicPixy",
+          "onlineId": "301013",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-453a3b2a14680965",
+      "character": "大凤",
+      "name": "毒苹果",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "大凤",
+          "name": "毒苹果",
+          "onlineId": "307071",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-599099103309917e",
+      "character": "克利夫兰",
+      "name": "骑士之夜",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "克利夫兰",
+          "name": "骑士之夜",
+          "onlineId": "102092",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-e3ff15bf7df792dd",
+      "character": "火奴鲁鲁",
+      "name": "盛夏的「灾难」",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "火奴鲁鲁",
+          "name": "盛夏的「灾难」",
+          "onlineId": "102122",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7164392003dc9c20",
+      "character": "埃尔德里奇",
+      "name": "正月的牵手",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃尔德里奇",
+          "name": "正月的牵手",
+          "onlineId": "101263",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-aba3b95064b49bc8",
+      "character": "圣路易斯",
+      "name": "雪下之饮",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "圣路易斯",
+          "name": "雪下之饮",
+          "onlineId": "102132",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-ac4bd4fa62f0989e",
+      "character": "伊吹",
+      "name": "永梦的青女",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "伊吹",
+          "name": "永梦的青女",
+          "onlineId": "399011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2c29e9386597b18e",
+      "character": "贝尔法斯特",
+      "name": "彩云之玫瑰",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "贝尔法斯特",
+          "name": "彩云之玫瑰",
+          "onlineId": "202121",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-3b3e0236f831ea9f",
+      "character": "拉菲",
+      "name": "白兔迎春",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "拉菲",
+          "name": "白兔迎春",
+          "onlineId": "101173",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-ca6fead294e4098a",
+      "character": "太原",
+      "name": "金蛇闹春",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "太原",
+          "name": "金蛇闹春",
+          "onlineId": "501041",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-75743f8fbf168a90",
+      "character": "独角兽",
+      "name": "憧憬的约会日",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "独角兽",
+          "name": "憧憬的约会日",
+          "onlineId": "206033",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-9435fa9e2077fc0e",
+      "character": "俾斯麦",
+      "name": "铁血的辉光",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "俾斯麦",
+          "name": "铁血的辉光",
+          "onlineId": "405011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-cc42722aafb44536",
+      "character": "皇家方舟",
+      "name": "晚会的守护者",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "皇家方舟",
+          "name": "晚会的守护者",
+          "onlineId": "207022",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-50ed319001230dd8",
+      "character": "天狼星",
+      "name": "盛夏的Seirios",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "天狼星",
+          "name": "盛夏的Seirios",
+          "onlineId": "202202",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-195734b72a526a96",
+      "character": "火奴鲁鲁",
+      "name": "两人的夏日祭",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "火奴鲁鲁",
+          "name": "两人的夏日祭",
+          "onlineId": "102124",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-0ab9e609b440437b",
+      "character": "吸血鬼",
+      "name": "夜姬的正装？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "吸血鬼",
+          "name": "夜姬的正装？",
+          "onlineId": "201233",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-80a34d373fd0ce0f",
+      "character": "黑太子",
+      "name": "WhitePrincess",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "黑太子",
+          "name": "WhitePrincess",
+          "onlineId": "202241",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-0d2085ea28952173",
+      "character": "扎拉",
+      "name": "泳池边的“偶遇”",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "扎拉",
+          "name": "泳池边的“偶遇”",
+          "onlineId": "603021",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-77ad236d43d893a0",
+      "character": "翔鹤",
+      "name": "散花舞鹤",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "翔鹤",
+          "name": "散花舞鹤",
+          "onlineId": "307051",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-3a7d80591b5abd9c",
+      "character": "絮库夫",
+      "name": "购物时光！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "絮库夫",
+          "name": "购物时光！",
+          "onlineId": "808011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-5fc007b15b535a0d",
+      "character": "格奈森瑙",
+      "name": "梦魇魅影",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "格奈森瑙",
+          "name": "梦魇魅影",
+          "onlineId": "404021",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-0019991a63537ff0",
+      "character": "埃尔德里奇",
+      "name": "喵喵偶像团？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃尔德里奇",
+          "name": "喵喵偶像团？",
+          "onlineId": "101264",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-8a09bd614f549ec6",
+      "character": "宁海",
+      "name": "东煌姐妹！·N",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "宁海",
+          "name": "东煌姐妹！·N",
+          "onlineId": "502023",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a09b135c2ff15df0",
+      "character": "平海",
+      "name": "东煌姐妹！·P",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "平海",
+          "name": "东煌姐妹！·P",
+          "onlineId": "502033",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-00e4f59cff258629",
+      "character": "斯佩伯爵海军上将",
+      "name": "铁血♥最可爱",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "斯佩伯爵海军上将",
+          "name": "铁血♥最可爱",
+          "onlineId": "403054",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-acc23ef6f4406948",
+      "character": "骏河",
+      "name": "百花庆云",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "骏河",
+          "name": "百花庆云",
+          "onlineId": "305141",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-ac583846d615e3c0",
+      "character": "龙凤",
+      "name": "凤舞新年",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "龙凤",
+          "name": "凤舞新年",
+          "onlineId": "306071",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-f911309edf91d496",
+      "character": "能代",
+      "name": "祭典的秘境？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "能代",
+          "name": "祭典的秘境？",
+          "onlineId": "302211",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-50bd15d85e786309",
+      "character": "大凤",
+      "name": "凤鸣春晓",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "大凤",
+          "name": "凤鸣春晓",
+          "onlineId": "307072",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-be66ae0ff314bcf5",
+      "character": "吾妻",
+      "name": "细语春霞",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "吾妻",
+          "name": "细语春霞",
+          "onlineId": "399041",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-e1f3fa6681b5cd44",
+      "character": "雪风",
+      "name": "冬之雪风",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "雪风",
+          "name": "冬之雪风",
+          "onlineId": "301162",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-15e4809a72d0f45e",
+      "character": "欧若拉",
+      "name": "渝城秘技",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "欧若拉",
+          "name": "渝城秘技",
+          "onlineId": "202153",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-40db937192285d9c",
+      "character": "威严",
+      "name": "囚牢里的危险兔",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "威严",
+          "name": "囚牢里的危险兔",
+          "onlineId": "701021",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-1b68248503296cd5",
+      "character": "库珀",
+      "name": "烈日的网球场",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "库珀",
+          "name": "烈日的网球场",
+          "onlineId": "101441",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-f06bdd54bb3278dc",
+      "character": "Z46",
+      "name": "少女的借物竞赛",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "Z46",
+          "name": "少女的借物竞赛",
+          "onlineId": "401462",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-125be72b92b43329",
+      "character": "埃米尔·贝尔汀",
+      "name": "「女仆」浪漫",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃米尔·贝尔汀",
+          "name": "「女仆」浪漫",
+          "onlineId": "802012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7b16429a892d6167",
+      "character": "恶毒",
+      "name": "秘密基地的Mercredi",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "恶毒",
+          "name": "秘密基地的Mercredi",
+          "onlineId": "901112",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-1d3a4da26a5a50ed",
+      "character": "黎塞留",
+      "name": "潮风的Fleuron",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "黎塞留",
+          "name": "潮风的Fleuron",
+          "onlineId": "805011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-c4741cbbf50d9c05",
+      "character": "让·巴尔",
+      "name": "秘密的Aprèsmidi",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "让·巴尔",
+          "name": "秘密的Aprèsmidi",
+          "onlineId": "905012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-feaaaac7f90d673e",
+      "character": "平海",
+      "name": "甜蜜嫣红",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "平海",
+          "name": "甜蜜嫣红",
+          "onlineId": "502035",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7cd6f476d99b071f",
+      "character": "圣路易斯",
+      "name": "LuxuryHandle",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "圣路易斯",
+          "name": "LuxuryHandle",
+          "onlineId": "102133",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-341d3b0cdbe9e4c3",
+      "character": "赫敏",
+      "name": "温柔的纯白天使",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "赫敏",
+          "name": "温柔的纯白天使",
+          "onlineId": "202271",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-4a9f6eadd8c44d48",
+      "character": "赫敏",
+      "name": "纯白的悠闲假日",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "赫敏",
+          "name": "纯白的悠闲假日",
+          "onlineId": "202272",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-225ec9d555ae7ae1",
+      "character": "樫野",
+      "name": "温泉放松时间",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "樫野",
+          "name": "温泉放松时间",
+          "onlineId": "319011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-b99ae71a530037ad",
+      "character": "絮库夫",
+      "name": "Loisirsbalneaires",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "絮库夫",
+          "name": "Loisirsbalneaires",
+          "onlineId": "808012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-8ee3e38efa33eed2",
+      "character": "埃塞克斯",
+      "name": "Craftfairytail",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃塞克斯",
+          "name": "Craftfairytail",
+          "onlineId": "107092",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a4ea02452d6e9886",
+      "character": "巴尔的摩",
+      "name": "夜风minuet",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "巴尔的摩",
+          "name": "夜风minuet",
+          "onlineId": "103163",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7e93f0e697e0e579",
+      "character": "绫波",
+      "name": "黯然礼装",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "绫波",
+          "name": "黯然礼装",
+          "onlineId": "331051",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-49c18f7f3ac3109d",
+      "character": "路易九世",
+      "name": "华服的圣骑士",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "路易九世",
+          "name": "华服的圣骑士",
+          "onlineId": "899011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-ba81a19e35d05506",
+      "character": "独角兽",
+      "name": "天使的MyNight",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "独角兽",
+          "name": "天使的MyNight",
+          "onlineId": "206035",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-da336a4308e1a2bd",
+      "character": "Z46",
+      "name": "未知的闪亮舞台",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "Z46",
+          "name": "未知的闪亮舞台",
+          "onlineId": "401463",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-11c4d6866ae212b5",
+      "character": "彼得·史特拉塞",
+      "name": "节庆的Chronos",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "彼得·史特拉塞",
+          "name": "节庆的Chronos",
+          "onlineId": "407031",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-03c839953aa2cfdc",
+      "character": "黎塞留",
+      "name": "常緑Rêveprophétique",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "黎塞留",
+          "name": "常緑Rêveprophétique",
+          "onlineId": "805012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a65ab4ae1c29e05b",
+      "character": "让·巴尔",
+      "name": "舶刀Premièreneige",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "让·巴尔",
+          "name": "舶刀Premièreneige",
+          "onlineId": "905013",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7a10e4a357a5f09d",
+      "character": "布莱默顿",
+      "name": "功夫少女！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "布莱默顿",
+          "name": "功夫少女！",
+          "onlineId": "103242",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-5c20f0d8191fe021",
+      "character": "柴郡",
+      "name": "音乐绚烂CaitSith",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "柴郡",
+          "name": "音乐绚烂CaitSith",
+          "onlineId": "299032",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-11809fad64abeefc",
+      "character": "光荣",
+      "name": "凉夜香雪",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "光荣",
+          "name": "凉夜香雪",
+          "onlineId": "207062",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-3629e97d1b20c683",
+      "character": "拉·加利索尼埃",
+      "name": "春晓醉梦",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "拉·加利索尼埃",
+          "name": "春晓醉梦",
+          "onlineId": "902012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-cda10e59ef909661",
+      "character": "艾伦·萨姆纳",
+      "name": "CharmingRabbit",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "艾伦·萨姆纳",
+          "name": "CharmingRabbit",
+          "onlineId": "101451",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-01dd674b6869422b",
+      "character": "博伊西",
+      "name": "羞怯的蓝宝石",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "博伊西",
+          "name": "羞怯的蓝宝石",
+          "onlineId": "102291",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-f2cb221d36caf195",
+      "character": "威悉",
+      "name": "黯调铅华",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "威悉",
+          "name": "黯调铅华",
+          "onlineId": "406012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-6cdda6b111aedb97",
+      "character": "波拉",
+      "name": "水边的事故？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "波拉",
+          "name": "水边的事故？",
+          "onlineId": "603031",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-5f257ee413d73c1d",
+      "character": "维托里奥·维内托",
+      "name": "拉斯佩齐亚之花",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "维托里奥·维内托",
+          "name": "拉斯佩齐亚之花",
+          "onlineId": "605011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2fcebcfe54549772",
+      "character": "北卡罗来纳",
+      "name": "秘密的换装练习？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "北卡罗来纳",
+          "name": "秘密的换装练习？",
+          "onlineId": "105121",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-69a4ab243509fd51",
+      "character": "里诺",
+      "name": "bunny·reno！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "里诺",
+          "name": "bunny·reno！",
+          "onlineId": "102263",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-68f687853f4cb60c",
+      "character": "阿贝克隆比",
+      "name": "坏坏兔的恶作剧！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "阿贝克隆比",
+          "name": "坏坏兔的恶作剧！",
+          "onlineId": "213042",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-865c21daa8d274ff",
+      "character": "岛风",
+      "name": "最速兔兔的邀请函(?)",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "岛风",
+          "name": "最速兔兔的邀请函(?)",
+          "onlineId": "301291",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-951074ac6388fd5f",
+      "character": "恶毒",
+      "name": "懒懒的白兔",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "恶毒",
+          "name": "懒懒的白兔",
+          "onlineId": "901113",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-b1804350247c42a6",
+      "character": "柴郡",
+      "name": "冰雪公主",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "柴郡",
+          "name": "冰雪公主",
+          "onlineId": "299033",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-d04bf577a264135c",
+      "character": "拉·加利索尼埃",
+      "name": "黑猫与南瓜之夜",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "拉·加利索尼埃",
+          "name": "黑猫与南瓜之夜",
+          "onlineId": "902013",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-e1ccc1a1eeb8b76f",
+      "character": "欧根亲王",
+      "name": "FinalLap",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "欧根亲王",
+          "name": "FinalLap",
+          "onlineId": "403034",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-8be9ca7e0bf7b897",
+      "character": "企业",
+      "name": "WindCatcher",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "企业",
+          "name": "WindCatcher",
+          "onlineId": "107066",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-bc1bd37ce909a1f0",
+      "character": "布莱默顿",
+      "name": "HappyDating！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "布莱默顿",
+          "name": "HappyDating！",
+          "onlineId": "103243",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-3f4674fbd5b4b9b9",
+      "character": "骏河",
+      "name": "“不情愿”的圣夜祭",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "骏河",
+          "name": "“不情愿”的圣夜祭",
+          "onlineId": "305143",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-d493192e319be907",
+      "character": "阿达尔伯特亲王",
+      "name": "闭店后的特别时光",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "阿达尔伯特亲王",
+          "name": "闭店后的特别时光",
+          "onlineId": "403101",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2e748c0418a6a689",
+      "character": "乌尔里希·冯·胡滕",
+      "name": "MädchenTrümmer",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "乌尔里希·冯·胡滕",
+          "name": "MädchenTrümmer",
+          "onlineId": "405031",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-74f41fd161d6c345",
+      "character": "伊丽莎白女王",
+      "name": "Maid·My·Highness",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "伊丽莎白女王",
+          "name": "Maid·My·Highness",
+          "onlineId": "205015",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-736a2e96dfb7d21c",
+      "character": "赤城",
+      "name": "朝凰来仪",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "赤城",
+          "name": "朝凰来仪",
+          "onlineId": "307014",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-593a43f2cb23d6f0",
+      "character": "卡律布狄斯",
+      "name": "治愈的红闺",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "卡律布狄斯",
+          "name": "治愈的红闺",
+          "onlineId": "202301",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a9d1af19b45fe7a6",
+      "character": "基洛夫",
+      "name": "疾速截击",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "基洛夫",
+          "name": "疾速截击",
+          "onlineId": "702042",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-681902430a736690",
+      "character": "喀琅施塔得",
+      "name": "突击行动开始！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "喀琅施塔得",
+          "name": "突击行动开始！",
+          "onlineId": "718011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-0e940e6d8ee6c611",
+      "character": "威严",
+      "name": "突袭！黑暗基地！",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站皮肤名为「突袭！暗黑基地！」，与 WIKI 的「突袭！黑暗基地！」字序不同；同一舰船同主题仅此一款，2026-11-06 人工打开页面核对",
+      "candidates": [
+        {
+          "character": "威严",
+          "name": "突袭！黑暗基地！",
+          "onlineId": "701023",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-f618b187a8ac5aed",
+      "character": "埃姆登",
+      "name": "黑白的夜之主",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃姆登",
+          "name": "黑白的夜之主",
+          "onlineId": "402071",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2485a0f24a68d12d",
+      "character": "吕佐夫",
+      "name": "永夜的赤之贵族",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "吕佐夫",
+          "name": "永夜的赤之贵族",
+          "onlineId": "404041",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-5398f9c6c973bd59",
+      "character": "埃吉尔",
+      "name": "港区的龙女仆",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃吉尔",
+          "name": "港区的龙女仆",
+          "onlineId": "499051",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-b99503adad47b5ad",
+      "character": "欧根亲王",
+      "name": "沉醉于夜",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "欧根亲王",
+          "name": "沉醉于夜",
+          "onlineId": "403035",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-d601e365fb29e56e",
+      "character": "前卫",
+      "name": "摇摆不定的伪装",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "前卫",
+          "name": "摇摆不定的伪装",
+          "onlineId": "205131",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-4f5599172d78d5b1",
+      "character": "罗恩",
+      "name": "苍翠的安眠曲",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "罗恩",
+          "name": "苍翠的安眠曲",
+          "onlineId": "499012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2c3f8c966ea07f65",
+      "character": "岛风",
+      "name": "不思议国度的白兔",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "岛风",
+          "name": "不思议国度的白兔",
+          "onlineId": "301292",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-1a39ec205cbac9f6",
+      "character": "大凤",
+      "name": "放学后的甜蜜时光",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "大凤",
+          "name": "放学后的甜蜜时光",
+          "onlineId": "307074",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-cd4c66b0008cb471",
+      "character": "罗马",
+      "name": "午夜的白天鹅",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "罗马",
+          "name": "午夜的白天鹅",
+          "onlineId": "605031",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-161940401fa4e925",
+      "character": "酒匂",
+      "name": "团子的诱惑",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "酒匂",
+          "name": "团子的诱惑",
+          "onlineId": "302231",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-8c1d74a2ed4b130a",
+      "character": "樫野",
+      "name": "绊倒的迷糊女仆",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "樫野",
+          "name": "绊倒的迷糊女仆",
+          "onlineId": "319012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-f87421f4a0a087af",
+      "character": "巴尔的摩",
+      "name": "迅疾的蓝星",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "巴尔的摩",
+          "name": "迅疾的蓝星",
+          "onlineId": "103165",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-13a8e1ac597b119c",
+      "character": "信浓",
+      "name": "轰鸣的银轮",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "信浓",
+          "name": "轰鸣的银轮",
+          "onlineId": "307082",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-641d72c0c9d6846e",
+      "character": "雅努斯",
+      "name": "万圣喵喵惊悚夜",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "雅努斯",
+          "name": "万圣喵喵惊悚夜",
+          "onlineId": "201351",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-26d81048a15fea8d",
+      "character": "布莱默顿",
+      "name": "悠然放松时光",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "布莱默顿",
+          "name": "悠然放松时光",
+          "onlineId": "103244",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-31943e854012e903",
+      "character": "北安普敦II",
+      "name": "竞泳之星",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "北安普敦II",
+          "name": "竞泳之星",
+          "onlineId": "103261",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-c9be421006455066",
+      "character": "布雷斯特",
+      "name": "苍海织歌",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "布雷斯特",
+          "name": "苍海织歌",
+          "onlineId": "899031",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7039af63d17d7db6",
+      "character": "海因里希亲王",
+      "name": "泳池边的救生兔(?)",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "海因里希亲王",
+          "name": "泳池边的救生兔(?)",
+          "onlineId": "403092",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-3606669bf1a7c1d7",
+      "character": "能代",
+      "name": "阳光·沙滩·假日",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "能代",
+          "name": "阳光·沙滩·假日",
+          "onlineId": "302216",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-e64881b431ce642f",
+      "character": "埃吉尔",
+      "name": "金龙腾祥云",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "埃吉尔",
+          "name": "金龙腾祥云",
+          "onlineId": "499052",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-d2b108307f169aa1",
+      "character": "鲁普雷希特亲王",
+      "name": "腾龙戏春？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "鲁普雷希特亲王",
+          "name": "腾龙戏春？",
+          "onlineId": "499071",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-f874cfc6911bfeba",
+      "character": "应瑞",
+      "name": "松戏梅·其上",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "应瑞",
+          "name": "松戏梅·其上",
+          "onlineId": "502042",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-460b363c45257bc2",
+      "character": "肇和",
+      "name": "松戏梅·其下",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "肇和",
+          "name": "松戏梅·其下",
+          "onlineId": "502052",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-c5cc2cfc2b94b328",
+      "character": "易北",
+      "name": "清纯的“反派小姐”？",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "易北",
+          "name": "清纯的“反派小姐”？",
+          "onlineId": "406022",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a4a3a43109304a9c",
+      "character": "玛莉萝丝",
+      "name": "热气蒸腾的女神",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "玛莉萝丝",
+          "name": "热气蒸腾的女神",
+          "onlineId": "10600012",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-93033b763579516e",
+      "character": "安克雷奇",
+      "name": "海豚、海洋、游泳课",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "安克雷奇",
+          "name": "海豚、海洋、游泳课",
+          "onlineId": "199031",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-8b6c64d12dfda285",
+      "character": "大凤",
+      "name": "海滨的白日美梦",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "大凤",
+          "name": "海滨的白日美梦",
+          "onlineId": "307075",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-1baf407a4c7cb15b",
+      "character": "库尔斯克",
+      "name": "雾中雪狼",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "库尔斯克",
+          "name": "雾中雪狼",
+          "onlineId": "703021",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-17d2e7f7a1e1ee90",
+      "character": "雷根斯堡",
+      "name": "暗之龙，光之岸",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "雷根斯堡",
+          "name": "暗之龙，光之岸",
+          "onlineId": "402101",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-fecd4a767ff0bcdb",
+      "character": "威严",
+      "name": "野兔和蒸汽房",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "威严",
+          "name": "野兔和蒸汽房",
+          "onlineId": "701025",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-e630e141c65640a2",
+      "character": "新泽西",
+      "name": "盛夏的闲暇",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "新泽西",
+          "name": "盛夏的闲暇",
+          "onlineId": "105172",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-367c3e755c8a5296",
+      "character": "天城",
+      "name": "红鸢的闲暇片刻",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "天城",
+          "name": "红鸢的闲暇片刻",
+          "onlineId": "304052",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-fe2e0f9d347c3db4",
+      "character": "戈里齐亚",
+      "name": "办公室的“隔阂”",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "戈里齐亚",
+          "name": "办公室的“隔阂”",
+          "onlineId": "603061",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-470812b7dc5a6cdc",
+      "character": "海伦娜",
+      "name": "耀眼的波纹",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "海伦娜",
+          "name": "耀眼的波纹",
+          "onlineId": "102053",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-c872e54147466b81",
+      "character": "克莱蒙梭",
+      "name": "金日煦风",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "克莱蒙梭",
+          "name": "金日煦风",
+          "onlineId": "905021",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-2df2d9b6e08ed32c",
+      "character": "企业",
+      "name": "天际的潜水者",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "企业",
+          "name": "天际的潜水者",
+          "onlineId": "137060",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-0efac432ae165697",
+      "character": "白龙",
+      "name": "丝竹喧阗",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "白龙",
+          "name": "丝竹喧阗",
+          "onlineId": "399052",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-97f2e4ba038aa4c6",
+      "character": "初月",
+      "name": "八月恋夏",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "初月",
+          "name": "八月恋夏",
+          "onlineId": "301891",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7569ca635528b01d",
+      "character": "樫野",
+      "name": "花绽之乐章",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站逐页查找一致（2026-11-06）",
+      "candidates": [
+        {
+          "character": "樫野",
+          "name": "花绽之乐章",
+          "onlineId": "319013",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
         }
       ]
     }
