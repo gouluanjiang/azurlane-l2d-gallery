@@ -1,0 +1,39 @@
+name: 皮肤缺漏或信息错误
+description: 有 L2D 皮肤没收录、信息不对，或试玩打开的不是这款皮肤
+title: "[皮肤] "
+labels: ["皮肤数据"]
+body:
+  - type: markdown
+    attributes:
+      value: 感谢反馈！请尽量写清是哪款皮肤；有官方公告或 WIKI 链接会更快核对。
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 问题类型
+      options:
+        - 图鉴缺少某款 L2D / L2D+ / 双形态皮肤
+        - 角色、皮肤名、类型或实装日期不对
+        - 原图或图解不对、打不开
+        - 试玩打开的不是这款皮肤，或一直显示“待核对”
+        - 其他
+    validations:
+      required: true
+  - type: input
+    id: skin
+    attributes:
+      label: 角色与皮肤名
+      placeholder: 例如：瑟堡「布偶熊里面的是……？」
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: 参考链接（可选）
+      description: 官方维护公告、WIKI 页面或 l2d.su 皮肤页面
+  - type: textarea
+    id: detail
+    attributes:
+      label: 具体情况
+      description: 你看到的和你预期的分别是什么？
+    validations:
+      required: true

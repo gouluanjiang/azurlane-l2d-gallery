@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 查看常见问题
+    url: https://github.com/gouluanjiang/azurlane-l2d-gallery#常见问题
+    about: 待核对、加载缓慢、新皮肤多久出现等常见情况的说明
