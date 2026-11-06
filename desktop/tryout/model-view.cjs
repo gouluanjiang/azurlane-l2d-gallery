@@ -17,6 +17,10 @@ const embeddedStyle = `
   .model-panel .model-collapsible-content.open { max-height: none !important; }
   .model-panel { display: block !important; overflow: auto !important; }
   .share-skin-button, .favorite-skin-button { display: none !important; }
+  /* 2026-11 site layout: a shared header (game switcher) now overlays the compact
+     sidebar, so a click on the "动作" tab landed on the switcher and left the skin. */
+  .browser-shared-header { display: none !important; }
+  .favorite-action-button, .model-floating-actions button[aria-label="分享当前皮肤"] { display: none !important; }
 `;
 const shortUrl = value => { try { const u = new URL(value); return u.origin + u.pathname; } catch { return ''; } };
 
@@ -80,7 +84,7 @@ class ModelView extends EventEmitter {
     const current = () => generation === this.generation && wc === this.contents && !wc.isDestroyed();
     wc.on('will-attach-webview', event => event.preventDefault());
     for (const name of ['will-navigate','will-redirect']) wc.on(name, (event, url) => { if (!allowedModelUrl(url, sample)) event.preventDefault(); });
-    wc.on('did-navigate-in-page', (_event, url, mainFrame) => { if (mainFrame && current() && !allowedModelUrl(url,sample)) this.fail('页面切换到了其他皮肤，请重新载入当前样例。','MODEL_CHANGED'); });
+    wc.on('did-navigate-in-page', (_event, url, mainFrame) => { if (mainFrame && current() && !allowedModelUrl(url,sample)) this.fail('页面切换到了其他皮肤，请重新载入当前样例。',`MODEL_CHANGED ${shortUrl(url)}`); });
     wc.on('console-message', details => { if (current() && details.level === 'error') { this.attempt.consoleErrors.push(details.message.slice(0,500)); this.attempt.consoleErrors = this.attempt.consoleErrors.slice(-15); } });
     wc.on('render-process-gone', (_event, details) => { if (current()) this.fail('模型画面已停止，可重新载入。', `RENDERER_${details.reason}`); });
     wc.on('did-fail-load', (_event, code, description, _url, mainFrame) => { if (current() && mainFrame && code !== -3) this.fail('在线页面未能打开，请检查网络后重试。',description); });

@@ -44,12 +44,14 @@ test('literal markup in a note remains text in storage',()=>storeTest(store=>{
 test('two explicit sample mappings require the matching stable identity and skin name',()=>{
   const catalog={skins:definitions.map(d=>({...d,guidePath:null}))};
   const samples=samplesFrom(catalog);assert.equal(samples.length,2);
-  assert.equal(samples[0].url,'https://l2d.su/cn/skins/818011/');
+  assert.equal(samples[0].url,'https://l2d.su/azurlane/skins/818011/');
   catalog.skins[0].name='另一款换装';assert.throws(()=>samplesFrom(catalog),/不匹配/);
-  for(const url of ['https://l2d.su/cn/skins/205162/','https://l2d.su.evil.test/cn/skins/818011/','file:///C:/data','https://user@l2d.su/cn/skins/818011/'])assert.equal(allowedModelUrl(url,samples[0]),false);
+  // The site rewrites the legacy /cn/ path to /azurlane/; both forms of the same skin stay allowed.
+  for(const url of ['https://l2d.su/azurlane/skins/818011/','https://l2d.su/cn/skins/818011/'])assert.equal(allowedModelUrl(url,samples[0]),true);
+  for(const url of ['https://l2d.su/cn/skins/205162/','https://l2d.su/azurlane/skins/205162/','https://l2d.su/azurlane/skins/818011/?x=1','https://l2d.su/other/skins/818011/','https://l2d.su.evil.test/azurlane/skins/818011/','file:///C:/data','https://user@l2d.su/azurlane/skins/818011/'])assert.equal(allowedModelUrl(url,samples[0]),false);
 });
 test('HTML load and an enabled artwork button cannot count as an interactive model',()=>{
-  const sample={url:'https://l2d.su/cn/skins/818011/',character:'瑟堡'};
+  const sample={url:'https://l2d.su/azurlane/skins/818011/',onlineId:'818011',character:'瑟堡'};
   const state={url:sample.url,title:'瑟堡',modelLoaded:false,canvas:{width:800,height:600},loading:'',error:'',staticButtonEnabled:true};
   assert.equal(modelIsReady(state,sample),false);
   state.modelLoaded=true;assert.equal(modelIsReady(state,sample),true);

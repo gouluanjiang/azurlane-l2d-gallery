@@ -48,7 +48,8 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
         const before=await motion();assert.notEqual(before.name,'touch_head');
         await pointer(point);
         const observed=await until(async()=>{const m=await motion();return m.name==='touch_head'&&m.playing&&m.progress>=0?m:false;},'native head animation '+sample.onlineId,10000);
-        await pause(250);const advanced=await motion();assert.equal(advanced.name,'touch_head');assert(advanced.progress>observed.progress,'Head animation advances after canvas click');
+        // The 2026-11 site refreshes its progress value less often; allow up to 3 s for it to move.
+        const advanced=await until(async()=>{const m=await motion();assert.equal(m.name,'touch_head');return m.progress>observed.progress?m:false;},'Head animation advances after canvas click',3000);
         const audible=tryout.model.contents.isCurrentlyAudible();assert.equal(audible,false);
         const headCapture=await capture('head-'+sample.onlineId);
         const audioFallback=await action('touch_body');assert(audioFallback.dialogue.includes('普通触摸'));
@@ -74,7 +75,9 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     await until(()=>gallery('document.documentElement.dataset.desktopReady==="true"'),'gallery',12000);
     await until(()=>gallery(`document.querySelectorAll('[data-tryout]').length===${sampleCount}&&document.querySelectorAll('[data-model-status]').length===${tryout.availability.length-sampleCount}`),'gallery availability badges',12000);
     const original=await gallery("({cards:document.querySelectorAll('.card').length,originals:document.querySelectorAll('[data-open-artwork]').length,guides:document.querySelectorAll('[data-open-guide]').length})");
-    assert.deepEqual(original,{cards:102,originals:102,guides:68});
+    // The catalog keeps growing through cloud sync; compare with the loaded catalog, not a fixed size.
+    const catalogSize=tryout.availability.length,guideCount=tryout.availability.filter(s=>s.guidePath).length;
+    assert.deepEqual(original,{cards:catalogSize,originals:catalogSize,guides:guideCount});
     await gallery("document.getElementById('search').value='午夜频道';document.getElementById('search').dispatchEvent(new Event('input',{bubbles:true}));");
     await until(()=>gallery('document.querySelectorAll("[data-tryout]").length===1'),'filtered entry',4000);
     await gallery("document.getElementById('clearSearch').click()");
@@ -105,7 +108,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     assert.equal(await local("document.querySelectorAll('.sample-choice:disabled').length"),reviewCount);
     const denied=await local("window.l2dTryout.select('azl-4ca72f96fc1f3915').then(()=>false,()=>true)");assert.equal(denied,true);
     await local("document.getElementById('skin-status').value='all';document.getElementById('skin-status').dispatchEvent(new Event('change'));");
-    assert.equal(await local("document.querySelectorAll('.sample-choice').length"),102);
+    assert.equal(await local("document.querySelectorAll('.sample-choice').length"),tryout.availability.length);
     await paint();fs.writeFileSync(path.join(out,'picker.png'),(await tryout.window.webContents.capturePage()).toPNG());
     await click('close-picker');await until(()=>!tryout.model.occluded,'picker restored model',3000);
     step('search-filter-and-review-guard',counts);

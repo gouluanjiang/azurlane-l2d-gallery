@@ -56,7 +56,7 @@ const releases=Object.freeze([
   {label:'第一批',version:'1.3.0-batch.1',newIds},
   {label:'第二批',version:'1.4.0-batch.2',newIds:secondIds},
   {label:'第三批',version:'1.5.0-batch.3',newIds:thirdIds},
-  {label:'第四批',version:'1.6.0-batch.4',newIds:fourthIds}
+  {label:'第四批',version:'1.6.1-batch.4',newIds:fourthIds} // 1.6.1: follows the l2d.su /azurlane/ page move
 ]);
 function releaseFrom(number=1) {
   if(!Number.isInteger(number)||!releases[number-1])throw new Error('未知试玩批次');

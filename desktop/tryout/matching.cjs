@@ -1,4 +1,5 @@
 // Matching is deliberately exact. Same-name forms and type changes need review.
+const { modelUrl } = require('./samples.cjs');
 function auditCatalog(catalog, source) {
   if (!Array.isArray(catalog?.skins) || !Array.isArray(source?.ships) || source.locale !== 'CN') throw new Error('目录格式或语言不正确');
   const seen = new Set();
@@ -35,7 +36,7 @@ function availabilityFrom(catalog, manifest, enabledIds = []) {
     const identityMatches = record && ['character','name','type'].every(key => record[key] === skin[key]);
     const state = identityMatches ? record.status : 'review';
     const playable = state === 'matched' && enabled.has(skin.id);
-    return {...skin,status:playable?'playable':state,reason:identityMatches?record.reason:'新记录或资料已变化，等待重新核对',candidates:identityMatches?record.candidates:[],url:state==='matched'?`https://l2d.su/cn/skins/${record.candidates[0].onlineId}/`:null};
+    return {...skin,status:playable?'playable':state,reason:identityMatches?record.reason:'新记录或资料已变化，等待重新核对',candidates:identityMatches?record.candidates:[],url:state==='matched'?modelUrl(record.candidates[0].onlineId):null};
   });
 }
 module.exports = {auditCatalog, availabilityFrom};

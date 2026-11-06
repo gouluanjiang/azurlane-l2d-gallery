@@ -18,7 +18,8 @@ function inspectModel() {
     staticButtonEnabled: Boolean(document.querySelector('button[aria-label="查看静态立绘"]:not(:disabled)'))
   };
 }
+const { allowedModelUrl } = require('./samples.cjs');
 function modelIsReady(ui, sample) {
-  return Boolean(ui && ui.url === sample.url && ui.title.includes(sample.character) && ui.modelLoaded && ui.canvas?.width > 100 && ui.canvas?.height > 100 && !ui.loading && !ui.error);
+  return Boolean(ui && allowedModelUrl(ui.url, sample) && ui.title.includes(sample.character) && ui.modelLoaded && ui.canvas?.width > 100 && ui.canvas?.height > 100 && !ui.loading && !ui.error);
 }
 module.exports = { inspectModel, modelIsReady, inspectScript: `(${inspectModel.toString()})()` };
