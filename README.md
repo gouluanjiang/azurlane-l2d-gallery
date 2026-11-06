@@ -69,6 +69,13 @@
 **① 云端：每周三、周六 北京时间 10:17**
 
 ```mermaid
+---
+config:
+  flowchart:
+    wrappingWidth: 360
+  themeVariables:
+    fontSize: 16px
+---
 flowchart TD
   A["📢 官网维护公告"] --> C{"🔍 云端核对<br/>角色 · 皮肤名 · 类型 · 原图"}
   B["📚 WIKI 换装图鉴"] --> C
@@ -79,6 +86,13 @@ flowchart TD
 **② 你的电脑：每次打开图鉴**
 
 ```mermaid
+---
+config:
+  flowchart:
+    wrappingWidth: 360
+  themeVariables:
+    fontSize: 16px
+---
 flowchart TD
   D[("☁️ GitHub 皮肤目录")] -->|"启动约 5 秒后自动同步<br/>最多每 12 小时一次"| E["🖼️ 你电脑上的图鉴<br/>下载新原图并逐张校验"]
   E -->|"新皮肤还没有试玩模型"| F{"🔎 在 l2d.su 查找<br/>同角色、同名皮肤"}
