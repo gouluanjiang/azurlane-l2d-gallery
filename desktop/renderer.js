@@ -12,6 +12,20 @@
   const status = document.createElement('div'); status.className = 'desktop-status';
   status.innerHTML = '<span class="desktop-dot"></span><span id="desktop-message" role="status" aria-live="polite">正在载入图鉴…</span><span class="desktop-schedule">云端每周三、周六 10:17 检查</span>';
   bar.after(status);
+  api.samples().then(samples => {
+    if (!samples.length) return;
+    const strip=document.createElement('section');strip.className='desktop-sample-strip';
+    const label=document.createElement('span');label.textContent=`L2D 试玩台 · ${samples.length} 款可玩`;strip.append(label);
+    const open=id=>api.openSample(id).catch(error=>{message.textContent=error.message;});
+    const enter=document.createElement('button');enter.type='button';enter.textContent='打开试玩台 / 切换皮肤';enter.addEventListener('click',()=>open(samples[0].id));strip.append(enter);
+    status.after(strip);
+    const decorate=()=>{for(const sample of samples){const card=document.querySelector(`.card[data-skin-id="${sample.id}"]`);if(!card||card.querySelector('[data-tryout]'))continue;const button=document.createElement('button');button.type='button';button.className='tag tryout-chip';button.dataset.tryout=sample.id;button.textContent='进入试玩';button.setAttribute('aria-label',`试玩${sample.character}「${sample.name}」`);button.addEventListener('click',()=>open(sample.id));card.querySelector('.meta').append(button);}};
+    decorate();const grid=document.querySelector('.grid');if(grid)new MutationObserver(decorate).observe(grid,{childList:true,subtree:true});
+    api.availability().then(rows=>{
+      const annotate=()=>{for(const row of rows){if(row.status==='playable')continue;const card=document.querySelector(`.card[data-skin-id="${row.id}"]`);if(!card||card.querySelector('[data-model-status]'))continue;const tag=document.createElement('span');tag.className='tag model-availability';tag.dataset.modelStatus=row.status;tag.textContent=row.status==='matched'?'模型已匹配 · 待接入':row.status==='no-model'?'暂无在线 Live2D':'模型待核对';tag.title=row.reason;card.querySelector('.meta').append(tag);}};
+      annotate();if(grid)new MutationObserver(annotate).observe(grid,{childList:true,subtree:true});
+    }).catch(()=>{});
+  }).catch(()=>{});
   const panel = document.createElement('dialog'); panel.className = 'desktop-dialog'; panel.id = 'desktop-log-dialog';
   panel.innerHTML = '<div class="desktop-dialog-heading"><h2>更新过程</h2><button data-close aria-label="关闭更新过程">关闭</button></div><p id="desktop-log-status"></p><pre id="desktop-log">尚未进行更新。</pre><p class="desktop-hint">同步云端：接收已发布的图鉴。检查最新资料：立即读取公告与 WIKI。完成后页面自动刷新。</p>';
   document.body.append(panel);

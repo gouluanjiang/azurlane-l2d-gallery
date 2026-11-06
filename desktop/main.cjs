@@ -5,16 +5,25 @@ const { pathToFileURL } = require('node:url');
 const { externalUrl, localResource } = require('./policy.cjs');
 const argument = name => { const i = process.argv.indexOf(name); return i >= 0 ? process.argv[i + 1] : undefined; };
 const appRoot = path.resolve(__dirname, '..');
+const sampleBuild = require('../package.json').sampleBuild === true;
+const batchBuild = require('../package.json').batchBuild || 0;
+const release = batchBuild ? require('./tryout/batch.cjs').releaseFrom(batchBuild) : null;
+const testScope = release?.scope || 'sample';
+const reportScope = release?.scope || 'two-skin-sample';
 const libraryRoot = path.resolve(argument('--library-root') || (app.isPackaged ? path.join(path.dirname(process.execPath), '..') : appRoot));
+const sampleTest = sampleBuild && process.argv.includes('--sample-self-test');
+const testRound = String(argument('--test-round') || '1');
+if (!/^[1-9][0-9]?$/.test(testRound)) throw new Error('无效测试轮次');
 const selfTest = process.argv.includes('--self-test');
-const profile = path.join(libraryRoot, selfTest ? '.desktop-data/self-test' : '.desktop-data');
+const profile = path.join(libraryRoot, sampleTest ? `.desktop-data/${testScope}-self-test/round-${testRound}/profile` : selfTest ? '.desktop-data/self-test' : batchBuild ? `.desktop-data/${testScope}/profile` : sampleBuild ? '.desktop-data/sample-profile' : '.desktop-data');
 fs.mkdirSync(profile, { recursive: true });
-app.setName('碧蓝航线图鉴');
+app.setName(batchBuild ? `碧蓝航线试玩台 · ${release.label}` : sampleBuild ? '碧蓝航线试玩样例' : '碧蓝航线图鉴');
 app.setPath('userData', profile);
 app.setPath('sessionData', profile);
 app.setAppUserModelId('gouluanjiang.azurlane.l2d.gallery');
 protocol.registerSchemesAsPrivileged([{ scheme: 'l2d', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }]);
 let window, worker, quitting = false;
+let tryout;
 let job = { phase: 'idle', message: '已有图片可离线查看', lines: [] };
 const readJson = relative => JSON.parse(fs.readFileSync(path.join(libraryRoot, relative), 'utf8').replace(/^\uFEFF/, ''));
 function currentState() {
@@ -65,12 +74,17 @@ if (!app.requestSingleInstanceLock()) app.quit();
 else {
   app.on('second-instance', () => { if (window) { if (window.isMinimized()) window.restore(); window.show(); window.focus(); } });
   app.whenReady().then(async () => {
+    // Window titles may be Chinese; HTTP headers must remain ASCII. Electron's
+    // protocol.handle builds Web Headers and rejects a non-ByteString UA before
+    // our handler runs (ERR_UNEXPECTED for every local subresource).
+    app.userAgentFallback=`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) AzurLaneL2DGallery/${app.getVersion()} Chrome/${process.versions.chrome} Electron/${process.versions.electron} Safari/537.36`;
     if (!fs.existsSync(path.join(libraryRoot, 'data/catalog.json')) || !fs.existsSync(path.join(libraryRoot, 'assets/skins'))) throw new Error('未找到图鉴资料。请保留软件所在的完整文件夹。');
     // Recover a previously interrupted transaction before the offline mirror loads.
     const { recoverInterrupted, acquireLock } = await import(pathToFileURL(path.join(appRoot, 'scripts/lib/sync-engine.mjs')).href);
     const release = acquireLock(libraryRoot);
     try { recoverInterrupted(libraryRoot); } finally { release(); }
     Menu.setApplicationMenu(null);
+    if(sampleTest){const log=path.join(libraryRoot,`verification/${reportScope}/round-${testRound}/network-diagnostic.jsonl`);fs.mkdirSync(path.dirname(log),{recursive:true});session.defaultSession.webRequest.onErrorOccurred(d=>fs.appendFileSync(log,JSON.stringify({url:d.url,error:d.error,type:d.resourceType})+'\n'));}
     session.defaultSession.setPermissionRequestHandler((_wc, permission, callback) => callback(permission === 'clipboard-sanitized-write'));
     session.defaultSession.setPermissionCheckHandler((_wc, permission, origin) => permission === 'clipboard-sanitized-write' && origin.startsWith('l2d://gallery'));
     protocol.handle('l2d', async request => {
@@ -78,32 +92,47 @@ else {
         const file = localResource(request.url, libraryRoot, appRoot);
         const response = await net.fetch(pathToFileURL(file).href);
         const headers = new Headers(response.headers);
+        if(sampleTest&&file.endsWith('.js')){const log=path.join(libraryRoot,`verification/${reportScope}/round-${testRound}/resource-types.jsonl`);fs.mkdirSync(path.dirname(log),{recursive:true});fs.appendFileSync(log,JSON.stringify({url:request.url,status:response.status,headers:Object.fromEntries(headers)})+'\n');}
         headers.set('Cache-Control', 'no-store');
         headers.set('Content-Security-Policy', "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'");
         return new Response(response.body, { status: response.status, headers });
-      } catch { return new Response('文件不存在', { status: 404 }); }
+      } catch (error) { if(sampleTest)errors.push(`本地资源 ${request.url}: ${error.message}`);return new Response('文件不存在', { status: 404 }); }
     });
     window = new BrowserWindow({ title: '碧蓝航线图鉴', width: 1380, height: 940, minWidth: 880, minHeight: 620, backgroundColor: '#07111f', show: false, autoHideMenuBar: true, icon: path.join(__dirname, 'icon.png'), webPreferences: { preload: path.join(__dirname, 'preload.cjs'), nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, spellcheck: false } });
     const errors = [];
-    window.webContents.on('console-message', (_e, details) => { if (details.level === 'error') errors.push(details.message); });
+    window.webContents.on('console-message', (details,level,message) => { if (details.level === 'error'||level===3) errors.push(details.message||message); });
     window.webContents.setWindowOpenHandler(({ url }) => { try { shell.openExternal(externalUrl(url)); } catch {} return { action: 'deny' }; });
     window.webContents.on('will-navigate', (event, url) => { if (url !== 'l2d://gallery/index.html') { event.preventDefault(); try { shell.openExternal(externalUrl(url)); } catch {} } });
     window.webContents.on('will-attach-webview', event => event.preventDefault());
-    window.once('ready-to-show', () => { if (!selfTest) window.show(); });
+    window.once('ready-to-show', () => { if (!selfTest && !sampleTest) window.show(); });
     window.on('close', event => {
       if (worker && !quitting) { event.preventDefault(); dialog.showMessageBox(window, { type: 'info', title: '正在更新图鉴', message: '更新仍在进行，完成后即可关闭软件。', buttons: ['继续等待'] }); }
+      else if (tryout?.window && !quitting) { event.preventDefault();tryout.close().then(()=>{if(!window.isDestroyed())window.close();}); }
     });
     ipcMain.handle('l2d:state', event => { authorized(event); return currentState(); });
     ipcMain.handle('l2d:start', (event, operation) => { authorized(event); return startUpdate(operation); });
     ipcMain.handle('l2d:folder', event => { authorized(event); return shell.openPath(libraryRoot); });
+    if (sampleBuild) {
+      const {TryoutManager}=require('./tryout/manager.cjs');
+      tryout=new TryoutManager({libraryRoot,parent:window,catalog:readJson('data/catalog.json'),testing:sampleTest,testRound,batch:batchBuild});
+    }
+    ipcMain.handle('l2d:samples', event => {authorized(event);tryout?.refreshCatalog(readJson('data/catalog.json'));return tryout?.samples || [];});
+    ipcMain.handle('l2d:availability', event => {authorized(event);tryout?.refreshCatalog(readJson('data/catalog.json'));return tryout?.availability || [];});
+    ipcMain.handle('l2d:sample', (event,id) => {authorized(event);if(!tryout)throw new Error('此入口仅在样例版开放');return tryout.open(id);});
     await window.loadURL('l2d://gallery/index.html');
+    if (sampleBuild && process.argv.includes('--open-sample') && !sampleTest) await tryout.open();
+    if (sampleTest) {
+      const {run}=require(batchBuild?'./tryout/batch-self-test.cjs':'./tryout/self-test.cjs');
+      await run({window,tryout,libraryRoot,testRound,errors});
+      quitting=true;await tryout.model?.stop();tryout.allowClose=true;tryout.window?.destroy();app.quit();
+    }
     if (selfTest) {
       const { run } = require('./self-test.cjs');
       await run({ window, libraryRoot, appRoot, errors, currentState, startUpdate, liveSync: process.argv.includes('--live-sync') });
       quitting = true; app.quit();
     }
   }).catch(error => {
-    if (selfTest) { fs.mkdirSync(path.join(libraryRoot, 'verification'), { recursive: true }); fs.writeFileSync(path.join(libraryRoot, 'verification/desktop-failure.json'), JSON.stringify({ error: error.stack }, null, 2)); }
+    if (selfTest || sampleTest) { const failurePath=path.join(libraryRoot,sampleTest?`verification/${reportScope}/round-${testRound}/failure.json`:'verification/desktop-failure.json');fs.mkdirSync(path.dirname(failurePath), { recursive: true }); fs.writeFileSync(failurePath, JSON.stringify({ error: error.stack }, null, 2)); }
     else dialog.showErrorBox('图鉴启动失败', error.message);
     quitting = true; if (worker) worker.kill(); app.exit(1);
   });
