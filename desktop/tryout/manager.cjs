@@ -15,7 +15,10 @@ class TryoutManager {
     this.selected=this.samples[0]; this.register();
   }
   refreshCatalog(catalog) {
-    const data=this.batch?require('./batch.cjs').batchFrom(catalog,this.batch===true?1:this.batch):{samples:samplesFrom(catalog)};
+    const number=this.batch===true?1:this.batch, batch=require('./batch.cjs');
+    // The full release also opens skins this computer verified after the build (auto-verify.cjs).
+    const extraRecords=number>=batch.fullRelease&&!this.testing?require('./auto-verify.cjs').loadStore(this.libraryRoot).records:[];
+    const data=this.batch?batch.batchFrom(catalog,number,{extraRecords}):{samples:samplesFrom(catalog)};
     this.samples=data.samples;this.availability=data.availability||this.samples.map(s=>({...s,status:'playable'}));this.auditedAt=data.auditedAt;
     this.release=data.release;
     if(this.selected)this.selected=this.samples.find(s=>s.id===this.selected.id)||this.samples[0];

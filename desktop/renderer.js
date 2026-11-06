@@ -32,6 +32,21 @@
   const settings = document.createElement('dialog'); settings.className = 'desktop-dialog'; settings.id = 'desktop-settings-dialog';
   settings.innerHTML = '<div class="desktop-dialog-heading"><h2>软件设置</h2><button data-close aria-label="关闭软件设置">关闭</button></div><p>程序与图片保存在同一个项目文件夹中。搬迁时请移动整个文件夹。</p><p id="desktop-version" class="desktop-hint"></p><div class="desktop-setting-actions"><button id="desktop-folder">打开软件文件夹</button><button id="desktop-rollback">回退上次更新</button></div><p id="desktop-no-backup" class="desktop-hint" hidden>目前没有可回退的历史版本；下次成功更新会自动保存备份。</p>';
   document.body.append(settings);
+  // Automatic updates: both on by default; the choice is kept on this computer.
+  const autoBox = document.createElement('fieldset'); autoBox.className = 'desktop-auto-settings';
+  autoBox.innerHTML = '<legend>自动更新</legend><label><input type="checkbox" id="desktop-auto-sync"> 启动时自动同步云端图鉴（最多每 12 小时一次）</label><label><input type="checkbox" id="desktop-auto-tryout"> 自动为新皮肤查找试玩模型（结果保存在本机，找不到的保持待核对）</label><p id="desktop-auto-status" class="desktop-hint"></p>';
+  settings.querySelector('.desktop-setting-actions').before(autoBox);
+  if (api.settings) {
+    const showSettings = value => {
+      document.querySelector('#desktop-auto-sync').checked = value.autoSync; document.querySelector('#desktop-auto-tryout').checked = value.autoTryout;
+      const when = iso => iso ? new Date(iso).toLocaleString('zh-CN') : '尚未进行';
+      document.querySelector('#desktop-auto-status').textContent = `上次自动同步：${when(value.lastAutoSync)}；上次自动核对试玩：${when(value.lastAutoTryout)}`;
+    };
+    api.settings().then(showSettings).catch(() => {});
+    for (const [id, key] of [['desktop-auto-sync', 'autoSync'], ['desktop-auto-tryout', 'autoTryout']]) {
+      document.querySelector('#' + id).addEventListener('change', event => api.setSettings({ [key]: event.target.checked }).then(showSettings).catch(error => { message.textContent = error.message; }));
+    }
+  } else autoBox.hidden = true;
   const confirm = document.createElement('dialog'); confirm.className = 'desktop-dialog'; confirm.id = 'desktop-confirm-dialog';
   confirm.innerHTML = '<h2>恢复上一版本？</h2><p>图鉴记录将恢复至上一次更新前；已下载的图片仍会保留。</p><div class="desktop-setting-actions"><button data-close>取消</button><button id="desktop-confirm-rollback">确认回退</button></div>';
   document.body.append(confirm);

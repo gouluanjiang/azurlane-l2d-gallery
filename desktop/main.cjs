@@ -24,6 +24,9 @@ app.setName(galleryTryout ? '碧蓝航线图鉴' : batchBuild ? `碧蓝航线试
 app.setPath('userData', profile);
 app.setPath('sessionData', profile);
 app.setAppUserModelId('gouluanjiang.azurlane.l2d.gallery');
+// Windows occlusion tracking marks a covered window hidden; the online model then lays out
+// with a zero-height canvas and never reports ready. Keep rendering while covered.
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 protocol.registerSchemesAsPrivileged([{ scheme: 'l2d', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }]);
 let window, worker, quitting = false;
 let tryout;
@@ -37,12 +40,26 @@ function notify() { if (window && !window.isDestroyed()) window.webContents.send
 function authorized(event) {
   if (!window || event.sender !== window.webContents || event.senderFrame !== window.webContents.mainFrame || event.senderFrame.url !== 'l2d://gallery/index.html') throw new Error('无效操作来源');
 }
-function startUpdate(operation) {
+// Per-computer preferences for automatic updates (shown in 设置).
+const settingsFile = () => path.join(libraryRoot, '.desktop-data/auto-update.json');
+function readSettings() {
+  let value = {};
+  try { value = JSON.parse(fs.readFileSync(settingsFile(), 'utf8')); } catch { /* defaults below */ }
+  return { autoSync: value.autoSync !== false, autoTryout: value.autoTryout !== false, lastAutoSync: value.lastAutoSync || null, lastAutoTryout: value.lastAutoTryout || null };
+}
+function writeSettings(patch) {
+  const next = { ...readSettings(), ...patch }, file = settingsFile(), temp = `${file}.tmp`;
+  fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(temp, JSON.stringify(next, null, 2) + '\n'); fs.renameSync(temp, file);
+  return next;
+}
+let finishedUpdate = null;
+function startUpdate(operation, { auto = false } = {}) {
   if (!['sync', 'check', 'rollback'].includes(operation)) throw new Error('未知操作');
   if (worker) return { started: false, busy: true };
+  const done = new Promise(resolve => { finishedUpdate = resolve; });
   const script = operation === 'check' ? 'check-updates.mjs' : 'sync.mjs';
   const args = operation === 'check' ? ['--apply-local'] : operation === 'rollback' ? ['--rollback'] : ['--public'];
-  job = { phase: 'running', operation, message: operation === 'check' ? '正在检查官方公告与原图…' : operation === 'rollback' ? '正在恢复上一版本…' : '正在同步云端已发布的图鉴…', lines: [], startedAt: new Date().toISOString() };
+  job = { phase: 'running', operation, auto, message: operation === 'check' ? '正在检查官方公告与原图…' : operation === 'rollback' ? '正在恢复上一版本…' : auto ? '正在自动同步云端图鉴…' : '正在同步云端已发布的图鉴…', lines: [], startedAt: new Date().toISOString() };
   notify();
   const env = { ...process.env, L2D_DATA_ROOT: libraryRoot };
   delete env.ELECTRON_RUN_AS_NODE;
@@ -62,15 +79,44 @@ function startUpdate(operation) {
       const result = readJson(operation === 'check' ? 'data/update-report.json' : 'data/sync-status.json');
       const total = currentState().total;
       const added = result.added ?? result.newCount ?? 0;
-      job = { ...job, phase: 'success', result, message: operation === 'rollback' ? `已恢复上一版本，共 ${total} 款` : added ? `更新完成，新增 ${added} 款，当前共 ${total} 款` : `已是最新图鉴，共 ${total} 款`, finishedAt: new Date().toISOString() };
+      job = { ...job, phase: 'success', result, message: operation === 'rollback' ? `已恢复上一版本，共 ${total} 款` : added ? `${auto ? '已自动更新' : '更新完成'}，新增 ${added} 款，当前共 ${total} 款` : `${auto ? '已自动检查，' : ''}已是最新图鉴，共 ${total} 款`, finishedAt: new Date().toISOString() };
       notify();
-      if (window && !window.isDestroyed()) window.webContents.reload();
+      // An automatic check reloads the page only when something changed (see autoUpdate).
+      if (!auto && window && !window.isDestroyed()) window.webContents.reload();
+      finishedUpdate?.({ ok: true, added });
     } else {
-      job = { ...job, phase: 'error', message: '更新未完成，现有图鉴已保留。可重试或查看过程。', finishedAt: new Date().toISOString() };
-      notify();
-    } } catch (error) { job = { ...job, phase:'error', message:`读取更新结果失败：${error.message}` }; notify(); }
+      job = { ...job, phase: 'error', message: auto ? '自动同步未完成，现有图鉴已保留；原因见“更新过程”，可稍后点“同步云端”。' : '更新未完成，现有图鉴已保留。可重试或查看过程。', finishedAt: new Date().toISOString() };
+      notify(); finishedUpdate?.({ ok: false, added: 0 });
+    } } catch (error) { job = { ...job, phase:'error', message:`读取更新结果失败：${error.message}` }; notify(); finishedUpdate?.({ ok: false, added: 0 }); }
   });
-  return { started: true };
+  return { started: true, done };
+}
+
+// Runs once after start: sync the published catalog (at most every 12 h), then let the
+// tryout look up skins that are still in review. Reloads the page only when something changed.
+async function autoUpdate() {
+  const settings = readSettings(), now = Date.now();
+  let added = 0, opened = 0;
+  if (settings.autoSync && !(Date.parse(settings.lastAutoSync || '') > now - 12 * 3600000)) {
+    const started = startUpdate('sync', { auto: true });
+    if (started.started) { const result = await started.done; if (result.ok) { writeSettings({ lastAutoSync: new Date().toISOString() }); added = result.added; } }
+  }
+  if (settings.autoTryout && tryout && !worker) {
+    const auto = require('./tryout/auto-verify.cjs');
+    tryout.refreshCatalog(readJson('data/catalog.json'));
+    const pending = auto.pendingSkins(readJson('data/catalog.json'), tryout.availability, auto.loadStore(libraryRoot));
+    if (pending.length) {
+      job = { phase: 'running', operation: 'tryout', auto: true, message: `正在为 ${pending.length} 款待核对皮肤查找试玩模型…`, lines: [] }; notify();
+      try {
+        const result = await new auto.AutoVerifier({ libraryRoot }).verify(pending, { progress: line => { job.lines = [...job.lines, line].slice(-70); job.message = line; notify(); } });
+        opened = result.opened.length;
+        job = { ...job, phase: 'success', message: opened ? `试玩台已自动开放 ${opened} 款新皮肤${result.unresolved.length ? `，${result.unresolved.length} 款仍待核对` : ''}` : `${result.unresolved.length} 款新皮肤暂未找到试玩模型，之后会再试`, lines: [...job.lines, ...result.unresolved.map(s => `待核对：${s.character}「${s.name}」 ${s.reason}`)] };
+      } catch (error) { job = { ...job, phase: 'error', message: `试玩模型自动核对未完成：${error.message}` }; }
+      notify(); writeSettings({ lastAutoTryout: new Date().toISOString() });
+      tryout.refreshCatalog(readJson('data/catalog.json'));
+    }
+  }
+  if ((added || opened) && window && !window.isDestroyed()) { const message = job; window.webContents.once('did-finish-load', () => { job = message; notify(); }); window.webContents.reload(); }
 }
 
 if (!app.requestSingleInstanceLock()) app.quit();
@@ -113,7 +159,14 @@ else {
       else if (tryout?.window && !quitting) { event.preventDefault();tryout.close().then(()=>{if(!window.isDestroyed())window.close();}); }
     });
     ipcMain.handle('l2d:state', event => { authorized(event); return currentState(); });
-    ipcMain.handle('l2d:start', (event, operation) => { authorized(event); return startUpdate(operation); });
+    ipcMain.handle('l2d:start', (event, operation) => { authorized(event); const { started, busy } = startUpdate(operation); return { started, busy }; });
+    ipcMain.handle('l2d:settings', event => { authorized(event); return readSettings(); });
+    ipcMain.handle('l2d:settings-set', (event, patch) => {
+      authorized(event);
+      const allowed = {};
+      for (const key of ['autoSync', 'autoTryout']) if (typeof patch?.[key] === 'boolean') allowed[key] = patch[key];
+      return writeSettings(allowed);
+    });
     ipcMain.handle('l2d:folder', event => { authorized(event); return shell.openPath(libraryRoot); });
     if (sampleBuild) {
       const {TryoutManager}=require('./tryout/manager.cjs');
@@ -123,6 +176,8 @@ else {
     ipcMain.handle('l2d:availability', event => {authorized(event);tryout?.refreshCatalog(readJson('data/catalog.json'));return tryout?.availability || [];});
     ipcMain.handle('l2d:sample', (event,id) => {authorized(event);if(!tryout)throw new Error('此入口仅在样例版开放');return tryout.open(id);});
     await window.loadURL('l2d://gallery/index.html');
+    // The official gallery updates itself a few seconds after start; batch apps and test runs do not.
+    if (!selfTest && !sampleTest && (galleryTryout || !batchBuild)) setTimeout(() => autoUpdate().catch(error => { job = { ...job, phase: 'error', message: `自动更新未完成：${error.message}` }; notify(); }), 5000);
     if (sampleBuild && process.argv.includes('--open-sample') && !sampleTest) await tryout.open();
     if (sampleTest) {
       const {run}=require(batchBuild?'./tryout/batch-self-test.cjs':'./tryout/self-test.cjs');

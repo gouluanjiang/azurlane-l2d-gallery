@@ -18,4 +18,11 @@ function allowedModelUrl(value, sample) {
   try { const u = new URL(value); return u.origin === 'https://l2d.su' && !u.username && !u.password && modelPaths(String(sample.onlineId)).includes(u.pathname) && !u.search; }
   catch { return false; }
 }
-module.exports = { definitions, samplesFrom, allowedModelUrl, modelUrl };
+// The other accepted address of the same skin. During a site deploy the CDN can keep a stale
+// copy of one page that points at removed scripts; the other path is cached separately.
+function alternateModelUrl(currentUrl, sample) {
+  let current = ''; try { current = new URL(currentUrl).pathname; } catch { /* use the first path */ }
+  const path = modelPaths(String(sample.onlineId)).find(p => p !== current) || modelPaths(String(sample.onlineId))[1];
+  return `https://l2d.su${path}`;
+}
+module.exports = { definitions, samplesFrom, allowedModelUrl, modelUrl, alternateModelUrl };

@@ -56,6 +56,13 @@ const fourthIds=Object.freeze([
 // (dual forms, renamed or newly synced skins). Frozen batches 1-4 keep the September manifest.
 const supplement=require('./online-mapping-supplement.json');
 const merged=Object.freeze({...manifest,records:[...manifest.records.filter(r=>!supplement.records.some(s=>s.id===r.id)),...supplement.records]});
+// Records the gallery verified on this computer for skins synced after this build
+// (desktop/tryout/auto-verify.cjs). They only fill gaps: a shipped record always wins.
+function mergedWith(extraRecords=[]) {
+  if(!extraRecords.length)return merged;
+  const known=new Set(merged.records.map(r=>r.id));
+  return {...merged,records:[...merged.records,...extraRecords.filter(r=>r&&!known.has(r.id)&&r.status==='matched')]};
+}
 const fullRelease=5;
 const releases=Object.freeze([
   {label:'第一批',version:'1.3.0-batch.1',newIds},
@@ -64,13 +71,13 @@ const releases=Object.freeze([
   {label:'第四批',version:'1.6.1-batch.4',newIds:fourthIds}, // 1.6.1: follows the l2d.su /azurlane/ page move
   {label:'全部皮肤',version:'1.7.0-all',all:true} // every verified skin; newly synced skins stay in review until verified
 ]);
-const manifestFor=number=>number>=fullRelease?merged:manifest;
+const manifestFor=(number,extraRecords)=>number>=fullRelease?mergedWith(extraRecords):manifest;
 const fixedIds=number=>[...accepted.map(s=>s.id),...releases.slice(0,Math.min(number,fullRelease-1)).flatMap(r=>r.newIds)];
-function releaseFrom(number=1) {
+function releaseFrom(number=1,{extraRecords=[]}={}) {
   if(!Number.isInteger(number)||!releases[number-1])throw new Error('未知试玩批次');
   const definition=releases[number-1];
   const earlier=fixedIds(number);
-  const enabledIds=definition.all?[...earlier,...merged.records.filter(r=>r.status==='matched'&&!earlier.includes(r.id)).map(r=>r.id)]:earlier;
+  const enabledIds=definition.all?[...earlier,...mergedWith(extraRecords).records.filter(r=>r.status==='matched'&&!earlier.includes(r.id)).map(r=>r.id)]:earlier;
   const releaseNewIds=definition.all?enabledIds.filter(id=>!earlier.includes(id)):definition.newIds;
   return {...definition,newIds:releaseNewIds,number,scope:`batch-${number}`,enabledIds,previousNotes:number===1?'tryout-notes':`batch-${number-1}/tryout-notes`};
 }
@@ -80,8 +87,8 @@ function formsFrom(candidates) {
   if(live.length!==1||spine.length>1||live.length+spine.length!==candidates.length)return null;
   return [{onlineId:live[0].onlineId,kind:'live2d',label:live[0].isLive2dPlus?'Live2D+':'Live2D'},...spine.map(c=>({onlineId:c.onlineId,kind:'spine',label:'Spine 动态立绘'}))];
 }
-function batchFrom(catalog,number=1) {
-  const release=releaseFrom(number),source=manifestFor(number);
+function batchFrom(catalog,number=1,{extraRecords=[]}={}) {
+  const release=releaseFrom(number,{extraRecords}),source=manifestFor(number,extraRecords);
   const availability=availabilityFrom(catalog,source,release.enabledIds).map(row=>{
     if(!row.candidates.length)return row;const forms=formsFrom(row.candidates);
     return forms?{...row,url:availabilityUrl(forms[0].onlineId)}:row;
@@ -90,10 +97,11 @@ function batchFrom(catalog,number=1) {
     const row=availability.find(s=>s.id===id);
     const forms=row&&number>=fullRelease?formsFrom(row.candidates):row?.candidates.length===1?formsFrom(row.candidates):null;
     if (!row || row.status!=='playable' || !forms) throw new Error('本批试玩资料不匹配，请恢复图鉴或核对映射：'+id);
+    const local=number>=fullRelease?extraRecords.find(r=>r.id===id&&!merged.records.some(m=>m.id===id)):null;
     const fromSupplement=supplement.records.some(s=>s.id===id)&&number>=fullRelease;
-    return {...row,onlineId:forms[0].onlineId,forms,label:release.newIds.includes(id)?'本批新增':'已验收皮肤',verifiedAt:(fromSupplement?supplement:manifest).auditedAt.slice(0,10)};
+    return {...row,onlineId:forms[0].onlineId,forms,label:local?'本机自动核对':release.newIds.includes(id)?'本批新增':'已验收皮肤',verifiedAt:(local?.verifiedAt||(fromSupplement?supplement:manifest).auditedAt).slice(0,10)};
   });
-  return {samples,availability,auditedAt:source===merged?supplement.auditedAt:manifest.auditedAt,release};
+  return {samples,availability,auditedAt:number>=fullRelease?supplement.auditedAt:manifest.auditedAt,release};
 }
 const {modelUrl:availabilityUrl}=require('./samples.cjs');
 module.exports={newIds,enabledIds,secondIds,thirdIds,fourthIds,fullRelease,batchFrom,releaseFrom,formsFrom};

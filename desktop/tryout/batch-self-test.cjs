@@ -20,7 +20,9 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
   const remote=script=>tryout.model.contents.executeJavaScript(script);
   const gallery=script=>window.webContents.executeJavaScript(script);
   const click=id=>local(`document.getElementById(${JSON.stringify(id)}).click()`);
-  async function ready(id){return until(()=>{if(tryout.model.state.phase==='error')throw new Error(tryout.model.state.error+': '+tryout.model.state.message);return tryout.model.state.phase==='ready'&&tryout.model.state.sampleId===id;},'model ready '+id);}
+  // Long runs share the desktop: if the player was minimized from outside, restore it and note it.
+  const restored=[];
+  async function ready(id){return until(()=>{if(tryout.model.state.phase==='error')throw new Error(tryout.model.state.error+': '+tryout.model.state.message);if(tryout.window&&(tryout.window.isMinimized()||!tryout.window.isVisible())){restored.push({id,at:new Date().toISOString()});tryout.window.restore();tryout.window.show();}return tryout.model.state.phase==='ready'&&tryout.model.state.sampleId===id;},'model ready '+id,210000);} // two 30 s stalls with reloads + 90 s deadline
   async function paint(){await local('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve(true))))');await pause(150);}
   async function capture(name){await paint();const wc=tryout.model.contents;fs.writeFileSync(path.join(out,`${name}-model.png`),(await wc.capturePage()).toPNG());fs.writeFileSync(path.join(out,`${name}-shell.png`),(await tryout.window.webContents.capturePage()).toPNG());return {model:name+'-model.png',shell:name+'-shell.png',bounds:tryout.model.bounds};}
   async function choose(id){await click('choose-skin');await until(()=>local('document.getElementById("skin-picker").open'),'picker open',4000);assert.equal(tryout.model.occluded,true);await local(`(()=>{document.getElementById('skin-search').value='';document.getElementById('skin-status').value='playable';document.getElementById('skin-search').dispatchEvent(new Event('input'));document.querySelector('.sample-choice[data-skin-id="${id}"]').click();})()`);await until(()=>local(`document.body.dataset.skinId===${JSON.stringify(id)}`),'selection applied',5000);await ready(id);assert.equal(tryout.model.occluded,false);}
@@ -134,11 +136,12 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     step('coverage-plan',{available:sampleCount,testedIds:subjects.map(s=>s.id),newIds:tryout.release.newIds,method:deep&&tryout.batch>=4?'All new skins plus four accepted regression anchors':'Full batch or new-only according to mode'});
     for(let index=0;index<subjects.length;index++) {
       const sample=subjects[index];if(tryout.selected.id!==sample.id)await choose(sample.id);
-      const load={sampleId:sample.id,character:sample.character,skinName:sample.name,url:sample.url,milliseconds:tryout.model.state.readyMs,autoRetry:tryout.model.attempt.autoRetry||null,ui:tryout.model.attempt.observations.at(-1)};
+      const load={sampleId:sample.id,character:sample.character,skinName:sample.name,url:sample.url,milliseconds:tryout.model.state.readyMs,autoRetry:tryout.model.attempt.autoRetry||null,autoRetries:(tryout.model.attempt.autoRetries||[]).length,ui:tryout.model.attempt.observations.at(-1)};
       assert(tryout.model.retired.every(row=>row.destroyed));
       if(deep){
         // Not every skin lists a login motion; use the first voiced greeting the model offers.
-        const motions=await remote("[...document.querySelectorAll('.spine-action-item')].map(e=>e.textContent.trim().replace(/^\\d+\\s*/,''))");
+        // The motion list can render a moment after the model reports ready.
+        const motions=await until(async()=>{const list=await remote("[...document.querySelectorAll('.spine-action-item')].map(e=>e.textContent.trim().replace(/^\\d+\\s*/,''))");return list.length?list:false;},'motion list '+sample.id,10000).catch(()=>[]);
         const greeting=['login','home','main_1','mail'].find(name=>motions.includes(name));assert(greeting,'No greeting motion: '+motions.slice(0,12).join(','));
         load.action=await action(greeting,{tolerant:tryout.batch>=5});
         if(!load.action.audible)assert.equal(load.action.motionActive,true,'greeting motion did not start: '+sample.id);
@@ -195,6 +198,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     step('accepted-build-and-user-notes-preserved',{protectedFiles});
     const greeted=report.steps.filter(s=>s.name==='skin-verified'&&s.action);
     if(greeted.length)step('greeting-voice-summary',{checked:greeted.length,audible:greeted.filter(s=>s.action.audible).length,missed:greeted.filter(s=>!s.action.audible).map(s=>({id:s.sampleId,character:s.character,skin:s.skinName,motion:s.action.label}))});
+    step('window-restores',{count:restored.length,restored});
     report.status='passed';report.finishedAt=new Date().toISOString();write();
   }catch(error){report.status='failed';report.error=error.stack;report.finishedAt=new Date().toISOString();try{report.galleryUI=await gallery("({url:location.href,ready:document.documentElement.dataset.desktopReady,bridge:typeof window.l2dDesktop,text:document.body.innerText.slice(0,3500),scripts:[...document.scripts].map(s=>s.src)})");fs.writeFileSync(path.join(out,'gallery-failure.png'),(await window.webContents.capturePage()).toPNG());}catch{}try{report.failureUI=await remote('document.body.innerText.slice(-6000)');await capture('failure');}catch{}write();throw error;}
 }

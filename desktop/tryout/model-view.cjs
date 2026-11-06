@@ -3,7 +3,7 @@ const { EventEmitter } = require('node:events');
 const fs = require('node:fs');
 const path = require('node:path');
 const { inspectScript, modelIsReady } = require('./readiness.cjs');
-const { allowedModelUrl } = require('./samples.cjs');
+const { allowedModelUrl, alternateModelUrl } = require('./samples.cjs');
 
 const embeddedStyle = `
   .app-shell { --selection-panel-width: 238px !important; }
@@ -126,16 +126,32 @@ class ModelView extends EventEmitter {
         } else if (this.state.phase === 'ready') {
           // Keep manual static-art inspection usable; only an explicit site error,
           // crash or wrong-skin navigation terminates a running player.
+        } else if (this.window.isMinimized() || !this.window.isVisible()) {
+          // A minimized or hidden window stops the page from laying out the model. Pause the
+          // stall check and the deadline until the window is back instead of failing.
+          this.attempt.progressAt = this.elapsed(); this.attempt.pausedWhileHidden = (this.attempt.pausedWhileHidden || 0) + 1; armDeadline();
+          this.publish({phase:'loading',message:'窗口已最小化，恢复后继续载入模型…',elapsedMs:this.elapsed()});
         } else {
           // The site sometimes stops mid-download (progress frozen) or leaves a blank page.
-          // Reload once when nothing visible has changed for stallMs, instead of waiting out the deadline.
+          // Reload (at most twice) when nothing visible has changed for stallMs, instead of waiting out the deadline.
           const progressKey = `${ui.mounted}|${ui.title}|${ui.loading}|${ui.progress}`;
+          const retries = this.attempt.autoRetries || [];
           if (progressKey !== this.attempt.progressKey) { this.attempt.progressKey = progressKey; this.attempt.progressAt = this.elapsed(); }
-          else if (!this.attempt.autoRetry && this.elapsed() - this.attempt.progressAt >= this.stallMs) {
-            this.attempt.autoRetry = { atMs: this.elapsed(), stalledOn: progressKey.slice(0, 200) };
+          else if (retries.length < 2 && this.elapsed() - this.attempt.progressAt >= this.stallMs) {
+            this.attempt.autoRetries = [...retries, { atMs: this.elapsed(), stalledOn: progressKey.slice(0, 200) }];
+            this.attempt.autoRetry = this.attempt.autoRetries[0];
             this.attempt.progressKey = null; this.attempt.controlsPrepared = false;
             this.publish({phase:'connecting',message:'模型资源下载停滞，正在自动重新载入…',elapsedMs:this.elapsed()});
-            armDeadline(); this.record(); wc.reload();
+            armDeadline(); this.record();
+            // After a site deploy a page (locally or at the CDN) can point at script files that no
+            // longer exist ("Failed to load module script ... text/html"). Then, or on the second
+            // retry, clear this session's cache and open the skin's other accepted address.
+            const staleScripts = this.attempt.consoleErrors.some(text => /Failed to load module script/.test(text));
+            if (retries.length || staleScripts) {
+              this.attempt.cacheCleared = true; await this.session.clearCache().catch(() => {}); if (!current()) return;
+              const alternate = alternateModelUrl(wc.getURL(), sample); this.attempt.autoRetries.at(-1).url = alternate;
+              wc.loadURL(alternate).catch(() => {});
+            } else wc.reloadIgnoringCache();
             this.pollTimer=setTimeout(poll,1000); return;
           }
           this.publish({phase:ui.mounted?'loading':'connecting',message:ui.loading|| (ui.mounted?'模型资源准备中…':'正在打开在线页面…'),elapsedMs:this.elapsed()});
