@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-11-06T00:00:00.000Z",
+  "method": "Each l2d.su skin page opened by ID: title gives character and skin name, the model label gives LIVE2D or SPINE; Live2D+ from the site skin tile tag. The site catalog is encrypted since 2026-11 and was not decoded.",
+  "catalogVersion": "20261104T090915264Z-461fe259c16b",
+  "records": [
+    {
+      "id": "azl-b6c280ddd51178af",
+      "character": "建武",
+      "name": "妆点，只为今夜",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；Live2D 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "建武",
+          "name": "妆点，只为今夜",
+          "onlineId": "503011",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        },
+        {
+          "character": "建武",
+          "name": "妆点，只为今夜",
+          "onlineId": "503012",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-91b3df8dd6d51f95",
+      "character": "四万十",
+      "name": "优哉游哉的龙神大人",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；Live2D+ 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "四万十",
+          "name": "优哉游哉的龙神大人",
+          "onlineId": "399062",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": true
+        },
+        {
+          "character": "四万十",
+          "name": "优哉游哉的龙神大人",
+          "onlineId": "399063",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a597ed746ab2fd7b",
+      "character": "Z13",
+      "name": "战略性约会进行时",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月目录尚无此皮肤，现已上线",
+      "candidates": [
+        {
+          "character": "Z13",
+          "name": "战略性约会进行时",
+          "onlineId": "401131",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-10087f055854e6ac",
+      "character": "曾克海军上将",
+      "name": "心动审讯练习中",
+      "type": "L2D",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月目录尚无此皮肤，现已上线",
+      "candidates": [
+        {
+          "character": "曾克海军上将",
+          "name": "心动审讯练习中",
+          "onlineId": "404071",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-62366903bf318903",
+      "character": "白凤",
+      "name": "缭乱之花的忍者游戏",
+      "type": "L2D+",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；网站标为 Live2D，本地图鉴为 L2D+；角色、皮肤名与编号一致",
+      "candidates": [
+        {
+          "character": "白凤",
+          "name": "缭乱之花的忍者游戏",
+          "onlineId": "307161",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-85e2f12910be4a44",
+      "character": "苏维埃同盟",
+      "name": "缠丝审讯",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；Live2D 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "苏维埃同盟",
+          "name": "缠丝审讯",
+          "onlineId": "705022",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        },
+        {
+          "character": "苏维埃同盟",
+          "name": "缠丝审讯",
+          "onlineId": "705023",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-4130f2c8245c3301",
+      "character": "约克城II",
+      "name": "交错的温柔时光",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；Live2D 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "约克城II",
+          "name": "交错的温柔时光",
+          "onlineId": "107102",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        },
+        {
+          "character": "约克城II",
+          "name": "交错的温柔时光",
+          "onlineId": "107103",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-19468ef2a1152547",
+      "character": "腓特烈大帝",
+      "name": "红封之礼",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；本地标为双形态，网站只提供 Live2D 形态",
+      "candidates": [
+        {
+          "character": "腓特烈大帝",
+          "name": "红封之礼",
+          "onlineId": "499023",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-7cd0f1868177cf39",
+      "character": "莫加多尔",
+      "name": "共坠的渴慕",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；Live2D 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "莫加多尔",
+          "name": "共坠的渴慕",
+          "onlineId": "901073",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        },
+        {
+          "character": "莫加多尔",
+          "name": "共坠的渴慕",
+          "onlineId": "901074",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-4ca72f96fc1f3915",
+      "character": "安土",
+      "name": "午夜的瑰色电梯",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；Live2D 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "安土",
+          "name": "午夜的瑰色电梯",
+          "onlineId": "304091",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        },
+        {
+          "character": "安土",
+          "name": "午夜的瑰色电梯",
+          "onlineId": "304092",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-a17232397b1db5bb",
+      "character": "金鹿号",
+      "name": "微笑的白色魅影",
+      "type": "双形态",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月后同步的新皮肤；Live2D 与 Spine 两种形态均可打开",
+      "candidates": [
+        {
+          "character": "金鹿号",
+          "name": "微笑的白色魅影",
+          "onlineId": "9600032",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": false
+        },
+        {
+          "character": "金鹿号",
+          "name": "微笑的白色魅影",
+          "onlineId": "9600033",
+          "dynamicType": "spine",
+          "isLive2d": false,
+          "isLive2dPlus": false
+        }
+      ]
+    },
+    {
+      "id": "azl-42f27cdc76dd8814",
+      "character": "白凤",
+      "name": "晴雨狐嫁",
+      "type": "L2D+",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月后同步的新皮肤",
+      "candidates": [
+        {
+          "character": "白凤",
+          "name": "晴雨狐嫁",
+          "onlineId": "307162",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": true
+        }
+      ]
+    },
+    {
+      "id": "azl-cc8c134f68d12096",
+      "character": "柴郡",
+      "name": "柴郡猫的童话书迷宫",
+      "type": "L2D+",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月后同步的新皮肤",
+      "candidates": [
+        {
+          "character": "柴郡",
+          "name": "柴郡猫的童话书迷宫",
+          "onlineId": "299035",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": true
+        }
+      ]
+    },
+    {
+      "id": "azl-3df1e17fd1f33b21",
+      "character": "水星号",
+      "name": "天使降临之日",
+      "type": "L2D+",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月后同步的新皮肤",
+      "candidates": [
+        {
+          "character": "水星号",
+          "name": "天使降临之日",
+          "onlineId": "9600171",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": true
+        }
+      ]
+    },
+    {
+      "id": "azl-fe8c8b5b37f20850",
+      "character": "塞利米耶号",
+      "name": "自投罗网的预言家？",
+      "type": "L2D+",
+      "status": "matched",
+      "reason": "网站页面标题与模型标签逐款核对一致；9 月后同步的新皮肤",
+      "candidates": [
+        {
+          "character": "塞利米耶号",
+          "name": "自投罗网的预言家？",
+          "onlineId": "9600191",
+          "dynamicType": "live2d",
+          "isLive2d": true,
+          "isLive2dPlus": true
+        }
+      ]
+    }
+  ]
+}

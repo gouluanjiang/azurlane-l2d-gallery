@@ -1,12 +1,12 @@
 const { BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('node:path');
-const { samplesFrom } = require('./samples.cjs');
+const { samplesFrom, modelUrl } = require('./samples.cjs');
 const { NotesStore } = require('./notes.cjs');
 const { ModelView } = require('./model-view.cjs');
 const pageUrl = 'l2d://gallery/desktop/tryout/index.html';
 class TryoutManager {
-  constructor({ libraryRoot, parent, catalog, testing = false, testRound = '1', batch = false }) {
-    this.libraryRoot=libraryRoot; this.parent=parent; this.testing=testing; this.testRound=testRound; this.batch=batch;
+  constructor({ libraryRoot, parent, catalog, testing = false, testRound = '1', batch = false, gallery = false }) {
+    this.libraryRoot=libraryRoot; this.parent=parent; this.testing=testing; this.testRound=testRound; this.batch=batch; this.gallery=gallery; this.formIndex=0;
     this.refreshCatalog(catalog);
     this.testScope=this.release?.scope||'sample';this.reportScope=this.release?.scope||'two-skin-sample';
     const notesFolder=path.join(libraryRoot,testing?`.desktop-data/${this.testScope}-self-test/round-${testRound}/notes`:batch?`.desktop-data/${this.testScope}/tryout-notes`:'.desktop-data/tryout-notes');
@@ -21,19 +21,26 @@ class TryoutManager {
     if(this.selected)this.selected=this.samples.find(s=>s.id===this.selected.id)||this.samples[0];
   }
   requireSample(id) { const sample=this.samples.find(s=>s.id===id); if(!sample)throw new Error('这款皮肤尚未在本批开放试玩'); return sample; }
+  // The model view guards navigation by the sample it was opened with, so each form is
+  // opened as the same skin with that form's online ID and page.
+  current() {
+    const form=this.selected.forms?.[this.formIndex];
+    return form?{...this.selected,onlineId:form.onlineId,url:modelUrl(form.onlineId),form:{...form,index:this.formIndex}}:this.selected;
+  }
   authorize(event) {
     if (!this.window || this.window.isDestroyed() || event.sender !== this.window.webContents || event.senderFrame !== this.window.webContents.mainFrame || event.senderFrame.url !== pageUrl) throw new Error('无效试玩操作来源');
   }
   register() {
     const handle=(name,fn)=>ipcMain.handle(`tryout:${name}`,(event,...args)=>{this.authorize(event);return fn(...args);});
-    handle('init',()=>({samples:this.samples,availability:this.availability,auditedAt:this.auditedAt,batch:this.batch,releaseLabel:this.release?.label,selectedId:this.selected.id,state:this.model.state,notes:this.notes.get(this.selected.id)}));
-    handle('select',async id=>{this.selected=this.requireSample(id);const notes=this.notes.get(id);await this.model.open(this.selected);return {sample:this.selected,notes};});
-    handle('retry',()=>this.model.open(this.selected));
+    handle('init',()=>({samples:this.samples,availability:this.availability,auditedAt:this.auditedAt,batch:this.batch,gallery:this.gallery,releaseLabel:this.release?.label,selectedId:this.selected.id,state:this.model.state,notes:this.notes.get(this.selected.id)}));
+    handle('select',async id=>{this.selected=this.requireSample(id);this.formIndex=0;const notes=this.notes.get(id);await this.model.open(this.current());return {sample:this.selected,formIndex:0,notes};});
+    handle('form',async index=>{if(!Number.isInteger(index)||!this.selected.forms?.[index])throw new Error('这款皮肤没有该形态');if(index===this.formIndex&&this.model.state.phase!=='error')return {formIndex:index};this.formIndex=index;await this.model.open(this.current());return {formIndex:index};});
+    handle('retry',()=>this.model.open(this.current()));
     handle('mute',value=>{if(typeof value!=='boolean')throw new Error('静音参数无效');this.model.setMuted(value);});
     handle('occlude',value=>{if(typeof value!=='boolean')throw new Error('窗口状态无效');this.model.setOccluded(value);});
     handle('bounds',bounds=>this.model.setBounds(bounds));
     handle('notes',(id,revision,operation,value)=>{this.requireSample(id);return this.notes.update(id,revision,operation,value);});
-    handle('browser',()=>shell.openExternal(this.selected.url));
+    handle('browser',()=>shell.openExternal(this.current().url));
     handle('search',()=>shell.openExternal(`https://search.bilibili.com/all?keyword=${encodeURIComponent(`碧蓝航线 ${this.selected.character} ${this.selected.name} L2D 互动 玩法`)}`));
     handle('close',async()=>{this.allowClose=true;await this.model.stop();this.window?.close();});
   }

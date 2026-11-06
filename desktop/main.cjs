@@ -5,8 +5,11 @@ const { pathToFileURL } = require('node:url');
 const { externalUrl, localResource } = require('./policy.cjs');
 const argument = name => { const i = process.argv.indexOf(name); return i >= 0 ? process.argv[i + 1] : undefined; };
 const appRoot = path.resolve(__dirname, '..');
-const sampleBuild = require('../package.json').sampleBuild === true;
-const batchBuild = require('../package.json').batchBuild || 0;
+// galleryTryout: the official gallery itself carries the tryout for that release
+// (keeps the gallery's own name, profile and window), instead of a separate batch app.
+const galleryTryout = require('../package.json').galleryTryout || 0;
+const sampleBuild = require('../package.json').sampleBuild === true || galleryTryout > 0;
+const batchBuild = require('../package.json').batchBuild || galleryTryout || 0;
 const release = batchBuild ? require('./tryout/batch.cjs').releaseFrom(batchBuild) : null;
 const testScope = release?.scope || 'sample';
 const reportScope = release?.scope || 'two-skin-sample';
@@ -15,9 +18,9 @@ const sampleTest = sampleBuild && process.argv.includes('--sample-self-test');
 const testRound = String(argument('--test-round') || '1');
 if (!/^[1-9][0-9]?$/.test(testRound)) throw new Error('无效测试轮次');
 const selfTest = process.argv.includes('--self-test');
-const profile = path.join(libraryRoot, sampleTest ? `.desktop-data/${testScope}-self-test/round-${testRound}/profile` : selfTest ? '.desktop-data/self-test' : batchBuild ? `.desktop-data/${testScope}/profile` : sampleBuild ? '.desktop-data/sample-profile' : '.desktop-data');
+const profile = path.join(libraryRoot, sampleTest ? `.desktop-data/${testScope}-self-test/round-${testRound}/profile` : selfTest ? '.desktop-data/self-test' : galleryTryout ? '.desktop-data' : batchBuild ? `.desktop-data/${testScope}/profile` : sampleBuild ? '.desktop-data/sample-profile' : '.desktop-data');
 fs.mkdirSync(profile, { recursive: true });
-app.setName(batchBuild ? `碧蓝航线试玩台 · ${release.label}` : sampleBuild ? '碧蓝航线试玩样例' : '碧蓝航线图鉴');
+app.setName(galleryTryout ? '碧蓝航线图鉴' : batchBuild ? `碧蓝航线试玩台 · ${release.label}` : sampleBuild ? '碧蓝航线试玩样例' : '碧蓝航线图鉴');
 app.setPath('userData', profile);
 app.setPath('sessionData', profile);
 app.setAppUserModelId('gouluanjiang.azurlane.l2d.gallery');
@@ -28,7 +31,7 @@ let job = { phase: 'idle', message: '已有图片可离线查看', lines: [] };
 const readJson = relative => JSON.parse(fs.readFileSync(path.join(libraryRoot, relative), 'utf8').replace(/^\uFEFF/, ''));
 function currentState() {
   const catalog = readJson('data/catalog.json');
-  return { job, total: catalog.skins.length, version: catalog.version, updatedTo: catalog.updatedTo, checkedAt: catalog.checkedAt, hasRollback: fs.existsSync(path.join(libraryRoot, '.l2d-update/last-success.json')) };
+  return { job, appVersion: app.getVersion(), total: catalog.skins.length, version: catalog.version, updatedTo: catalog.updatedTo, checkedAt: catalog.checkedAt, hasRollback: fs.existsSync(path.join(libraryRoot, '.l2d-update/last-success.json')) };
 }
 function notify() { if (window && !window.isDestroyed()) window.webContents.send('l2d:progress', job); }
 function authorized(event) {
@@ -114,7 +117,7 @@ else {
     ipcMain.handle('l2d:folder', event => { authorized(event); return shell.openPath(libraryRoot); });
     if (sampleBuild) {
       const {TryoutManager}=require('./tryout/manager.cjs');
-      tryout=new TryoutManager({libraryRoot,parent:window,catalog:readJson('data/catalog.json'),testing:sampleTest,testRound,batch:batchBuild});
+      tryout=new TryoutManager({libraryRoot,parent:window,catalog:readJson('data/catalog.json'),testing:sampleTest,testRound,batch:batchBuild,gallery:galleryTryout>0});
     }
     ipcMain.handle('l2d:samples', event => {authorized(event);tryout?.refreshCatalog(readJson('data/catalog.json'));return tryout?.samples || [];});
     ipcMain.handle('l2d:availability', event => {authorized(event);tryout?.refreshCatalog(readJson('data/catalog.json'));return tryout?.availability || [];});

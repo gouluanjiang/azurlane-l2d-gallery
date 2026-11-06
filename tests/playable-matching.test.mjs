@@ -77,7 +77,7 @@ test('second release adds twelve exact models while preserving the accepted eigh
   const changed={...catalog,skins:catalog.skins.map(s=>s.id===batch.secondIds[0]?{...s,name:'尚未核对的新皮肤'}:s)};
   assert.throws(()=>batch.batchFrom(changed,2),/不匹配/);
   assert.equal(batch.batchFrom(changed,1).samples.length,8);
-  for(const invalid of [0,5,1.5,'3'])assert.throws(()=>batch.releaseFrom(invalid),/未知/);
+  for(const invalid of [0,6,1.5,'3'])assert.throws(()=>batch.releaseFrom(invalid),/未知/);
 });
 
 test('third release preserves all accepted mappings and separates the two Shinano costumes',()=>{
@@ -112,7 +112,33 @@ test('fourth release preserves 32 accepted models and separates the Karl costume
   assert.equal(batch.batchFrom(changed,3).samples.length,32);
 });
 
-for(const number of [2,3,4])test(`release ${number} inherits previous notes and drafts without changing older files`,()=>{
+test('the full release opens every verified skin, keeps accepted order and adds Spine forms',()=>{
+  const catalog=JSON.parse(fs.readFileSync(new URL('../data/catalog.json',import.meta.url),'utf8'));
+  const fourth=batch.batchFrom(catalog,4),full=batch.batchFrom(catalog,batch.fullRelease);
+  assert.equal(full.release.label,'全部皮肤');
+  assert.deepEqual(full.samples.slice(0,44).map(s=>[s.id,s.onlineId]),fourth.samples.map(s=>[s.id,s.onlineId]));
+  assert.equal(new Set(full.samples.map(s=>s.onlineId)).size,full.samples.length);
+  assert.equal(full.samples.length,catalog.skins.length);
+  for(const s of full.samples){assert.equal(s.forms[0].kind,'live2d');assert.equal(s.forms[0].onlineId,s.onlineId);assert(s.forms.length<=2);}
+  const kinmu=full.samples.find(s=>s.id==='azl-a17232397b1db5bb');
+  assert.deepEqual(kinmu.forms.map(f=>[f.onlineId,f.kind]),[['9600032','live2d'],['9600033','spine']]);
+  // Frozen batches still read the September manifest only.
+  assert.equal(fourth.availability.filter(s=>s.status==='review').length,15);
+  // A skin synced later and not yet verified stays in review even in the full release.
+  const synced=batch.batchFrom({...catalog,skins:[...catalog.skins,{...catalog.skins[0],id:'azl-not-verified-yet',name:'尚未核对'}]},batch.fullRelease);
+  assert.equal(synced.availability.at(-1).status,'review');
+  assert.equal(synced.samples.length,catalog.skins.length);
+});
+test('form lists accept one Live2D plus at most one Spine and nothing else',()=>{
+  const live={onlineId:'1',dynamicType:'live2d',isLive2dPlus:false},spine={onlineId:'2',dynamicType:'spine'};
+  assert.deepEqual(batch.formsFrom([live,spine]).map(f=>f.kind),['live2d','spine']);
+  assert.equal(batch.formsFrom([spine]),null);
+  assert.equal(batch.formsFrom([live,{...live,onlineId:'3'}]),null);
+  assert.equal(batch.formsFrom([live,spine,{...spine,onlineId:'4'}]),null);
+  assert.equal(batch.formsFrom([live,{onlineId:'5',dynamicType:'painting'}]),null);
+});
+
+for(const number of [2,3,4,5])test(`release ${number} inherits previous notes and drafts without changing older files`,()=>{
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'l2d-second-inherit-'));
   try{
     const first=batch.releaseFrom(number-1),second=batch.releaseFrom(number);

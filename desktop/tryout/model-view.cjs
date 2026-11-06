@@ -25,8 +25,8 @@ const embeddedStyle = `
 const shortUrl = value => { try { const u = new URL(value); return u.origin + u.pathname; } catch { return ''; } };
 
 class ModelView extends EventEmitter {
-  constructor(window, { diagnosticDir, partition = 'persist:l2d-sample-online-v1', timeoutMs = 90000 } = {}) {
-    super(); this.window = window; this.timeoutMs = timeoutMs; this.diagnosticDir = diagnosticDir;
+  constructor(window, { diagnosticDir, partition = 'persist:l2d-sample-online-v1', timeoutMs = 90000, stallMs = 30000 } = {}) {
+    super(); this.window = window; this.timeoutMs = timeoutMs; this.stallMs = stallMs; this.diagnosticDir = diagnosticDir;
     this.session = session.fromPartition(partition); this.generation = 0; this.muted = false; this.occluded = false;
     this.bounds = {x: 20, y: 150, width: 800, height: 650}; this.retired = [];
     this.state = { phase: 'idle', message: '选择一款皮肤开始试玩', elapsedMs: 0, audible: false };
@@ -96,7 +96,8 @@ class ModelView extends EventEmitter {
       wc.insertCSS(embeddedStyle).catch(()=>{});
       this.publish({phase:'loading',message:'正在准备模型资源…',elapsedMs:this.elapsed()});
     });
-    this.deadlineTimer = setTimeout(() => { if (current() && this.state.phase !== 'ready') this.fail('等待模型超过 90 秒，请重试或在浏览器打开。','MODEL_TIMEOUT'); }, this.timeoutMs);
+    const armDeadline = () => { clearTimeout(this.deadlineTimer); this.deadlineTimer = setTimeout(() => { if (current() && this.state.phase !== 'ready') this.fail('等待模型超过 90 秒，请重试或在浏览器打开。','MODEL_TIMEOUT'); }, this.timeoutMs); };
+    armDeadline();
     const poll = async () => {
       if (!current() || this.state.phase === 'error') return;
       let watchdog;
@@ -126,6 +127,17 @@ class ModelView extends EventEmitter {
           // Keep manual static-art inspection usable; only an explicit site error,
           // crash or wrong-skin navigation terminates a running player.
         } else {
+          // The site sometimes stops mid-download (progress frozen) or leaves a blank page.
+          // Reload once when nothing visible has changed for stallMs, instead of waiting out the deadline.
+          const progressKey = `${ui.mounted}|${ui.title}|${ui.loading}|${ui.progress}`;
+          if (progressKey !== this.attempt.progressKey) { this.attempt.progressKey = progressKey; this.attempt.progressAt = this.elapsed(); }
+          else if (!this.attempt.autoRetry && this.elapsed() - this.attempt.progressAt >= this.stallMs) {
+            this.attempt.autoRetry = { atMs: this.elapsed(), stalledOn: progressKey.slice(0, 200) };
+            this.attempt.progressKey = null; this.attempt.controlsPrepared = false;
+            this.publish({phase:'connecting',message:'模型资源下载停滞，正在自动重新载入…',elapsedMs:this.elapsed()});
+            armDeadline(); this.record(); wc.reload();
+            this.pollTimer=setTimeout(poll,1000); return;
+          }
           this.publish({phase:ui.mounted?'loading':'connecting',message:ui.loading|| (ui.mounted?'模型资源准备中…':'正在打开在线页面…'),elapsedMs:this.elapsed()});
           if (this.elapsed() % 4000 < 800) this.record();
         }

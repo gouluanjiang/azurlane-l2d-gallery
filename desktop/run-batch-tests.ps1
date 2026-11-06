@@ -1,7 +1,8 @@
-﻿param([int]$StartRound=1,[int]$EndRound=2,[ValidateSet(1,2,3,4)][int]$Batch=4,[ValidateSet('auto','regression','portraits','interaction')][string]$Mode='auto',[ValidatePattern('^$|^azl-[a-f0-9]{16}$')][string]$OnlySkin='')
+﻿param([int]$StartRound=1,[int]$EndRound=2,[ValidateSet(1,2,3,4,5)][int]$Batch=4,[ValidateSet('auto','regression','portraits','interaction')][string]$Mode='auto',[ValidatePattern('^$|^azl-[a-f0-9]{16}$')][string]$OnlySkin='',[ValidateRange(60,7200)][int]$TimeoutSeconds=600)
 $ErrorActionPreference='Stop'
 $projectRoot=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-$runtimeExe=Join-Path $projectRoot ".desktop-batch-$Batch\碧蓝航线图鉴.exe"
+# Batch 5 (all skins) ships inside the official gallery runtime, not a separate batch runtime.
+$runtimeExe=if($Batch -eq 5){Join-Path $projectRoot ".desktop\碧蓝航线图鉴.exe"}else{Join-Path $projectRoot ".desktop-batch-$Batch\碧蓝航线图鉴.exe"}
 if($StartRound -lt 1 -or $EndRound -gt 99 -or $StartRound -gt $EndRound){throw 'Invalid test rounds'}
 if($OnlySkin -and $Mode -ne 'interaction'){throw 'A focused diagnostic requires -Mode interaction'}
 for($round=$StartRound;$round -le $EndRound;$round++){
@@ -16,7 +17,7 @@ for($round=$StartRound;$round -le $EndRound;$round++){
     $process=Start-Process -FilePath $runtimeExe -ArgumentList $testArguments -WorkingDirectory $projectRoot -WindowStyle Hidden -RedirectStandardError (Join-Path $outputFolder "stderr.txt") -RedirectStandardOutput (Join-Path $outputFolder "stdout.txt") -PassThru
     $trackedProcessHandle=$process.Handle
     Write-Output ("Round {0} started; PID {1}" -f $round,$process.Id)
-    if(-not $process.WaitForExit(600000)){throw "Round $round exceeded the process timeout; PID $($process.Id)"}
+    if(-not $process.WaitForExit($TimeoutSeconds*1000)){throw "Round $round exceeded the process timeout; PID $($process.Id)"}
     $process.Refresh()
     $reportFile=Join-Path $outputFolder 'acceptance.json'
     if(-not (Test-Path -LiteralPath $reportFile)){throw "Round $round did not create an acceptance report"}

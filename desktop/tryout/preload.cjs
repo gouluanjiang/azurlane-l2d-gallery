@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('l2dTryout',{
   init:()=>ipcRenderer.invoke('tryout:init'),
   select:id=>ipcRenderer.invoke('tryout:select',id),
   retry:()=>ipcRenderer.invoke('tryout:retry'),
+  form:index=>ipcRenderer.invoke('tryout:form',index),
   mute:value=>ipcRenderer.invoke('tryout:mute',value),
   occlude:value=>ipcRenderer.invoke('tryout:occlude',value),
   bounds:value=>ipcRenderer.invoke('tryout:bounds',value),

@@ -118,6 +118,20 @@
     $('voice-state').textContent=state.muted?'已静音':state.audible?'语音正在播放':'语音待触发';$('mute').setAttribute('aria-pressed',String(Boolean(state.muted)));$('mute').textContent=state.muted?'取消静音':'静音';
     $('stage').dataset.state=state.phase;
   }
+  // Dual-form skins: Live2D opens first; the Spine form is the same skin, notes are shared.
+  function renderForms(target,active) {
+    const box=$('form-switch');box.replaceChildren();
+    const forms=target.forms||[];box.hidden=forms.length<2;
+    forms.forEach((form,index)=>{
+      const b=document.createElement('button');b.type='button';b.dataset.formIndex=String(index);b.textContent=form.label;
+      b.setAttribute('aria-pressed',String(index===active));b.setAttribute('aria-label',`切换到${form.label}形态`);
+      b.addEventListener('click',async()=>{if(switching||b.getAttribute('aria-pressed')==='true'&&currentPhase!=='error')return;switching=true;
+        try{for(const x of box.children)x.disabled=true;renderState({phase:'connecting',sampleId:target.id,message:`正在切换到${form.label}…`,elapsedMs:0});await api.form(index);
+          for(const x of box.children)x.setAttribute('aria-pressed',String(x===b));$('skin-caption').textContent=`${target.character}「${target.name}」 · ${form.label} · 在线模型 l2d.su`;}
+        catch(e){showError(e);}finally{switching=false;for(const x of box.children)x.disabled=false;}});
+      box.append(b);
+    });
+  }
   async function selectSample(id,initial=false) {
     if(switching||(!initial&&current?.id===id))return;
     switching=true;$('note-fields').disabled=true;clearError();
@@ -128,7 +142,8 @@
       current=target;document.body.dataset.skinId=id;
       $('selected-art').src=resource(target.artworkPath);$('selected-title').textContent=`${target.character} · ${target.name}`;$('selected-meta').textContent=`${target.type} · ${target.releaseDate} · ${target.label}`;
       for(const b of $('samples').children)b.setAttribute('aria-pressed',String(b.dataset.skinId===id));
-      $('loading-art').src=resource(target.artworkPath);$('skin-caption').textContent=`${target.character}「${target.name}」 · 在线模型 l2d.su`;
+      $('loading-art').src=resource(target.artworkPath);$('skin-caption').textContent=`${target.character}「${target.name}」${target.forms?.length>1?` · ${target.forms[0].label}`:''} · 在线模型 l2d.su`;
+      renderForms(target,0);
       const hasGuide=Boolean(target.guidePath);
       for(const name of ['small-viewport','guide-tools','guide-hint','expand-guide'])$(name).hidden=!hasGuide;
       $('guide-empty').hidden=hasGuide;$('guide-title').textContent=hasGuide?'高清玩法图解':'新装探索';$('guide-caption').textContent=hasGuide?'放大查看点位，再回到模型上试一试。':'先玩起来，把发现记在自己的笔记里。';
@@ -146,8 +161,8 @@
   $('back-gallery').addEventListener('click',close);api.onClose(close);api.onState(renderState);api.onSelect(id=>selectSample(id));
   api.init().then(async data=>{
     samples=data.samples;availability=data.availability;
-    $('release-label').textContent=data.batch?`${data.releaseLabel} · 待你验收`:'两款样例';document.title=data.batch?`L2D 试玩台 · ${data.releaseLabel}`:'L2D 试玩台 · 两款样例';
-    $('scope-summary').textContent=`本批 ${samples.length} 款可试玩`;
+    $('release-label').textContent=data.gallery?data.releaseLabel:data.batch?`${data.releaseLabel} · 待你验收`:'两款样例';document.title=data.batch?`L2D 试玩台 · ${data.releaseLabel}`:'L2D 试玩台 · 两款样例';
+    $('scope-summary').textContent=`${data.gallery?'共':'本批'} ${samples.length} 款可试玩`;
     const count=status=>availability.filter(s=>s.status===status).length;
     $('mapping-summary').textContent=`共 ${availability.length} 款 · ${count('playable')} 款可试玩 · ${count('matched')} 款已匹配待接入 · ${count('review')} 款待核对`+(data.auditedAt?` · 核对于 ${data.auditedAt.slice(0,10)}`:'');
     renderPicker();
