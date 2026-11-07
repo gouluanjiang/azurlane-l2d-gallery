@@ -17,7 +17,8 @@
     "desktop:sample": "node desktop/build-sample.mjs",
     "desktop:batch": "node desktop/build-batch.mjs",
     "audit:playable": "node scripts/audit-playable.mjs",
-    "desktop:dev": "electron ."
+    "desktop:dev": "electron .",
+    "release:pack": "node desktop/package-release.mjs"
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",

@@ -78,15 +78,18 @@ function startUpdate(operation, { auto = false } = {}) {
     try { if (code === 0) {
       const result = readJson(operation === 'check' ? 'data/update-report.json' : 'data/sync-status.json');
       const total = currentState().total;
-      const added = result.added ?? result.newCount ?? 0;
-      job = { ...job, phase: 'success', result, message: operation === 'rollback' ? `已恢复上一版本，共 ${total} 款` : added ? `${auto ? '已自动更新' : '更新完成'}，新增 ${added} 款，当前共 ${total} 款` : `${auto ? '已自动检查，' : ''}已是最新图鉴，共 ${total} 款`, finishedAt: new Date().toISOString() };
+      const added = result.added ?? result.newCount ?? 0, repaired = result.repaired ?? 0;
+      job = { ...job, phase: 'success', result, message: operation === 'rollback' ? `已恢复上一版本，共 ${total} 款` : added ? `${auto ? '已自动更新' : '更新完成'}，新增 ${added} 款，当前共 ${total} 款` : repaired ? `已补齐 ${repaired} 张本地图像，共 ${total} 款` : `${auto ? '已自动检查，' : ''}已是最新图鉴，共 ${total} 款`, finishedAt: new Date().toISOString() };
       notify();
       // An automatic check reloads the page only when something changed (see autoUpdate).
       if (!auto && window && !window.isDestroyed()) window.webContents.reload();
-      finishedUpdate?.({ ok: true, added });
+      finishedUpdate?.({ ok: true, added, repaired });
     } else {
       job = { ...job, phase: 'error', message: auto ? '自动同步未完成，现有图鉴已保留；原因见“更新过程”，可稍后点“同步云端”。' : '更新未完成，现有图鉴已保留。可重试或查看过程。', finishedAt: new Date().toISOString() };
-      notify(); finishedUpdate?.({ ok: false, added: 0 });
+      let repaired = 0; try { if (operation === 'sync') repaired = readJson('data/sync-status.json').repaired ?? 0; } catch { /* no status written */ }
+      notify();
+      if (!auto && repaired && window && !window.isDestroyed()) window.webContents.reload();
+      finishedUpdate?.({ ok: false, added: 0, repaired });
     } } catch (error) { job = { ...job, phase:'error', message:`读取更新结果失败：${error.message}` }; notify(); finishedUpdate?.({ ok: false, added: 0 }); }
   });
   return { started: true, done };
@@ -96,10 +99,10 @@ function startUpdate(operation, { auto = false } = {}) {
 // tryout look up skins that are still in review. Reloads the page only when something changed.
 async function autoUpdate() {
   const settings = readSettings(), now = Date.now();
-  let added = 0, opened = 0;
+  let added = 0, repaired = 0, opened = 0;
   if (settings.autoSync && !(Date.parse(settings.lastAutoSync || '') > now - 12 * 3600000)) {
     const started = startUpdate('sync', { auto: true });
-    if (started.started) { const result = await started.done; if (result.ok) { writeSettings({ lastAutoSync: new Date().toISOString() }); added = result.added; } }
+    if (started.started) { const result = await started.done; repaired = result.repaired ?? 0; if (result.ok) { writeSettings({ lastAutoSync: new Date().toISOString() }); added = result.added; } }
   }
   if (settings.autoTryout && tryout && !worker) {
     const auto = require('./tryout/auto-verify.cjs');
@@ -116,7 +119,7 @@ async function autoUpdate() {
       tryout.refreshCatalog(readJson('data/catalog.json'));
     }
   }
-  if ((added || opened) && window && !window.isDestroyed()) { const message = job; window.webContents.once('did-finish-load', () => { job = message; notify(); }); window.webContents.reload(); }
+  if ((added || repaired || opened) && window && !window.isDestroyed()) { const message = job; window.webContents.once('did-finish-load', () => { job = message; notify(); }); window.webContents.reload(); }
 }
 
 if (!app.requestSingleInstanceLock()) app.quit();
