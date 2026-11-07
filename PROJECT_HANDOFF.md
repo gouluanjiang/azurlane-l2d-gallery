@@ -1,5 +1,7 @@
 # PROJECT HANDOFF — 碧蓝航线 L2D 玩法合集
 
+> **当前状态：2026-11-07 起进入维护模式，最新版本 1.7.2。出问题先看第 18 节“维护模式”。** 下面几条“最新续接”是历史记录。
+
 > **最新续接：2026-11-06，补录 2017 年起的 131 款早期 L2D 换装（共 238 款，全部可试玩），正式图鉴新增自动同步与试玩模型自动核对，等待用户验收。** 详见第 15 节；1.7.0 并入图鉴见第 14 节。第四批 1.6.1 见第 13.1 节；前三批入口已冻结且无法再加载在线模型。项目已迁至 `D:\碧蓝航线图鉴`。
 
 > **最新续接：2026-09-18，第四批 1.6.0-batch.4 工程验证通过，等待用户验收。** 第三批已于 2026-09-17 由用户明确“验收通过 继续进行下一批的制作流程”，验收记录为 `verification/batch-3/user-acceptance.json`。第四批新增十二款、累计四十四款，入口 `碧蓝航线试玩台-第四批.exe`；58 项测试及最终三轮实际程序验证通过，详见第 13 节。企业、吾妻的来源未提供摸头语音，已验证无语音摸头动作与普通触摸语音。第五批尚未开始。
@@ -309,3 +311,54 @@
 - `batch-self-test.cjs`：去掉笔记步骤，改用年份筛选与“最近试玩”；`-OnlySkin` 不再限定 interaction 模式。第 17 轮（瑟堡，regression）与第 18 轮（金鹿号双形态无图解，portraits）通过。
 - 已知：试玩区尺寸变了（无图解时约 1501×853），摸头测试点按旧尺寸 1065×658 标定，interaction 模式需要重新标定后才能运行。
 - 追加（同日）：图解面板有自己的“收起 ›”按钮，收起后变成右侧 40 px 的竖向“玩法图解”窄栏；工具栏的“收起动作栏”隐藏 l2d.su 页面左侧的动作 / 参数 / 部件栏（注入 CSS 隐藏 `section.sidebar`、`.browser-panel-frame`，把 `.model-workspace` 与 `.browser-page-toolbar` 左移到 8 px），模型区宽度 1107 → 1434 px。两项偏好都存在试玩页的 localStorage，动作栏状态在切换皮肤和重新载入后保持。第 25 轮（瑟堡，regression）覆盖两种收起与恢复。
+
+## 18. 维护模式（2026-11-07 起）
+
+用户确认项目转入稳定运行，不再主动开发。出问题时按本节处理。
+
+**现状**
+- 最新版本 1.7.2（[Releases](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/latest)，便携压缩包，不含游戏图片）。
+- 2026-11-07 目录：238 款、238 张原图（全部有公开来源）、68 款有图解，全部可试玩。
+- README 的数量与更新日期改为 shields.io 动态徽章，直接读 `main` 上的 `data/catalog.json`，不再手写数字。
+
+**自动运行的部分**
+
+| 环节 | 时间 | 说明 |
+| --- | --- | --- |
+| 云端收录 `update.yml` | 每周三、六 北京时间 10:17（cron `17 2 * * 3,6`） | 每次都提交一次目录（至少更新 `checkedAt`），仓库保持活跃，GitHub 不会因 60 天无活动停用定时任务 |
+| 本机同步 | 图鉴启动约 5 秒后，最多每 12 小时一次 | 只在图鉴打开时运行；首次启动先下载最新皮肤的原图 |
+| 试玩模型核对 | 每次启动 | 结果存 `.desktop-data/tryout-auto-verify.json`，找不到的 3 天后再试 |
+
+**出问题时的信号**
+- GitHub Actions 失败邮件：自动收录失败，已有目录不受影响。
+- 图鉴顶部状态“自动检查未完成”：点状态文字看原因。
+- 试玩台“模型暂时未能打开”：多半是 l2d.su 不可用或改版。
+- 新皮肤一直“试玩待核对”：网站上的名称和 WIKI 对不上。
+
+**排查手册**
+1. **试玩台打不开（l2d.su 改版）**：先在浏览器打开 `https://l2d.su/azurlane/skins/<编号>/` 确认网站本身正常。
+   - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
+   - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器，以及 `readiness.cjs` 的 `inspectScript`。
+   - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 25。
+2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
+3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
+4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
+5. **补玩法图解**：给皮肤写 `guidePath`、`guideSource`、`guideSha256`、`guideBytes`，来源必须在 `IMAGE_HOSTS` 内，经同步引擎提交，并通过 `npm run validate:local`。
+
+**发布新版本**
+1. 在 `desktop/tryout/batch.cjs` 把第 5 版的 `version` 改为新号（如 `1.7.3-all`），提 PR，CI 通过后合并。
+2. `npm run release:pack`，再运行 `.desktop\碧蓝航线图鉴.exe --self-test`（在 `D:\碧蓝航线图鉴` 下）。
+3. `gh release create v<版本> --target <main 的完整 SHA>`，上传压缩包和 `.sha256`；从 Releases 重新下载核对校验值。
+
+**本机注意**
+- 项目必须放在 `D:\碧蓝航线图鉴`，不能放进带 Codex 沙盒权限的目录（`D:\code`、`Documents\Codex`），否则桌面版无法启动。
+- `origin` 的 SSH 地址在这台电脑上主机密钥校验失败，推送用 HTTPS：`git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push https://github.com/gouluanjiang/azurlane-l2d-gallery.git <分支>`。
+- 机器人每周三、六会提交 `main` 上的目录；改动目录的 PR 要在 10:17 前合并，或合并前先同步 `main`。
+
+**已知未完成（不影响运行）**
+- 170 款没有本地玩法图解，新皮肤也不会自动带图解。
+- 新界面上还没跑完整的 198 款回归；摸头测试（interaction 模式）的点位按旧试玩区尺寸 1065×658 标定，需按新尺寸重新标定 `verification/batch-4/head-points.json` 后才能运行。
+- 第 15 轮有 10 款早期皮肤未检测到问候语音，抽查吹雪实际有声音，属于检测问题。
+
+**2026-11-07 本机清理**：删除试玩测试配置文件、构建缓存、本地发布包和验证截图（`verification` 中的 JSON 报告与 `head-points.json` 等标定文件保留）。
