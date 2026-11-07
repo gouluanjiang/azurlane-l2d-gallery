@@ -1,8 +1,8 @@
-﻿param([int]$StartRound=1,[int]$EndRound=2,[ValidateSet(1,2,3,4,5)][int]$Batch=4,[ValidateSet('auto','regression','portraits','interaction')][string]$Mode='auto',[ValidatePattern('^$|^azl-[a-f0-9]{16}$')][string]$OnlySkin='',[ValidateRange(60,7200)][int]$TimeoutSeconds=600)
+﻿param([int]$StartRound=1,[int]$EndRound=2,[ValidateSet(5)][int]$Batch=5,[ValidateSet('auto','regression','portraits','interaction')][string]$Mode='auto',[ValidatePattern('^$|^azl-[a-f0-9]{16}$')][string]$OnlySkin='',[ValidateRange(60,7200)][int]$TimeoutSeconds=600)
 $ErrorActionPreference='Stop'
 $projectRoot=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-# Batch 5 (all skins) ships inside the official gallery runtime, not a separate batch runtime.
-$runtimeExe=if($Batch -eq 5){Join-Path $projectRoot ".desktop\碧蓝航线图鉴.exe"}else{Join-Path $projectRoot ".desktop-batch-$Batch\碧蓝航线图鉴.exe"}
+# The full tryout (release 5) ships inside the gallery runtime; the frozen batch 1-4 editions were retired.
+$runtimeExe=Join-Path $projectRoot ".desktop\碧蓝航线图鉴.exe"
 if($StartRound -lt 1 -or $EndRound -gt 99 -or $StartRound -gt $EndRound){throw 'Invalid test rounds'}
 if($OnlySkin -and $Mode -ne 'interaction'){throw 'A focused diagnostic requires -Mode interaction'}
 for($round=$StartRound;$round -le $EndRound;$round++){

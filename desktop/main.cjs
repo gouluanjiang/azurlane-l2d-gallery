@@ -183,7 +183,7 @@ else {
     if (!selfTest && !sampleTest && (galleryTryout || !batchBuild)) setTimeout(() => autoUpdate().catch(error => { job = { ...job, phase: 'error', message: `自动更新未完成：${error.message}` }; notify(); }), 5000);
     if (sampleBuild && process.argv.includes('--open-sample') && !sampleTest) await tryout.open();
     if (sampleTest) {
-      const {run}=require(batchBuild?'./tryout/batch-self-test.cjs':'./tryout/self-test.cjs');
+      const {run}=require('./tryout/batch-self-test.cjs');
       await run({window,tryout,libraryRoot,testRound,errors});
       quitting=true;await tryout.model?.stop();tryout.allowClose=true;tryout.window?.destroy();app.quit();
     }
