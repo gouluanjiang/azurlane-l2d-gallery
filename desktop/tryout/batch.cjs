@@ -69,7 +69,7 @@ const releases=Object.freeze([
   {label:'第二批',version:'1.4.0-batch.2',newIds:secondIds},
   {label:'第三批',version:'1.5.0-batch.3',newIds:thirdIds},
   {label:'第四批',version:'1.6.1-batch.4',newIds:fourthIds}, // 1.6.1: follows the l2d.su /azurlane/ page move
-  {label:'全部皮肤',version:'1.7.1-all',all:true} // every verified skin; newly synced skins stay in review until verified
+  {label:'全部皮肤',version:'1.7.2-all',all:true} // every verified skin; newly synced skins stay in review until verified
 ]);
 const manifestFor=(number,extraRecords)=>number>=fullRelease?mergedWith(extraRecords):manifest;
 const fixedIds=number=>[...accepted.map(s=>s.id),...releases.slice(0,Math.min(number,fullRelease-1)).flatMap(r=>r.newIds)];
