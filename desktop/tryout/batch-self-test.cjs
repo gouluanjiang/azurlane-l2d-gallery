@@ -25,7 +25,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
   async function ready(id){return until(()=>{if(tryout.model.state.phase==='error')throw new Error(tryout.model.state.error+': '+tryout.model.state.message);if(tryout.window&&(tryout.window.isMinimized()||!tryout.window.isVisible())){restored.push({id,at:new Date().toISOString()});tryout.window.restore();tryout.window.show();}return tryout.model.state.phase==='ready'&&tryout.model.state.sampleId===id;},'model ready '+id,210000);} // two 30 s stalls with reloads + 90 s deadline
   async function paint(){await local('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve(true))))');await pause(150);}
   async function capture(name){await paint();const wc=tryout.model.contents;fs.writeFileSync(path.join(out,`${name}-model.png`),(await wc.capturePage()).toPNG());fs.writeFileSync(path.join(out,`${name}-shell.png`),(await tryout.window.webContents.capturePage()).toPNG());return {model:name+'-model.png',shell:name+'-shell.png',bounds:tryout.model.bounds};}
-  async function choose(id){await click('choose-skin');await until(()=>local('document.getElementById("skin-picker").open'),'picker open',4000);assert.equal(tryout.model.occluded,true);await local(`(()=>{document.getElementById('skin-search').value='';document.getElementById('skin-status').value='playable';document.getElementById('skin-search').dispatchEvent(new Event('input'));document.querySelector('.sample-choice[data-skin-id="${id}"]').click();})()`);await until(()=>local(`document.body.dataset.skinId===${JSON.stringify(id)}`),'selection applied',5000);await ready(id);assert.equal(tryout.model.occluded,false);}
+  async function choose(id){await click('choose-skin');await until(()=>local('document.getElementById("skin-picker").open'),'picker open',4000);assert.equal(tryout.model.occluded,true);await local(`(()=>{document.getElementById('skin-search').value='';document.getElementById('skin-year').value='all';document.getElementById('skin-search').dispatchEvent(new Event('input'));document.querySelector('#samples .sample-choice[data-skin-id="${id}"]').click();})()`);await until(()=>local(`document.body.dataset.skinId===${JSON.stringify(id)}`),'selection applied',5000);await ready(id);assert.equal(tryout.model.occluded,false);}
   const pointer=async p=>{const wc=tryout.model.contents;tryout.window.focus();wc.focus();wc.sendInputEvent({type:'mouseMove',x:p.x,y:p.y});wc.sendInputEvent({type:'mouseDown',x:p.x,y:p.y,button:'left',clickCount:1});await pause(120);wc.sendInputEvent({type:'mouseUp',x:p.x,y:p.y,button:'left',clickCount:1});};
   async function silent(){let since=0;await until(()=>{if(tryout.model.contents.isCurrentlyAudible()){since=0;return false;}since ||=Date.now();return Date.now()-since>700;},'previous audio ends',50000);}
   async function touchHead(sample){
@@ -87,7 +87,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     step('resource-probe',{results:await gallery("Promise.all(['l2d://gallery/data/skins-data.js','l2d://gallery/desktop/renderer.js'].map(async url=>{try{const r=await fetch(url);return {url,status:r.status,headers:[...r.headers],text:(await r.text()).slice(0,200)};}catch(e){return {url,error:e.message}}}))")});
     await until(()=>gallery('document.documentElement.dataset.desktopReady==="true"'),'gallery',12000);
     await until(()=>gallery(`document.querySelectorAll('[data-tryout]').length===${sampleCount}&&document.querySelectorAll('[data-model-status]').length===${tryout.availability.length-sampleCount}`),'gallery availability badges',12000);
-    const original=await gallery("({cards:document.querySelectorAll('.card').length,originals:document.querySelectorAll('[data-open-artwork]').length,guides:document.querySelectorAll('[data-open-guide]').length})");
+    const original=await gallery("({cards:document.querySelectorAll('.card').length,originals:document.querySelectorAll('[data-open-artwork]').length,guides:document.querySelectorAll('.badge-guide').length})");
     // The catalog keeps growing through cloud sync; compare with the loaded catalog, not a fixed size.
     const catalogSize=tryout.availability.length,guideCount=tryout.availability.filter(s=>s.guidePath).length;
     assert.deepEqual(original,{cards:catalogSize,originals:catalogSize,guides:guideCount});
@@ -104,26 +104,29 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     step('initial-model-state',{nativeVisible:tryout.model.view?.getVisible(),occluded:tryout.model.occluded,body:await remote('document.body.innerText.slice(0,2200)'),viewport:await remote('({width:innerWidth,height:innerHeight,visibility:document.visibilityState})')});
     await ready(tryout.samples[0].id);
     await click('choose-skin');await until(()=>local('document.getElementById("skin-picker").open'),'skin picker',5000);
-    const counts=await local("({playable:document.querySelectorAll('.sample-choice').length,text:document.getElementById('mapping-summary').textContent})");assert.equal(counts.playable,sampleCount);
+    const counts=await local("({playable:document.querySelectorAll('#samples .sample-choice:not(:disabled)').length,listed:document.querySelectorAll('#samples .sample-choice').length,text:document.getElementById('mapping-summary').textContent})");assert.equal(counts.playable,sampleCount);assert.equal(counts.listed,tryout.availability.length);
     // Search results must equal exactly the playable skins whose "character name" text contains the query,
     // and always keep the accepted same-character skins apart.
     const matching=query=>tryout.samples.filter(s=>`${s.character} ${s.name}`.toLocaleLowerCase().includes(query)).map(s=>s.id).sort();
     await local("document.getElementById('skin-search').value='狮';document.getElementById('skin-search').dispatchEvent(new Event('input'));");
-    const lionIds=await local("[...document.querySelectorAll('.sample-choice')].map(e=>e.dataset.skinId).sort()");
+    const lionIds=await local("[...document.querySelectorAll('#samples .sample-choice')].map(e=>e.dataset.skinId).sort()");
     assert.deepEqual(lionIds,matching('狮'));for(const id of ['azl-24a8b69272bcc3f0','azl-789bced6e0969a71'])assert(lionIds.includes(id));
     await local("document.getElementById('skin-search').value='信浓';document.getElementById('skin-search').dispatchEvent(new Event('input'));");
-    const shinanoIds=await local("[...document.querySelectorAll('.sample-choice')].map(e=>e.dataset.skinId).sort()");
+    const shinanoIds=await local("[...document.querySelectorAll('#samples .sample-choice')].map(e=>e.dataset.skinId).sort()");
     assert.deepEqual(shinanoIds,matching('信浓'));assert(shinanoIds.includes('azl-7f76cef9141cdab6'));
     if(tryout.batch>=4){
       await local("document.getElementById('skin-search').value='腓特烈·卡尔';document.getElementById('skin-search').dispatchEvent(new Event('input'));");
-      assert.deepEqual(await local("[...document.querySelectorAll('.sample-choice')].map(e=>e.dataset.skinId).sort()"),['azl-604a37a57691b511','azl-9b55443b7f67aba2'].sort());
+      assert.deepEqual(await local("[...document.querySelectorAll('#samples .sample-choice')].map(e=>e.dataset.skinId).sort()"),['azl-604a37a57691b511','azl-9b55443b7f67aba2'].sort());
     }
-    await local("document.getElementById('skin-search').value='';document.getElementById('skin-status').value='review';document.getElementById('skin-status').dispatchEvent(new Event('change'));");
-    assert.equal(await local("document.querySelectorAll('.sample-choice:disabled').length"),reviewCount);
+    await local("document.getElementById('skin-search').value='';document.getElementById('skin-search').dispatchEvent(new Event('input'));");
+    // Skins that cannot be played yet stay listed, disabled, after the playable ones.
+    assert.equal(await local("document.querySelectorAll('#samples .sample-choice:disabled').length"),tryout.availability.length-sampleCount);
     const notOpen=tryout.availability.find(s=>s.status!=='playable')?.id||'azl-0000000000000000';
     const denied=await local(`window.l2dTryout.select(${JSON.stringify(notOpen)}).then(()=>false,()=>true)`);assert.equal(denied,true);
-    await local("document.getElementById('skin-status').value='all';document.getElementById('skin-status').dispatchEvent(new Event('change'));");
-    assert.equal(await local("document.querySelectorAll('.sample-choice').length"),tryout.availability.length);
+    const year=tryout.samples[0].releaseDate.slice(0,4);
+    await local(`document.getElementById('skin-year').value='${year}';document.getElementById('skin-year').dispatchEvent(new Event('change'));`);
+    assert.equal(await local("document.querySelectorAll('#samples .sample-choice').length"),tryout.availability.filter(s=>s.releaseDate.startsWith(year+'-')).length);
+    await local("document.getElementById('skin-year').value='all';document.getElementById('skin-year').dispatchEvent(new Event('change'));");
     await paint();fs.writeFileSync(path.join(out,'picker.png'),(await tryout.window.webContents.capturePage()).toPNG());
     await click('close-picker');await until(()=>!tryout.model.occluded,'picker restored model',3000);
     step('search-filter-and-review-guard',counts);
@@ -132,7 +135,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     const coveredIds=deep&&tryout.batch>=4?[...regressionAnchors,...tryout.release.newIds].filter((id,i,all)=>all.indexOf(id)===i):deep?tryout.release.enabledIds:tryout.release.newIds;
     let subjects=tryout.batch?tryout.samples.filter(s=>coveredIds.includes(s.id)):tryout.samples;
     const onlyIndex=process.argv.indexOf('--test-only-skin');
-    if(onlyIndex>=0){assert.equal(mode,'interaction');const id=process.argv[onlyIndex+1];assert(subjects.some(s=>s.id===id),'Unknown diagnostic skin');subjects=subjects.filter(s=>s.id===id);}
+    if(onlyIndex>=0){const id=process.argv[onlyIndex+1];assert(subjects.some(s=>s.id===id),'Unknown diagnostic skin');subjects=subjects.filter(s=>s.id===id);}
     step('coverage-plan',{available:sampleCount,testedIds:subjects.map(s=>s.id),newIds:tryout.release.newIds,method:deep&&tryout.batch>=4?'All new skins plus four accepted regression anchors':'Full batch or new-only according to mode'});
     for(let index=0;index<subjects.length;index++) {
       const sample=subjects[index];if(tryout.selected.id!==sample.id)await choose(sample.id);
@@ -148,13 +151,8 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
         await remote(`document.querySelector('button[aria-label="触摸区域"]:not([aria-pressed="true"])')?.click()`);await pause(350);
         load.capture=await capture(`skin-${sample.onlineId}`);
         await remote(`document.querySelector('button[aria-label="触摸区域"][aria-pressed="true"]')?.click()`);
-        await click('guide-tab');
         if(sample.guidePath){await until(()=>local('document.getElementById("small-image").naturalWidth>1000'),'guide image',8000);load.guideWidth=await local('document.getElementById("small-image").naturalWidth');}
-        else assert.equal(await local('document.getElementById("guide-empty").hidden'),false);
-        await click('notes-tab');
-        assert.equal(tryout.notes.get(sample.id).entries.length,0,'fresh test profile');
-        await local(`(()=>{const values={'note-location':${JSON.stringify(sample.character+' '+sample.onlineId)},'note-steps':'点击动作菜单进行验证','note-result':'本批隔离测试记录'};for(const [id,value]of Object.entries(values)){const e=document.getElementById(id);e.value=value;e.dispatchEvent(new Event('input',{bubbles:true}));}document.getElementById('note-triggered').checked=true;document.getElementById('note-triggered').dispatchEvent(new Event('input'));})()`);
-        await click('save-note');await until(()=>tryout.notes.get(sample.id).entries.length===1,'skin-specific note saved',6000);
+        else assert.equal(await local('document.getElementById("sidebar").hidden'),true);
       }
       if(mode==='interaction')await touchHead(sample);
       if(!deep){await silent();await remote(`document.querySelector('button[aria-label="触摸区域"]:not([aria-pressed="true"])')?.click()`);await pause(500);load.capture=await capture('idle-'+sample.onlineId);}
@@ -173,7 +171,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
       step('skin-verified',load);
     }
     if(deep){
-      await choose(tryout.samples[0].id);await click('guide-tab');
+      await choose(tryout.samples[0].id);
       await click('expand-guide');await until(()=>local('document.getElementById("guide-dialog").open'),'guide dialog',3000);assert.equal(tryout.model.occluded,true);await click('close-guide');await until(()=>!tryout.model.occluded,'model restored',3000);
       await click('mute');await until(()=>tryout.model.contents.isAudioMuted(),'mute',3000);await click('mute');
       tryout.window.setContentSize(1120,740);await pause(600);
@@ -186,12 +184,14 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
       assert.equal(await local('document.getElementById("failure-actions").hidden'),false);
       tryout.model.session.webRequest.onBeforeRequest(null);await click('stage-retry');await until(()=>tryout.model.state.phase!=='error','retry starts',5000);await ready(tryout.samples[0].id);
       step('failure-retry-and-release',{method:'Request failure in isolated test session'});
-      await click('notes-tab');await local("document.getElementById('note-location').value='关闭前的未保存草稿';document.getElementById('note-location').dispatchEvent(new Event('input')); ");
       await click('back-gallery');await until(()=>!tryout.window,'player closed',8000);
       await tryout.open(tryout.samples[0].id);await until(()=>local('document.documentElement.dataset.tryoutReady==="true"'),'reopen',12000);
-      assert.equal(await local('document.getElementById("note-location").value'),'关闭前的未保存草稿');
-      for(const sample of subjects)assert.equal(tryout.notes.get(sample.id).entries[0].location,sample.character+' '+sample.onlineId);
-      await ready(tryout.samples[0].id);step('tested-skin-notes-and-draft-persist',{skins:subjects.length,ids:subjects.map(s=>s.id)});
+      await ready(tryout.samples[0].id);
+      // Recently played skins are offered first in the picker after reopening.
+      await click('choose-skin');await until(()=>local('document.getElementById("skin-picker").open'),'picker after reopen',5000);
+      const recent=await local("[...document.querySelectorAll('#recent-list .sample-choice')].map(e=>e.dataset.skinId)");
+      assert.equal(recent[0],tryout.samples[0].id);await click('close-picker');await until(()=>!tryout.model.occluded,'picker closed',3000);
+      step('close-reopen-and-recent',{recent});
     }
     await tryout.model.stop();assert(tryout.model.retired.every(row=>row.destroyed));
     for(const row of protectedFiles)assert.equal(hash(path.join(libraryRoot,row.file)),row.sha256,row.file);

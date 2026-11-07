@@ -8,133 +8,98 @@
   <style>
     :root { color-scheme:dark; --bg:#07111f; --panel:#101d31; --panel-2:#14243b; --line:#263c5f; --blue:#68b5ff; --cyan:#62e4ef; --muted:#9eb2cf; --red:#ff7f9b; --green:#64dda0; --amber:#ffc66d; --purple:#bd9cff; }
     * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { min-height:100vh; margin:0; background:radial-gradient(circle at 50% -10%,#1d3d66 0,#0c1a2c 32%,var(--bg) 68%); color:#eef6ff; font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
-    body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(120deg,rgba(53,136,218,.08),transparent 42%),radial-gradient(circle at 85% 18%,rgba(98,228,239,.08),transparent 25%); }
-    main { width:min(1540px,94vw); margin:auto; padding:38px 0 72px; }
-    .site-header { margin-bottom:20px; }
-    h1 { margin:0 0 10px; font-size:clamp(28px,4vw,48px); letter-spacing:.02em; text-wrap:balance; }
-    h2 { margin:0; font-size:24px; }
-    .subtitle { margin:0; color:var(--muted); line-height:1.75; }
+    body { min-height:100vh; margin:0; background:radial-gradient(circle at 50% -10%,#173357 0,#0b1829 30%,var(--bg) 65%); color:#eef6ff; font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
+    main { width:min(1680px,96vw); margin:auto; padding:22px 0 56px; }
+    .site-header { display:flex; align-items:baseline; flex-wrap:wrap; gap:6px 16px; margin-bottom:14px; }
+    h1 { margin:0; font-size:26px; letter-spacing:.02em; }
+    .subtitle { margin:0; color:var(--muted); font-size:14px; }
     [hidden] { display:none!important; }
-    .update-status { padding:14px 17px; border:1px solid var(--line); border-radius:14px; background:rgba(16,29,49,.72); color:var(--muted); line-height:1.7; }
-    .update-status strong { color:#e8f3ff; }
-    .update-meta { display:flex; flex-wrap:wrap; gap:4px 24px; margin-top:4px; overflow-wrap:anywhere; }
-    .update-status details { margin-top:6px; }
-    .update-status summary { width:fit-content; color:var(--blue); cursor:pointer; }
-    .update-status p { margin:6px 0 0; }
     .data-error { margin:18px 0; padding:20px; border:1px solid var(--red); border-radius:14px; background:#331c2c; line-height:1.7; }
     .data-error strong { color:#ffb0c2; }
     .data-error p { margin:6px 0 12px; }
-    .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:20px 0 22px; }
-    .stat { position:relative; overflow:hidden; padding:16px 17px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(145deg,rgba(20,36,59,.96),rgba(12,25,43,.96)); box-shadow:0 12px 30px rgba(0,0,0,.14); }
-    .stat::after { content:""; position:absolute; right:-24px; bottom:-34px; width:90px; height:90px; border-radius:50%; background:currentColor; opacity:.06; }
-    .stat b { display:block; font-size:31px; line-height:1.1; color:var(--blue); }
-    .stat-ready b { color:var(--green); }
-    .stat-pending b { color:var(--amber); }
-    .stat-missing b { color:var(--red); }
-    .stat span { display:block; margin-top:5px; color:#c8d6eb; font-size:14px; }
-    .toolbar-shell { position:sticky; top:0; z-index:50; margin:0 -10px 18px; padding:10px; border:1px solid transparent; border-radius:16px; background:rgba(7,17,31,.83); backdrop-filter:blur(16px) saturate(135%); box-shadow:0 12px 30px rgba(0,0,0,.18); }
+    .toolbar-shell { position:sticky; top:0; z-index:50; margin:0 -10px 14px; padding:10px; border-radius:0 0 14px 14px; background:rgba(7,17,31,.88); backdrop-filter:blur(16px) saturate(135%); box-shadow:0 12px 30px rgba(0,0,0,.18); }
     .toolbar { display:flex; gap:9px; align-items:center; }
     .search-wrap { position:relative; flex:1 1 360px; min-width:220px; }
     input,select,button { font:inherit; }
-    input,select { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:12px; outline:none; background:#0b182a; color:#fff; }
+    input,select { width:100%; padding:10px 14px; border:1px solid var(--line); border-radius:11px; outline:none; background:#0b182a; color:#fff; }
     input { padding-right:42px; }
     input:focus,select:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(104,181,255,.15); }
-    select { width:auto; min-width:180px; cursor:pointer; }
-    button { padding:10px 13px; border:1px solid var(--line); border-radius:11px; background:var(--panel); color:#edf6ff; cursor:pointer; transition:border-color .18s ease,background .18s ease,color .18s ease,transform .18s ease; }
+    select { width:auto; min-width:170px; cursor:pointer; }
+    button { padding:8px 13px; border:1px solid var(--line); border-radius:10px; background:var(--panel); color:#edf6ff; cursor:pointer; transition:border-color .18s ease,background .18s ease,color .18s ease; }
     button:hover { border-color:#527ab1; }
-    button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid rgba(104,181,255,.65); outline-offset:2px; }
+    button:focus-visible,a:focus-visible { outline:3px solid rgba(104,181,255,.65); outline-offset:2px; }
     button.active { border-color:#70baff; background:#1d66ad; color:#fff; }
-    .clear-search { position:absolute; top:50%; right:7px; width:32px; height:32px; padding:0; border:0; border-radius:50%; transform:translateY(-50%); background:transparent; color:var(--muted); font-size:22px; }
-    .clear-search:hover { transform:translateY(-50%); background:#172a45; color:#fff; }
-    .clear-search[hidden] { display:none; }
-    .filter-row { display:flex; gap:8px; margin-top:9px; overflow-x:auto; scrollbar-width:thin; }
-    .filter-row button { flex:0 0 auto; white-space:nowrap; }
-    .year-row { display:flex; gap:8px; margin-left:auto; padding-left:12px; border-left:1px solid var(--line); }
-    .results-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 2px 14px; color:var(--muted); font-size:14px; }
+    .clear-search { position:absolute; top:50%; right:7px; width:30px; height:30px; padding:0; border:0; border-radius:50%; transform:translateY(-50%); background:transparent; color:var(--muted); font-size:21px; }
+    .clear-search:hover { background:#172a45; color:#fff; }
+    .filter-row { display:flex; gap:7px; margin-top:8px; overflow-x:auto; scrollbar-width:thin; }
+    .filter-row button { flex:0 0 auto; white-space:nowrap; padding:6px 12px; font-size:14px; }
+    .filter-row button small { margin-left:5px; color:inherit; opacity:.7; }
+    .year-row { display:flex; gap:7px; margin-left:auto; padding-left:12px; border-left:1px solid var(--line); }
+    .results-bar { margin:0 2px 12px; color:var(--muted); font-size:13px; }
     .results-bar strong { color:#eaf4ff; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; scroll-margin-top:140px; }
-    .card { position:relative; min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:18px; background:linear-gradient(180deg,var(--panel-2),var(--panel)); box-shadow:0 10px 28px rgba(0,0,0,.18); content-visibility:auto; contain-intrinsic-size:440px; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
-    .card:hover { transform:translateY(-4px); border-color:#4d78aa; box-shadow:0 18px 42px rgba(0,0,0,.3); }
-    .card.status-ready { border-color:rgba(100,221,160,.58); box-shadow:0 10px 30px rgba(52,182,122,.12); }
-    .media-trigger { position:relative; display:block; width:100%; padding:0; border:0; border-radius:0; background:transparent; color:inherit; text-decoration:none; cursor:pointer; overflow:hidden; }
-    .media-trigger[data-open-guide] { cursor:zoom-in; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+    .card { position:relative; aspect-ratio:2/3; min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:14px; background:#0b1626; box-shadow:0 10px 26px rgba(0,0,0,.22); content-visibility:auto; contain-intrinsic-size:auto 300px; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+    .card:hover { transform:translateY(-3px); border-color:#5b86ba; box-shadow:0 18px 40px rgba(0,0,0,.36); }
+    .media-trigger { position:absolute; inset:0; display:block; width:100%; height:100%; padding:0; border:0; border-radius:0; background:transparent; color:inherit; cursor:zoom-in; }
     .media-trigger:focus-visible { outline:3px solid var(--blue); outline-offset:-3px; }
-    .thumb-frame { position:relative; height:330px; overflow:hidden; isolation:isolate; background:#08111e; }
-    .thumb-frame::before { content:""; position:absolute; inset:-28px; z-index:-2; background-image:var(--thumb-bg); background-size:cover; background-position:center; filter:blur(22px) brightness(.44) saturate(1.12); transform:scale(1.12); }
-    .thumb-frame::after { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,rgba(4,10,18,.05),rgba(4,10,18,.35)); }
-    .thumb { position:relative; width:100%; height:100%; display:block; padding:8px; object-fit:contain; object-position:center; filter:drop-shadow(0 8px 16px rgba(0,0,0,.42)); transition:transform .24s ease,filter .24s ease; }
-    .thumb-frame.thumb-frame-full-art { height:auto; aspect-ratio:2/3; }
-    .thumb-frame.thumb-frame-full-art .thumb { padding:0; object-fit:cover; filter:none; }
-    .card:hover .thumb { transform:scale(1.018); filter:drop-shadow(0 10px 20px rgba(0,0,0,.52)) brightness(1.04); }
-    .thumb-frame.image-failed::before { display:none; }
-    .fallback { position:absolute; inset:0; display:none; place-items:center; padding:25px; text-align:center; color:var(--muted); background:#091421; line-height:1.65; }
-    .thumb-frame.image-failed .fallback { display:grid; }
-    .info { display:flex; min-height:139px; flex-direction:column; padding:15px 16px 16px; }
-    .name { overflow:hidden; color:#fff; font-size:18px; font-weight:800; line-height:1.4; text-overflow:ellipsis; white-space:nowrap; }
-    .skin { display:-webkit-box; min-height:48px; margin-top:5px; overflow:hidden; color:#d8e8ff; line-height:1.5; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
-    .meta { display:flex; gap:7px; flex-wrap:wrap; margin-top:auto; padding-top:11px; }
-    .tag { padding:4px 8px; border:1px solid transparent; border-radius:999px; background:#1c2a42; color:#c6d8f2; font-size:12px; line-height:1.3; }
-    .tag.type-l2d { border-color:rgba(104,181,255,.35); background:#173557; color:#9fd0ff; }
-    .tag.type-l2d-plus { border-color:rgba(189,156,255,.38); background:#342757; color:#d2baff; }
-    .tag.type-dual { border-color:rgba(255,198,109,.4); background:#4a351e; color:#ffd792; }
-    .tag.status-ready { border-color:rgba(100,221,160,.4); background:#173d2d; color:#8ff0b9; }
-    .artwork-chip { padding:4px 8px; border-color:rgba(100,221,160,.4); border-radius:999px; background:#173d2d; color:#8ff0b9; font-size:12px; line-height:1.3; }
-    .artwork-chip:hover { border-color:rgba(137,255,194,.82); background:#21543e; color:#d9ffeb; }
-    .tag.status-pending { border-color:rgba(255,198,109,.4); background:#47351f; color:#ffd18b; }
-    .tag.status-missing { border-color:rgba(255,127,155,.35); background:#482337; color:#ffabc0; }
+    .thumb { display:block; width:100%; height:100%; object-fit:cover; object-position:center top; transition:transform .3s ease; }
+    .card:hover .thumb { transform:scale(1.03); }
+    .fallback { position:absolute; inset:0; display:none; place-items:center; padding:24px; text-align:center; color:var(--muted); font-size:13px; line-height:1.7; background:linear-gradient(160deg,#13253d,#0a1524); }
+    .card.image-failed .fallback { display:grid; }
+    .card.image-failed .thumb { visibility:hidden; }
+    .badges { position:absolute; top:8px; left:8px; right:8px; display:flex; gap:6px; pointer-events:none; }
+    .badge { padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700; line-height:1.6; backdrop-filter:blur(6px); }
+    .badge-new { background:#ff6f91e6; color:#fff; }
+    .badge-guide { margin-left:auto; background:#11392ae0; color:#8ff0b9; border:1px solid rgba(100,221,160,.5); font-weight:400; }
+    .info { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:flex-end; gap:8px; padding:46px 11px 10px; background:linear-gradient(180deg,transparent,rgba(5,11,21,.78) 42%,rgba(5,11,21,.95)); pointer-events:none; }
+    .info-text { min-width:0; flex:1; }
+    .name { overflow:hidden; color:#fff; font-size:16px; font-weight:800; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; text-shadow:0 1px 3px #000a; }
+    .skin { overflow:hidden; margin-top:1px; color:#d8e8ff; font-size:13px; line-height:1.45; text-overflow:ellipsis; white-space:nowrap; }
+    .meta { display:flex; align-items:center; gap:4px; min-height:24px; margin-top:3px; color:#9fb4cf; font-size:12px; white-space:nowrap; }
+    .meta .type-l2d-plus { color:#d2baff; }
+    .meta .type-dual { color:#ffd792; }
+    .info button { pointer-events:auto; }
     .empty-state { display:none; padding:48px 20px; border:1px dashed var(--line); border-radius:18px; text-align:center; color:var(--muted); background:rgba(12,25,43,.65); }
     .empty-state.visible { display:block; }
     .empty-state button { margin-top:14px; }
-    .missing-details { margin-top:38px; border:1px solid var(--line); border-radius:16px; background:rgba(16,29,49,.72); }
-    .missing-details summary { padding:17px 19px; color:#e8f3ff; font-size:18px; font-weight:800; cursor:pointer; user-select:none; }
-    .missing-content { padding:0 19px 19px; border-top:1px solid var(--line); }
-    .missing-actions { display:flex; justify-content:flex-end; padding:12px 0; }
-    .copy-feedback { margin-right:auto; align-self:center; color:var(--green); font-size:13px; }
-    .missing-list { columns:3 290px; column-gap:28px; margin:0; padding-left:22px; }
-    .missing-list li { break-inside:avoid; margin:0 0 8px; color:#dbe9ff; }
     body.guide-open { overflow:hidden; }
-    .guide-modal[hidden] { display:none; }
-    .guide-modal { position:fixed; inset:0; z-index:1000; display:grid; grid-template-rows:1fr auto; padding:12px; background:rgba(0,4,11,.95); backdrop-filter:blur(9px); }
+    .guide-modal { position:fixed; inset:0; z-index:1000; display:grid; grid-template-rows:auto 1fr auto; padding:10px 12px; background:rgba(0,4,11,.95); backdrop-filter:blur(9px); }
+    .viewer-head { display:flex; align-items:center; gap:14px; min-height:44px; padding:0 64px 6px 6px; }
+    .viewer-caption { min-width:0; overflow:hidden; font-size:18px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
+    .viewer-caption small { margin-left:10px; color:var(--muted); font-size:13px; font-weight:400; }
+    .viewer-counter { margin-left:auto; color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
     .guide-stage { position:relative; min-width:0; min-height:0; overflow:hidden; border-radius:12px; cursor:grab; touch-action:none; }
     .guide-stage.dragging { cursor:grabbing; }
     .guide-stage img { position:absolute; left:50%; top:50%; display:block; max-width:none; max-height:none; transform-origin:center; user-select:none; -webkit-user-drag:none; will-change:transform; box-shadow:0 22px 70px rgba(0,0,0,.7); }
-    .guide-close { position:fixed; z-index:1002; top:16px; right:18px; width:44px; height:44px; padding:0; border:1px solid rgba(255,255,255,.55); border-radius:50%; background:rgba(5,10,18,.88); color:#fff; font-size:30px; line-height:1; }
+    .viewer-nav { position:absolute; z-index:3; top:50%; width:52px; height:84px; padding:0; border:1px solid rgba(255,255,255,.18); border-radius:14px; transform:translateY(-50%); background:rgba(5,10,18,.6); color:#fff; font-size:34px; line-height:1; }
+    .viewer-nav:hover { background:rgba(29,102,173,.85); }
+    .viewer-nav:disabled { opacity:.25; cursor:default; }
+    #viewerPrev { left:10px; } #viewerNext { right:10px; }
+    .guide-close { position:fixed; z-index:1002; top:12px; right:16px; width:42px; height:42px; padding:0; border:1px solid rgba(255,255,255,.55); border-radius:50%; background:rgba(5,10,18,.88); color:#fff; font-size:28px; line-height:1; }
     .guide-tools { z-index:1001; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:7px; padding:9px; }
+    .viewer-actions { display:contents; }
     .guide-message { position:absolute; z-index:2; inset:0; display:grid; place-content:center; gap:12px; padding:24px; text-align:center; color:#dbe9ff; cursor:default; touch-action:auto; }
     .guide-message p { margin:0; line-height:1.7; }
     .guide-message-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
     .guide-tools button:disabled { opacity:.45; cursor:default; }
     .guide-tools button { min-width:42px; background:rgba(12,25,43,.94); }
-    .guide-tools .viewer-guide-button { border-color:rgba(100,221,160,.62); background:#173d2d; color:#baffd6; }
-    .guide-tools .viewer-guide-button[hidden] { display:none; }
-    .zoom-label { min-width:68px; color:#dcecff; text-align:center; font-variant-numeric:tabular-nums; }
-    footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); line-height:1.7; }
-    @media(max-width:980px){ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{flex-wrap:wrap}.search-wrap{flex-basis:100%}select{flex:1}.year-row{margin-left:0;padding-left:0;border-left:0} }
-    @media(max-width:700px){ main{width:min(94vw,560px);padding-top:24px}.stats{gap:8px}.stat{padding:12px}.stat b{font-size:25px}.stat span{font-size:12px}.toolbar-shell{top:0;margin-inline:-6px;padding:7px}.filter-row{padding-bottom:3px}.grid{grid-template-columns:1fr}.thumb-frame{height:min(126vw,520px)}.card{contain-intrinsic-size:610px}.missing-list{columns:1}.guide-modal{padding:4px}.guide-close{top:10px;right:10px}.guide-tools{padding:6px}.guide-tools button{padding:9px 11px}.results-bar{align-items:flex-start;flex-direction:column;gap:4px} }
-    @media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto}*,*::before,*::after{transition:none!important} }
+    .guide-tools .viewer-accent { border-color:rgba(100,221,160,.62); background:#173d2d; color:#baffd6; }
+    .guide-tools .tool-gap { width:14px; }
+    .zoom-label { min-width:60px; color:#dcecff; text-align:center; font-variant-numeric:tabular-nums; }
+    footer { margin-top:30px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; line-height:1.7; }
+    @media(max-width:980px){ .toolbar{flex-wrap:wrap}.search-wrap{flex-basis:100%}select{flex:1}.year-row{margin-left:0;padding-left:0;border-left:0} }
+    @media(max-width:700px){ main{width:94vw;padding-top:16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.guide-modal{padding:4px}.viewer-nav{width:40px;height:64px} }
+    @media(prefers-reduced-motion:reduce){ *,*::before,*::after{transition:none!important} }
   </style>
 </head>
 <body>
 <main>
   <header class="site-header">
-    <h1 id="pageTitle">碧蓝航线 L2D 玩法合集</h1>
-    <p class="subtitle">收录范围：<span id="rangeStart">—</span> 至 <span id="rangeEnd">—</span>；包含 L2D、L2D+ 与双形态换装。</p>
+    <h1>碧蓝航线 L2D 图鉴</h1>
+    <p class="subtitle" id="summary">正在读取本地数据…</p>
   </header>
-  <section class="update-status" aria-label="本地更新状态">
-    <strong id="localUpdateState">正在读取本地数据…</strong>
-    <div class="update-meta"><span>数据版本：<span id="localVersion">—</span></span><span>上次检查：<span id="checkedAt">—</span></span></div>
-    <details><summary>如何更新</summary><p>双击同目录的“一键更新.cmd”，按窗口提示同步数据和原图；云端检查暂不可用时，可双击“本机检查更新.cmd”直接检查游戏资料。完成后刷新或重新打开本页。</p><p>本页只读取本地文件，打开页面不会联网检查更新。玩法搜索仅在点击对应入口时打开。</p></details>
-  </section>
   <div id="dataError" class="data-error" role="alert" hidden><strong>本地数据无法读取</strong><p id="dataErrorDetail"></p><button id="reloadData" type="button">重新加载页面</button></div>
   <noscript><div class="data-error">请启用浏览器 JavaScript，再重新打开本页以加载本地图鉴。</div></noscript>
-  <div class="stats">
-    <div class="stat"><b id="total">—</b><span>收录皮肤</span></div>
-    <div class="stat stat-ready"><b id="readyCount">—</b><span>本地可查看图解</span></div>
-    <div class="stat stat-pending"><b id="pendingCount">—</b><span>已确认待接入</span></div>
-    <div class="stat stat-missing"><b id="missingCount">—</b><span>仍缺同版式图解</span></div>
-  </div>
 
   <section class="toolbar-shell" aria-label="皮肤筛选工具">
     <div class="toolbar">
@@ -143,47 +108,35 @@
         <button id="clearSearch" class="clear-search" type="button" aria-label="清空搜索" hidden>×</button>
       </div>
       <select id="sortOrder" aria-label="皮肤排序方式">
-        <option value="date-asc">实装时间：从早到晚</option>
         <option value="date-desc">实装时间：从新到旧</option>
+        <option value="date-asc">实装时间：从早到晚</option>
         <option value="name">角色名排序</option>
       </select>
     </div>
     <div class="filter-row">
-      <button class="active" type="button" data-filter="all">全部</button>
-      <button type="button" data-filter="ready">可查看图解</button>
-      <button type="button" data-filter="pending">已确认待接入</button>
-      <button type="button" data-filter="missing">缺图解</button>
+      <button class="active" type="button" data-filter="all">全部<small id="countAll"></small></button>
+      <button type="button" data-filter="new">新上线<small id="countNew"></small></button>
+      <button type="button" data-filter="ready">有玩法图解<small id="countReady"></small></button>
       <div id="yearFilters" class="year-row" aria-label="按年份筛选">
         <button class="active" type="button" data-year="all">全部年份</button>
       </div>
     </div>
   </section>
 
-  <div class="results-bar" aria-live="polite">
-    <span id="resultCount">正在读取本地数据…</span>
-    <span id="activeHint">按实装时间从早到晚排列</span>
-  </div>
+  <div class="results-bar" aria-live="polite"><span id="resultCount">正在读取本地数据…</span></div>
   <div id="grid" class="grid"></div>
   <div id="emptyState" class="empty-state">
     没有找到符合当前条件的皮肤。
     <br><button id="resetFilters" type="button">清空搜索与筛选</button>
   </div>
 
-  <details class="missing-details">
-    <summary>仍未检索到同版式图解的皮肤（<span id="missingListCount">—</span>）</summary>
-    <div class="missing-content">
-      <div class="missing-actions">
-        <span id="copyFeedback" class="copy-feedback" aria-live="polite"></span>
-        <button id="copyMissing" type="button">复制全部名字</button>
-      </div>
-      <ol id="missingList" class="missing-list"></ol>
-    </div>
-  </details>
-
   <div id="guideModal" class="guide-modal" role="dialog" aria-modal="true" aria-label="图片查看器" hidden>
+    <div class="viewer-head"><div id="viewerCaption" class="viewer-caption"></div><span id="viewerCounter" class="viewer-counter"></span></div>
     <button id="guideClose" class="guide-close" type="button" aria-label="关闭图片查看器">×</button>
     <div id="guideStage" class="guide-stage">
       <img id="guideImage" alt="" draggable="false">
+      <button id="viewerPrev" class="viewer-nav" type="button" aria-label="上一款（←）">‹</button>
+      <button id="viewerNext" class="viewer-nav" type="button" aria-label="下一款（→）">›</button>
       <div id="guideMessage" class="guide-message" role="status" hidden>
         <p id="guideMessageText"></p>
         <div id="guideRecovery" class="guide-message-actions" hidden>
@@ -194,7 +147,11 @@
       </div>
     </div>
     <div class="guide-tools" aria-label="图片查看工具">
-      <button id="viewGuideFromArtwork" class="viewer-guide-button" type="button" hidden>查看玩法图解</button>
+      <span id="viewerActions" class="viewer-actions"></span>
+      <button id="viewGuideFromArtwork" class="viewer-accent" type="button" hidden>查看玩法图解</button>
+      <button id="viewArtworkFromGuide" type="button" hidden>返回原图</button>
+      <button id="searchVideo" type="button" hidden>搜索玩法视频 ↗</button>
+      <span class="tool-gap"></span>
       <button id="zoomOut" type="button" aria-label="缩小图片">−</button>
       <button id="zoomFit" type="button">适应窗口</button>
       <span id="zoomLabel" class="zoom-label">适应</span>
@@ -203,10 +160,7 @@
     </div>
   </div>
 
-  <footer>
-    图片核对优先使用碧蓝航线 WIKI 的换装图；若图片未能载入，卡片仍保留角色名、正式皮肤名和玩法搜索链接。<br>
-    本页不把普通皮肤立绘、视频封面误报为“红圈操作说明图”。
-  </footer>
+  <footer>原图来自碧蓝航线 WIKI，玩法图解来自玩家整理。点卡片查看原图，在查看器里用 ← → 翻看。</footer>
 </main>
 <script src="data/skins-data.js"></script>
 <script>
@@ -217,30 +171,35 @@ const sortOrder=document.querySelector('#sortOrder');
 const clearSearch=document.querySelector('#clearSearch');
 const emptyState=document.querySelector('#emptyState');
 const resultCount=document.querySelector('#resultCount');
-const activeHint=document.querySelector('#activeHint');
 const guideModal=document.querySelector('#guideModal');
 const guideStage=document.querySelector('#guideStage');
 const guideImage=document.querySelector('#guideImage');
 const guideClose=document.querySelector('#guideClose');
 const viewGuideFromArtwork=document.querySelector('#viewGuideFromArtwork');
+const viewArtworkFromGuide=document.querySelector('#viewArtworkFromGuide');
+const searchVideo=document.querySelector('#searchVideo');
+const viewerCaption=document.querySelector('#viewerCaption');
+const viewerCounter=document.querySelector('#viewerCounter');
+const viewerPrev=document.querySelector('#viewerPrev');
+const viewerNext=document.querySelector('#viewerNext');
 const guideMessage=document.querySelector('#guideMessage');
 const guideMessageText=document.querySelector('#guideMessageText');
 const guideRecovery=document.querySelector('#guideRecovery');
 const fallbackArtwork=document.querySelector('#fallbackArtwork');
 const zoomLabel=document.querySelector('#zoomLabel');
 const zoomButtons=['zoomOut','zoomIn','zoomFit','zoomActual'].map(id=>document.getElementById(id));
-const state={filter:'all',year:'all',sort:'date-asc'};
-let skins=[],skinById=new Map(),missingSkins=[];
+const state={filter:'all',year:'all',sort:'date-desc'};
+// Skins released within this many days count as "新上线".
+const NEW_DAYS=60;
+let skins=[],skinById=new Map(),currentView=[],newSince='';
 let guideReturnFocus=null,viewerMode='artwork',activeViewer=null,imageReady=false;
 let zoom=1,fitZoom=1,panX=0,panY=0,dragMoved=false;
 let pinchStartDistance=0,pinchStartZoom=1;
 const pointers=new Map();
 const searchUrl=(c,s)=>`https://search.bilibili.com/all?keyword=${encodeURIComponent('碧蓝航线 '+c+' '+s+' L2D 彩蛋 教程')}`;
 const hasLocalGuide=skin=>Boolean(skin.guidePath);
-const guideStatus=skin=>hasLocalGuide(skin)?'ready':skin.guideConfirmed===true||Boolean(skin.guideSource)?'pending':'missing';
+const isNew=skin=>skin.releaseDate>=newSince;
 const typeClass=type=>type==='L2D+'?'type-l2d-plus':type==='双形态'?'type-dual':'type-l2d';
-const statusText={ready:'可查看图解',pending:'已确认，待接入',missing:'缺图解'};
-const statusClass={ready:'status-ready',pending:'status-pending',missing:'status-missing'};
 function element(tag,className,text){
   const node=document.createElement(tag);
   if(className) node.className=className;
@@ -279,30 +238,24 @@ function validateData(data){
 function showDataError(error){
   document.querySelector('#dataError').hidden=false;
   document.querySelector('#dataErrorDetail').textContent=error.message||'数据无法加载，请重新同步后重试。';
-  document.querySelector('#localUpdateState').textContent='本地数据不可用';
-  document.querySelectorAll('.stats,.toolbar-shell,.results-bar,.missing-details').forEach(node=>node.hidden=true);
+  document.querySelector('#summary').textContent='本地数据不可用';
+  document.querySelectorAll('.toolbar-shell,.results-bar').forEach(node=>node.hidden=true);
   grid.hidden=true;
   emptyState.classList.remove('visible');
 }
 function updatePageMeta(data){
   const dates=skins.map(skin=>skin.releaseDate).sort();
-  const title=`碧蓝航线 L2D 玩法合集（更新至 ${data.updatedTo}）`;
-  document.title=title;
-  document.querySelector('#pageTitle').textContent=title;
-  document.querySelector('#rangeStart').textContent=dates[0];
-  document.querySelector('#rangeEnd').textContent=dates[dates.length-1];
-  document.querySelector('#localUpdateState').textContent='本地数据已载入';
-  document.querySelector('#localVersion').textContent=data.version;
-  document.querySelector('#checkedAt').textContent=data.checkedAt?new Date(data.checkedAt).toLocaleString('zh-CN',{hour12:false}):'尚未记录';
-  const counts=skins.reduce((acc,skin)=>(acc[guideStatus(skin)]++,acc),{ready:0,pending:0,missing:0});
-  document.querySelector('#total').textContent=skins.length;
-  document.querySelector('#readyCount').textContent=counts.ready;
-  document.querySelector('#pendingCount').textContent=counts.pending;
-  document.querySelector('#missingCount').textContent=counts.missing;
-  document.querySelector('#missingListCount').textContent=counts.missing;
+  document.title=`碧蓝航线 L2D 图鉴（更新至 ${data.updatedTo}）`;
+  newSince=new Date(Date.now()-NEW_DAYS*864e5).toISOString().slice(0,10);
+  document.querySelector('#summary').textContent=`共 ${skins.length} 款 · ${dates[0]} 至 ${dates[dates.length-1]} · 资料更新至 ${data.updatedTo}`;
+  const newCount=skins.filter(isNew).length;
+  document.querySelector('#countAll').textContent=skins.length;
+  document.querySelector('#countNew').textContent=newCount;
+  document.querySelector('#countReady').textContent=skins.filter(hasLocalGuide).length;
+  document.querySelector('[data-filter="new"]').hidden=!newCount;
   const yearFilters=document.querySelector('#yearFilters');
   yearFilters.replaceChildren();
-  for(const year of ['all',...new Set(dates.map(date=>date.slice(0,4)))]){
+  for(const year of ['all',...[...new Set(dates.map(date=>date.slice(0,4)))].reverse()]){
     const button=element('button',year==='all'?'active':'',year==='all'?'全部年份':year);
     button.type='button'; button.dataset.year=year; yearFilters.appendChild(button);
   }
@@ -310,10 +263,10 @@ function updatePageMeta(data){
 function sortedView(){
   const term=q.value.trim().toLocaleLowerCase('zh-CN');
   const view=skins.filter(skin=>{
-    const matchesStatus=state.filter==='all'||guideStatus(skin)===state.filter;
+    const matchesFilter=state.filter==='all'||(state.filter==='new'&&isNew(skin))||(state.filter==='ready'&&hasLocalGuide(skin));
     const matchesYear=state.year==='all'||skin.releaseDate.startsWith(state.year+'-');
     const haystack=(skin.character+' '+skin.name).toLocaleLowerCase('zh-CN');
-    return matchesStatus&&matchesYear&&haystack.includes(term);
+    return matchesFilter&&matchesYear&&haystack.includes(term);
   });
   return view.sort((a,b)=>{
     if(state.sort==='date-desc') return b.releaseDate.localeCompare(a.releaseDate)||a.character.localeCompare(b.character,'zh-CN');
@@ -322,53 +275,42 @@ function sortedView(){
   });
 }
 function createCard(skin){
-  const status=guideStatus(skin),hasGuide=hasLocalGuide(skin);
-  const card=element('article',`card status-${status}`); card.dataset.skinId=skin.id;
-  const media=element(hasGuide?'button':'a','media-trigger');
+  const card=element('article','card'); card.dataset.skinId=skin.id;
   const label=`${skin.character}「${skin.name}」`;
-  if(hasGuide){ media.type='button'; media.dataset.openGuide=''; media.dataset.skinId=skin.id; media.setAttribute('aria-label',`查看${label}玩法图解`); }
-  else { media.href=searchUrl(skin.character,skin.name); media.target='_blank'; media.rel='noopener noreferrer'; media.setAttribute('aria-label',`搜索${label}玩法教程`); }
-  const isCherbourg=skin.character==='瑟堡'&&skin.name==='布偶熊里面的是……？';
-  const frame=element('div',`thumb-frame${isCherbourg?' thumb-frame-full-art':''}`);
-  const encodedPath=skin.artworkPath.split('/').map(encodeURIComponent).join('/');
-  frame.style.setProperty('--thumb-bg',`url("${encodedPath}")`);
+  const media=element('button','media-trigger');
+  media.type='button'; media.dataset.openArtwork=''; media.dataset.skinId=skin.id;
+  media.setAttribute('aria-label',`查看${label}皮肤原图`);
   const image=element('img','thumb');
-  image.alt=`${skin.character} ${skin.name}`; image.loading='lazy'; image.decoding='async';
-  image.addEventListener('error',()=>{ image.hidden=true; frame.classList.add('image-failed'); });
-  image.addEventListener('load',()=>{ image.hidden=false; frame.classList.remove('image-failed'); });
+  image.alt=''; image.loading='lazy'; image.decoding='async';
+  image.addEventListener('error',()=>card.classList.add('image-failed'));
+  image.addEventListener('load',()=>card.classList.remove('image-failed'));
   image.src=skin.artworkPath;
-  const fallback=element('div','fallback');
-  fallback.append('本地换装图未能载入',element('br'),hasGuide?'点击仍可查看玩法图解':'点击仍可检索玩法教程');
-  frame.append(image,fallback); media.appendChild(frame);
-  const info=element('div','info');
+  const fallback=element('div','fallback','原图暂未下载到本机');
+  media.append(image,fallback);
+  const badges=element('div','badges');
+  if(isNew(skin)) badges.append(element('span','badge badge-new','新'));
+  if(hasLocalGuide(skin)) badges.append(element('span','badge badge-guide','图解'));
+  const info=element('div','info'),text=element('div','info-text');
   const name=element('div','name',skin.character); name.title=skin.character;
-  const title=element('div','skin',`「${skin.name}」`); title.title=`「${skin.name}」`;
+  const title=element('div','skin',skin.name); title.title=skin.name;
   const meta=element('div','meta');
-  const artwork=element('button','tag artwork-chip','查看原图');
-  artwork.type='button'; artwork.dataset.openArtwork=''; artwork.dataset.skinId=skin.id;
-  artwork.setAttribute('aria-label',`查看${label}皮肤原图`);
-  meta.append(element('span',`tag ${typeClass(skin.type)}`,skin.type),element('span','tag',skin.releaseDate),element('span',`tag ${statusClass[status]}`,statusText[status]),artwork);
-  info.append(name,title,meta); card.append(media,info);
+  meta.append(element('span',typeClass(skin.type),skin.type),` · ${skin.releaseDate}`);
+  text.append(name,title,meta); info.append(text);
+  card.append(media,badges,info);
   return card;
 }
 function render(){
-  const view=sortedView();
-  grid.replaceChildren(...view.map(createCard));
-  resultCount.replaceChildren('显示 ',element('strong','',view.length),` / ${skins.length} 款皮肤`);
-  const labels={'date-asc':'按实装时间从早到晚排列','date-desc':'按实装时间从新到旧排列','name':'按角色名排列'};
-  activeHint.textContent=labels[state.sort];
-  emptyState.classList.toggle('visible',view.length===0);
-  grid.hidden=view.length===0; clearSearch.hidden=!q.value;
+  currentView=sortedView();
+  grid.replaceChildren(...currentView.map(createCard));
+  resultCount.replaceChildren('显示 ',element('strong','',currentView.length),` / ${skins.length} 款`);
+  emptyState.classList.toggle('visible',currentView.length===0);
+  grid.hidden=currentView.length===0; clearSearch.hidden=!q.value;
 }
 function resetFilters(){
-  state.filter='all'; state.year='all'; state.sort='date-asc'; q.value=''; sortOrder.value=state.sort;
+  state.filter='all'; state.year='all'; state.sort='date-desc'; q.value=''; sortOrder.value=state.sort;
   document.querySelectorAll('[data-filter]').forEach(button=>button.classList.toggle('active',button.dataset.filter==='all'));
   document.querySelectorAll('[data-year]').forEach(button=>button.classList.toggle('active',button.dataset.year==='all'));
   render();
-}
-function renderMissingList(){
-  missingSkins=skins.filter(skin=>guideStatus(skin)==='missing').sort((a,b)=>a.releaseDate.localeCompare(b.releaseDate)||a.character.localeCompare(b.character,'zh-CN'));
-  document.querySelector('#missingList').replaceChildren(...missingSkins.map(skin=>element('li','',`${skin.character} —「${skin.name}」`)));
 }
 function applyGuideTransform(){
   guideImage.style.transform=`translate(calc(-50% + ${panX}px),calc(-50% + ${panY}px)) scale(${zoom})`;
@@ -394,9 +336,21 @@ function updateImageState(status){
   fallbackArtwork.hidden=viewerMode!=='guide';
   if(status==='loading'){ guideMessageText.textContent='正在读取本地图片…'; zoomLabel.textContent='加载中'; }
   if(status==='error'){
-    guideMessageText.textContent='本地图片未能载入。可重试加载，或关闭后运行“一键更新.cmd”修复，再重新打开本页。';
+    guideMessageText.textContent='这张图片还没有下载到本机，或文件已损坏。可以重试，或同步后再看。';
     zoomLabel.textContent='加载失败';
   }
+}
+function updateViewerChrome(){
+  const index=currentView.indexOf(activeViewer);
+  viewerCaption.replaceChildren(`${activeViewer.character}「${activeViewer.name}」`,element('small','',`${activeViewer.type} · ${activeViewer.releaseDate}${viewerMode==='guide'?' · 玩法图解':''}`));
+  viewerCounter.textContent=index>=0?`${index+1} / ${currentView.length}`:'';
+  viewerPrev.disabled=index<=0; viewerNext.disabled=index<0||index>=currentView.length-1;
+  viewGuideFromArtwork.hidden=viewerMode!=='artwork'||!activeViewer.guidePath;
+  viewArtworkFromGuide.hidden=viewerMode!=='guide';
+  searchVideo.hidden=Boolean(activeViewer.guidePath);
+  for(const neighbour of [currentView[index-1],currentView[index+1]]) if(neighbour) new Image().src=neighbour.artworkPath;
+  guideModal.dataset.skinId=activeViewer.id;
+  guideModal.dispatchEvent(new CustomEvent('viewer-change',{detail:{skinId:activeViewer.id,mode:viewerMode}}));
 }
 function setViewerMode(mode,{retry=false}={}){
   if(!activeViewer) return;
@@ -405,7 +359,7 @@ function setViewerMode(mode,{retry=false}={}){
   if(!source) return;
   const label=`${activeViewer.character}「${activeViewer.name}」${isArtwork?'皮肤原图':'玩法图解'}`;
   guideModal.setAttribute('aria-label',label); guideImage.alt=label;
-  viewGuideFromArtwork.hidden=!isArtwork||!activeViewer.guidePath;
+  updateViewerChrome();
   pointers.clear(); guideStage.classList.remove('dragging'); panX=0; panY=0; dragMoved=false;
   updateImageState('loading');
   if(retry) guideImage.removeAttribute('src');
@@ -422,14 +376,19 @@ function openViewer(trigger,mode){
   guideModal.hidden=false; document.body.classList.add('guide-open');
   setViewerMode(mode); guideClose.focus();
 }
+function stepViewer(delta){
+  const index=currentView.indexOf(activeViewer),next=currentView[index+delta];
+  if(index<0||!next) return;
+  activeViewer=next; guideReturnFocus=grid.querySelector(`[data-open-artwork][data-skin-id="${next.id}"]`)||guideReturnFocus;
+  setViewerMode('artwork');
+}
 function closeGuide(){
   guideModal.hidden=true; document.body.classList.remove('guide-open'); pointers.clear(); guideStage.classList.remove('dragging');
-  if(guideReturnFocus&&guideReturnFocus.isConnected) guideReturnFocus.focus();
+  if(guideReturnFocus&&guideReturnFocus.isConnected){ guideReturnFocus.focus({preventScroll:true}); guideReturnFocus.closest('.card')?.scrollIntoView({block:'nearest'}); }
 }
 grid.addEventListener('click',event=>{
   const artwork=event.target.closest('[data-open-artwork]');
-  if(artwork){ openViewer(artwork,'artwork'); return; }
-  const guide=event.target.closest('[data-open-guide]'); if(guide) openViewer(guide,'guide');
+  if(artwork) openViewer(artwork,'artwork');
 });
 document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
   state.filter=button.dataset.filter;
@@ -445,20 +404,6 @@ clearSearch.addEventListener('click',()=>{ q.value=''; q.focus(); render(); });
 sortOrder.addEventListener('change',()=>{ state.sort=sortOrder.value; render(); });
 document.querySelector('#resetFilters').addEventListener('click',resetFilters);
 document.querySelector('#reloadData').addEventListener('click',()=>window.location.reload());
-document.querySelector('#copyMissing').addEventListener('click',async()=>{
-  const text=missingSkins.map(skin=>`${skin.character} —「${skin.name}」`).join('\n');
-  const feedback=document.querySelector('#copyFeedback');
-  try{
-    if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(text);
-    else{
-      const area=element('textarea'); area.value=text; area.style.position='fixed'; area.style.opacity='0'; document.body.appendChild(area); area.select();
-      let copied; try{ copied=document.execCommand('copy'); }finally{ area.remove(); }
-      if(!copied) throw new Error('copy failed');
-    }
-    feedback.textContent='已复制全部名字';
-  }catch{ feedback.textContent='复制失败，请手动选择列表'; }
-  setTimeout(()=>feedback.textContent='',2200);
-});
 guideImage.addEventListener('load',()=>{ updateImageState('ready'); fitGuide(); });
 guideImage.addEventListener('error',()=>updateImageState('error'));
 guideClose.addEventListener('click',closeGuide);
@@ -466,8 +411,12 @@ document.querySelector('#closeImageError').addEventListener('click',closeGuide);
 document.querySelector('#retryImage').addEventListener('click',()=>setViewerMode(viewerMode,{retry:true}));
 fallbackArtwork.addEventListener('click',()=>setViewerMode('artwork'));
 viewGuideFromArtwork.addEventListener('click',()=>setViewerMode('guide'));
+viewArtworkFromGuide.addEventListener('click',()=>setViewerMode('artwork'));
+searchVideo.addEventListener('click',()=>{ if(activeViewer) window.open(searchUrl(activeViewer.character,activeViewer.name),'_blank','noopener'); });
+viewerPrev.addEventListener('click',()=>stepViewer(-1));
+viewerNext.addEventListener('click',()=>stepViewer(1));
 guideStage.addEventListener('click',event=>{ if(event.target===guideStage&&!dragMoved) closeGuide(); dragMoved=false; });
-guideStage.addEventListener('dblclick',event=>{ if(!imageReady) return; event.preventDefault(); Math.abs(zoom-fitZoom)<.01?actualGuide():fitGuide(); });
+guideStage.addEventListener('dblclick',event=>{ if(!imageReady||event.target.closest('button')) return; event.preventDefault(); Math.abs(zoom-fitZoom)<.01?actualGuide():fitGuide(); });
 guideStage.addEventListener('wheel',event=>{ if(!imageReady) return; event.preventDefault(); setZoom(zoom*(event.deltaY<0?1.14:.88)); },{passive:false});
 document.querySelector('#zoomOut').addEventListener('click',()=>setZoom(zoom*.82));
 document.querySelector('#zoomIn').addEventListener('click',()=>setZoom(zoom*1.22));
@@ -503,6 +452,8 @@ window.addEventListener('resize',()=>{ if(!guideModal.hidden) fitGuide(); });
 document.addEventListener('keydown',event=>{
   if(guideModal.hidden) return;
   if(event.key==='Escape'){ event.preventDefault(); closeGuide(); }
+  else if(event.key==='ArrowLeft'){ event.preventDefault(); stepViewer(-1); }
+  else if(event.key==='ArrowRight'){ event.preventDefault(); stepViewer(1); }
   else if(event.key==='+'||event.key==='=') setZoom(zoom*1.22);
   else if(event.key==='-') setZoom(zoom*.82);
   else if(event.key==='0') fitGuide();
@@ -514,10 +465,12 @@ document.addEventListener('keydown',event=>{
     else if(!event.shiftKey&&document.activeElement===last){ event.preventDefault(); first.focus(); }
   }
 });
+// Lets the desktop shell reload images that finished downloading after the page opened.
+window.l2dGallery={retryFailedImages(){ for(const card of grid.querySelectorAll('.card.image-failed')){ const img=card.querySelector('.thumb'); const src=img.getAttribute('src'); img.removeAttribute('src'); img.src=src; } }};
 try{
   const data=validateData(window.L2D_SKINS_DATA);
   skins=data.skins; skinById=new Map(skins.map(skin=>[skin.id,skin]));
-  updatePageMeta(data); renderMissingList(); render();
+  updatePageMeta(data); render();
 }catch(error){ showDataError(error); }
 </script>
 </body>
