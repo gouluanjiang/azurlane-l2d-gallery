@@ -348,12 +348,10 @@
 
 **发布新版本**
 1. 在 `desktop/tryout/batch.cjs` 把第 5 版的 `version` 改为新号（如 `1.7.3-all`），提 PR，CI 通过后合并。
-2. `npm run release:pack`，再运行 `.desktop\碧蓝航线图鉴.exe --self-test`（在 `D:\碧蓝航线图鉴` 下）。
+2. `npm run release:pack`，再运行 `.desktop\碧蓝航线图鉴.exe --self-test`（工作目录为项目文件夹）。
 3. `gh release create v<版本> --target <main 的完整 SHA>`，上传压缩包和 `.sha256`；从 Releases 重新下载核对校验值。
 
-**本机注意**
-- 项目必须放在 `D:\碧蓝航线图鉴`，不能放进带 Codex 沙盒权限的目录（`D:\code`、`Documents\Codex`），否则桌面版无法启动。
-- `origin` 的 SSH 地址在这台电脑上主机密钥校验失败，推送用 HTTPS：`git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push https://github.com/gouluanjiang/azurlane-l2d-gallery.git <分支>`。
+**提交注意**
 - 机器人每周三、六会提交 `main` 上的目录；改动目录的 PR 要在 10:17 前合并，或合并前先同步 `main`。
 
 **已知未完成（不影响运行）**
