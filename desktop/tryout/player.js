@@ -28,14 +28,21 @@
     return {fit,setSource(src){view.loaded=false;image.src=src;}};
   }
   const small=makeViewer('small'),large=makeViewer('large');
+  // Guide panel: shown for skins with a local guide; collapses to a narrow rail on the right.
   function layoutSidebar() {
     const hasGuide=Boolean(current?.guidePath), hidden=!hasGuide||guideCollapsed;
-    $('sidebar').hidden=hidden;$('workspace').classList.toggle('side-hidden',hidden);
-    $('toggle-sidebar').hidden=!hasGuide;$('search-guide').hidden=hasGuide;
-    $('toggle-sidebar').textContent=guideCollapsed?'展开图解':'收起图解';$('toggle-sidebar').setAttribute('aria-expanded',String(!hidden));
+    $('sidebar').hidden=hidden;$('guide-rail').hidden=!hasGuide||!guideCollapsed;
+    $('workspace').classList.toggle('side-hidden',!hasGuide);$('workspace').classList.toggle('side-rail',hasGuide&&guideCollapsed);
+    $('search-guide').hidden=hasGuide;
     if(!hidden)requestAnimationFrame(()=>small.fit());
   }
-  $('toggle-sidebar').addEventListener('click',()=>{guideCollapsed=!guideCollapsed;localStorage.setItem('l2d-guide-collapsed',guideCollapsed?'1':'0');layoutSidebar();});
+  const setGuideCollapsed=value=>{guideCollapsed=value;localStorage.setItem('l2d-guide-collapsed',value?'1':'0');layoutSidebar();};
+  $('collapse-guide').addEventListener('click',()=>setGuideCollapsed(true));
+  $('guide-rail').addEventListener('click',()=>setGuideCollapsed(false));
+  // The site's own left column (actions / parameters / parts) inside the model view.
+  let actionsCollapsed=localStorage.getItem('l2d-actions-collapsed')==='1';
+  const renderActionsToggle=()=>{$('toggle-actions').textContent=actionsCollapsed?'展开动作栏':'收起动作栏';$('toggle-actions').setAttribute('aria-pressed',String(actionsCollapsed));};
+  $('toggle-actions').addEventListener('click',()=>{actionsCollapsed=!actionsCollapsed;localStorage.setItem('l2d-actions-collapsed',actionsCollapsed?'1':'0');renderActionsToggle();api.panel(actionsCollapsed).catch(showError);});
   $('expand-guide').addEventListener('click',async()=>{await api.occlude(true);$('guide-dialog').showModal();large.fit();});
   $('close-guide').addEventListener('click',()=>$('guide-dialog').close());
   $('guide-dialog').addEventListener('close',()=>api.occlude(false).catch(showError));
@@ -127,7 +134,7 @@
     for(const year of years){const option=document.createElement('option');option.value=year;option.textContent=year;$('skin-year').append(option);}
     const waiting=availability.length-samples.length;
     $('mapping-summary').textContent=`共 ${samples.length} 款可试玩${waiting?`，${waiting} 款暂不能试玩`:''}`;
-    renderPicker();
+    renderPicker();renderActionsToggle();await api.panel(actionsCollapsed);
     await selectSample(data.selectedId,true);document.documentElement.dataset.tryoutReady='true';
   }).catch(showError);
 })();

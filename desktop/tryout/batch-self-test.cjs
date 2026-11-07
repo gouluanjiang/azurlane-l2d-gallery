@@ -173,6 +173,20 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     if(deep){
       await choose(tryout.samples[0].id);
       await click('expand-guide');await until(()=>local('document.getElementById("guide-dialog").open'),'guide dialog',3000);assert.equal(tryout.model.occluded,true);await click('close-guide');await until(()=>!tryout.model.occluded,'model restored',3000);
+      // The guide panel collapses to a rail and the stage widens; the rail brings it back.
+      const stageWidth=()=>local("document.getElementById('stage').getBoundingClientRect().width");
+      const withGuide=await stageWidth();
+      await click('collapse-guide');await until(()=>local("!document.getElementById('guide-rail').hidden&&document.getElementById('sidebar').hidden"),'guide collapsed',3000);
+      const collapsedWidth=await stageWidth();assert(collapsedWidth>withGuide+250,`stage did not widen: ${withGuide} -> ${collapsedWidth}`);
+      await click('guide-rail');await until(()=>local("!document.getElementById('sidebar').hidden&&document.getElementById('guide-rail').hidden"),'guide restored',3000);
+      // The site's left column hides inside the model view and the model takes its width.
+      const siteLayout=()=>remote("(()=>{const s=document.querySelector('.app-shell section.sidebar');const w=document.querySelector('.model-workspace').getBoundingClientRect();return {column:s?getComputedStyle(s).display:'missing',left:Math.round(w.left),width:Math.round(w.width)};})()");
+      const columnShown=await siteLayout();
+      await click('toggle-actions');const columnHidden=await until(async()=>{const v=await siteLayout();return v.column==='none'&&v.left<=8?v:false;},'action column hidden',4000);
+      assert(columnHidden.width>columnShown.width+150,`model did not widen: ${JSON.stringify([columnShown,columnHidden])}`);
+      await click('collapse-guide');await until(()=>local("document.getElementById('sidebar').hidden"),'guide collapsed for capture',3000);await pause(1500);const bothCollapsed=await capture('collapsed-both');const toolbarLeft=await remote("Math.round(document.querySelector('.browser-page-toolbar')?.getBoundingClientRect().left??-1)");assert(toolbarLeft<=8,'site toolbar still offset: '+toolbarLeft);await click('guide-rail');
+      await click('toggle-actions');await until(async()=>{const v=await siteLayout();return v.column!=='none'&&v.left>8;},'action column restored',4000);
+      step('guide-and-action-column-collapse',{withGuide,collapsedWidth,columnShown,columnHidden,bothCollapsed,toolbarLeft});
       await click('mute');await until(()=>tryout.model.contents.isAudioMuted(),'mute',3000);await click('mute');
       tryout.window.setContentSize(1120,740);await pause(600);
       const layout=await local("({overflow:document.body.scrollWidth>innerWidth,stage:document.getElementById('stage').getBoundingClientRect().toJSON(),sidebar:document.getElementById('sidebar').getBoundingClientRect().toJSON()})");assert.equal(layout.overflow,false);assert(layout.stage.width>500&&layout.stage.height>350);step('guide-mute-and-minimum-window',layout);

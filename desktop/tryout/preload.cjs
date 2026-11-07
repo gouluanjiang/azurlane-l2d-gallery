@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('l2dTryout',{
   mute:value=>ipcRenderer.invoke('tryout:mute',value),
   occlude:value=>ipcRenderer.invoke('tryout:occlude',value),
   bounds:value=>ipcRenderer.invoke('tryout:bounds',value),
+  panel:value=>ipcRenderer.invoke('tryout:panel',value),
   notes:(id,revision,operation,value)=>ipcRenderer.invoke('tryout:notes',id,revision,operation,value),
   browser:()=>ipcRenderer.invoke('tryout:browser'),
   search:()=>ipcRenderer.invoke('tryout:search'),

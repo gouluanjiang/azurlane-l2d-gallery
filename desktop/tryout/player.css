@@ -35,6 +35,10 @@ body[data-phase=error] #state-dot{background:#f497ac}
 
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:12px;flex:1;min-height:0;padding:12px}
 .workspace.side-hidden{grid-template-columns:minmax(0,1fr)}
+.workspace.side-rail{grid-template-columns:minmax(0,1fr) 40px}
+.guide-rail{writing-mode:vertical-rl;padding:14px 0;font-size:14px;letter-spacing:.15em;border-radius:12px;background:#172539;border-color:#31435a;color:#b8d7dc}
+.guide-rail:hover{background:#21364f}
+#toggle-actions[aria-pressed=true]{border-color:#89d6cd;color:#a8ece3}
 .stage{min-width:0;min-height:0;position:relative;background:#0c1421;border-radius:12px;overflow:hidden;border:1px solid #2c3b4f}
 #loading-art{position:absolute;width:100%;height:100%;object-fit:contain;opacity:.18;filter:blur(1px)}
 .stage-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:35px;background:linear-gradient(#101b2b33,#101b2bbd)}
@@ -49,6 +53,7 @@ body[data-phase=error] #state-dot{background:#f497ac}
 .guide-caption{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:12px 14px 8px}
 .guide-caption h2{font-size:16px;font-weight:500}
 .guide-caption button{font-size:13px;padding:5px 8px}
+.guide-caption h2{margin-right:auto}
 .guide-tools{display:flex;align-items:center;gap:6px;padding:0 14px 8px;flex:none}
 .guide-tools button{padding:4px 9px;font-size:14px}
 .guide-tools span{font-size:13px;min-width:46px;text-align:center;color:#c1d4e4}
