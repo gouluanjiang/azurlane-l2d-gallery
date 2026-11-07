@@ -7,7 +7,9 @@
 [![CI](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/workflows/ci.yml/badge.svg)](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/workflows/ci.yml)
 [![自动收录](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/workflows/update.yml/badge.svg)](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/workflows/update.yml)
 ![平台](https://img.shields.io/badge/%E5%B9%B3%E5%8F%B0-Windows%20x64-blue)
-![收录](https://img.shields.io/badge/%E6%94%B6%E5%BD%95-238%20%E6%AC%BE-ff69b4)
+[![收录](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgouluanjiang%2Fazurlane-l2d-gallery%2Fmain%2Fdata%2Fcatalog.json&query=%24.skins.length&label=%E6%94%B6%E5%BD%95&suffix=%20%E6%AC%BE&color=ff69b4)](data/catalog.json)
+[![资料更新至](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgouluanjiang%2Fazurlane-l2d-gallery%2Fmain%2Fdata%2Fcatalog.json&query=%24.updatedTo&label=%E8%B5%84%E6%96%99%E6%9B%B4%E6%96%B0%E8%87%B3&color=2f8f86)](https://github.com/gouluanjiang/azurlane-l2d-gallery/actions/workflows/update.yml)
+[![最新版本](https://img.shields.io/github/v/release/gouluanjiang/azurlane-l2d-gallery?label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC)](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/latest)
 [![最近提交](https://img.shields.io/github/last-commit/gouluanjiang/azurlane-l2d-gallery?label=%E6%9C%80%E8%BF%91%E6%8F%90%E4%BA%A4)](https://github.com/gouluanjiang/azurlane-l2d-gallery/commits/main)
 
 [快速开始](#快速开始) · [自动更新](#自动更新) · [常见问题](#常见问题) · [问题反馈](https://github.com/gouluanjiang/azurlane-l2d-gallery/issues/new/choose) · [开发记录](PROJECT_HANDOFF.md)
@@ -18,7 +20,7 @@
 ## 目录
 
 - [现在收录了什么](#现在收录了什么)
-- [核心功能：边看图解边试玩](#核心功能边看图解边试玩)
+- [核心功能：翻看原图，一键试玩](#核心功能翻看原图一键试玩)
 - [自动更新](#自动更新)
 - [全部功能](#全部功能)：[图鉴](#图鉴) · [试玩台](#试玩台) · [更新与设置](#更新与设置)
 - [快速开始](#快速开始)
@@ -32,12 +34,12 @@
 
 ## 现在收录了什么
 
-| 项目 | 数量 |
+| 项目 | 内容 |
 | --- | --- |
-| 换装 | **238 款**，2017-09-08 爱宕「盛夏进行曲」至 2026-10-22 |
-| 本地高清原图 | 238 张，每张都核对过大小与 SHA-256 |
-| 本地玩法图解 | 68 款；其余可一键搜索 Bilibili 玩法视频 |
-| 可在线试玩 | 238 款，其中 7 款双形态可在 Live2D 与 Spine 动态立绘之间切换 |
+| 换装 | 从 2017-09-08 爱宕「盛夏进行曲」起的全部 L2D、L2D+、双形态换装；当前数量和更新日期见顶部徽章，随云端收录自动增加 |
+| 本地高清原图 | 每款一张，每张都核对过大小与 SHA-256 |
+| 本地玩法图解 | 部分皮肤有；其余可一键搜索 Bilibili 玩法视频 |
+| 可在线试玩 | 能在 l2d.su 上唯一对应的全部皮肤；双形态可在 Live2D 与 Spine 动态立绘之间切换 |
 
 收录范围与 [WIKI 换装图鉴](https://wiki.biligame.com/blhx/%E6%8D%A2%E8%A3%85%E5%9B%BE%E9%89%B4)中的 L2D、L2D+、双形态换装逐条对应。
 
@@ -146,7 +148,7 @@ flowchart TD
 
 1. 到 [Releases](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/latest) 下载 `azurlane-l2d-gallery-<版本>-win-x64.zip`（约 150 MB）。
 2. 解压到普通文件夹，例如 `D:\碧蓝航线图鉴`。不要放进 `C:\Program Files` 这类需要管理员权限的位置。
-3. 双击 **`碧蓝航线图鉴.exe`**。首次启动会自动下载并校验 238 张原图和 68 张玩法图解（约 800 MB，网速正常时 5 分钟左右），完成后页面自动刷新。
+3. 双击 **`碧蓝航线图鉴.exe`**。首次启动会自动下载并校验全部原图和玩法图解（约 800 MB，网速正常时 5 分钟左右）。最新皮肤的原图先下载，几十张后首屏就能看到图。
 
 压缩包里没有游戏图片，图片都从 WIKI 等公开来源下载，每张都会核对校验值。下载中途断网也没关系：已下载的图片会保留，下次启动或点“检查更新”会接着补。
 
@@ -171,7 +173,7 @@ npm run release:pack    # 可选：生成上面那种便携版压缩包
 ## 使用前请了解
 
 - **在线模型来自第三方网站：** l2d.su 可能改版或暂时不可用，届时试玩会受影响，图鉴本身不受影响。2026 年 11 月的一次改版已经适配。
-- **图解还不完整：** 238 款中 68 款有本地玩法图解，2023-09-21 之前补录的 131 款暂时都没有。
+- **图解还不完整：** 只有部分皮肤有本地玩法图解（可用“有玩法图解”筛选查看），2023-09-21 之前补录的早期皮肤暂时都没有；新收录的皮肤也不会自动带图解。
 - **只收录能证明的皮肤：** 云端只收录官方公告和 WIKI 能对上的新皮肤；试玩模型也只在网站上唯一对应时才开放。对不上的会显示“待核对”，不会猜测。
 - **整个文件夹一起搬：** `碧蓝航线图鉴.exe` 依赖同目录的 `.desktop` 运行环境和 `data`、`assets`，不能只拷贝 exe。
 - **不要放进沙盒工具的目录：** 被 Codex 等沙盒工具加过访问权限的文件夹里，程序可能报“图鉴启动失败 ERR_FAILED”或直接退出，移到普通文件夹即可。
