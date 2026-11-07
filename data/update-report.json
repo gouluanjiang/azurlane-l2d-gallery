@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-11-04T09:09:15.264Z",
-  "since": "2026-09-20",
+  "checkedAt": "2026-11-07T08:45:32.479Z",
+  "since": "2026-09-23",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -183,10 +183,23 @@
       "returningSkins": [],
       "acceptedIds": [],
       "reviewCount": 0
+    },
+    {
+      "id": 18549,
+      "title": "2026维护公告（2026年11月5日10:00）",
+      "date": "2026-11-05",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18549",
+      "apiUrl": "https://api.biligame.com/news/18549",
+      "bodySha256": "f1deeeda763b989616e1f3356bd7623e998df28051f0858f14490d8b8d3e7d61",
+      "bodyCharacters": 2096,
+      "newSkins": [],
+      "returningSkins": [],
+      "acceptedIds": [],
+      "reviewCount": 0
     }
   ],
   "warnings": [],
   "newCount": 0,
   "reviewCount": 0,
-  "latestAnnouncement": "2026-10-22"
+  "latestAnnouncement": "2026-11-05"
 }
