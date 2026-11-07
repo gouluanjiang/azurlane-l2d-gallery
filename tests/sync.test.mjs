@@ -103,3 +103,17 @@ test('only the three existing verified guide hosts are allowed',()=>{
   for(const host of ['075fac25.pinme.dev','417ce07b.pinme.dev','ed6b1227.pinme.dev']) assert.equal(allowedImageUrl(`https://${host}/image.png`).hostname,host);
   assert.throws(()=>allowedImageUrl('https://arbitrary.pinme.dev/image.png'),/来源/);
 });
+test('missing images the current catalog already references are restored in place, and partial progress survives a failure',async t=>{
+  const x=setup(t);const extra=skin('另一款');
+  const fresh={...x.current,skins:[...x.current.skins,extra]};
+  fs.writeFileSync(path.join(x.rootDir,'data/catalog.json'),JSON.stringify(fresh,null,2)+'\n');fs.writeFileSync(path.join(x.rootDir,'data/skins-data.js'),serializeCatalog(fresh));
+  fs.unlinkSync(path.join(x.rootDir,x.current.skins[0].artworkPath));
+  let calls=0;const flaky=async()=>(++calls===1?fetchOk():new Response('no',{status:503}));
+  const failed=await syncCatalog({rootDir:x.rootDir,nextCatalog:fresh,fetchImpl:flaky}).catch(e=>e);
+  assert.match(failed.message,/1 张本地图像未能补齐，已下载的 1 张已保留/);assert.equal(failed.repaired,1);
+  const kept=[x.current.skins[0],extra].filter(s=>fs.existsSync(path.join(x.rootDir,s.artworkPath)));assert.equal(kept.length,1);
+  const result=await syncCatalog({rootDir:x.rootDir,nextCatalog:fresh,fetchImpl:fetchOk});
+  assert.equal(result.status,'unchanged');assert.equal(result.repaired,1);
+  for(const s of fresh.skins)assert.equal(sha256(fs.readFileSync(path.join(x.rootDir,s.artworkPath))),s.artworkSha256);
+  assert.equal(fs.existsSync(path.join(x.rootDir,'.l2d-update/backups')),false);
+});

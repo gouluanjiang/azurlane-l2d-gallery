@@ -19,10 +19,11 @@ try {
     if (transport) result.transport = transport;
   }
   atomicWrite(path.join(rootDir, 'data/sync-status.json'), jsonText({ ...result, checkedAt: new Date().toISOString() }));
-  console.log(result.status === 'unchanged' ? '已经是最新版本，未重复下载或收录。' : result.status === 'rolled_back' ? `已回退到版本 ${result.version}。` : `同步完成：新增 ${result.added} 款，当前共 ${result.count} 款。`);
+  if (result.repaired) console.log(`已补齐本地缺少的 ${result.repaired} 张图像。`);
+  console.log(result.status === 'unchanged' ? (result.repaired ? '图鉴记录已经是最新版本。' : '已经是最新版本，未重复下载或收录。') : result.status === 'rolled_back' ? `已回退到版本 ${result.version}。` : `同步完成：新增 ${result.added} 款，当前共 ${result.count} 款。`);
   console.log('现在重新打开或刷新图鉴即可。');
 } catch (error) {
   console.error(`更新失败：${error.message}\n原有图鉴和图片已保留；修复网络或配置后可以重试。`);
-  try { atomicWrite(path.join(rootDir, 'data/sync-status.json'), jsonText({ status: 'failed', checkedAt: new Date().toISOString(), error: error.message })); } catch {}
+  try { atomicWrite(path.join(rootDir, 'data/sync-status.json'), jsonText({ status: 'failed', checkedAt: new Date().toISOString(), error: error.message, repaired: error.repaired ?? 0 })); } catch {}
   process.exitCode = 1;
 }

@@ -134,6 +134,23 @@ export async function syncCatalog({ rootDir, nextCatalog, fetchImpl = fetch, sou
     const nextJson = jsonText(nextCatalog), nextJs = serializeCatalog(nextCatalog);
     const id = `${Date.now()}-${randomUUID()}`, staged = `.l2d-update/staging/${id}`;
     const entries = assetEntries(nextCatalog), pending = [];
+    // An image the current catalog already references with the same checksum
+    // (e.g. a fresh install that ships the catalog without images) is restored
+    // straight into place: no record changes, so it needs no transaction, and
+    // every verified download is kept even when another one fails.
+    const referenced = new Set(assetEntries(current).map(e => `${e.file}\0${e.hash}\0${e.bytes}`));
+    const repairs = entries.filter(e => referenced.has(`${e.file}\0${e.hash}\0${e.bytes}`) && !fs.existsSync(safePath(rootDir, e.file)));
+    const repairFailures = [];
+    for (const [index, entry] of repairs.entries()) {
+      progress(`补齐本地原图 ${index + 1}/${repairs.length}：${entry.file}`);
+      try {
+        if (!entry.source) throw new Error('缺少本地图像且没有下载来源');
+        const downloaded = await fetchImage(entry.source, { fetchImpl }); verifyBytes(entry, downloaded.bytes);
+        atomicWrite(safePath(rootDir, entry.file), downloaded.bytes);
+      } catch (error) { repairFailures.push(`${entry.file}：${error.message}`); progress(`未能补齐 ${entry.file}：${error.message}`); }
+    }
+    if (repairFailures.length) throw Object.assign(new Error(`${repairFailures.length} 张本地图像未能补齐，已下载的 ${repairs.length - repairFailures.length} 张已保留，下次同步会继续。首个原因：${repairFailures[0]}`), { repaired: repairs.length - repairFailures.length });
+    const repaired = repairs.length;
     for (const entry of entries) {
       const destination = safePath(rootDir, entry.file);
       if (fs.existsSync(destination)) { verifyBytes(entry, fs.readFileSync(destination)); continue; }
@@ -145,7 +162,7 @@ export async function syncCatalog({ rootDir, nextCatalog, fetchImpl = fetch, sou
     }
     fault('after-stage');
     if (sha256(fs.readFileSync(currentFile)) !== sha256(baselineJson) || sha256(fs.readFileSync(scriptFile)) !== sha256(baselineJs)) throw new Error('下载期间本地图鉴发生修改，本次同步已停止并保留修改');
-    if (fs.readFileSync(currentFile, 'utf8') === nextJson && fs.readFileSync(scriptFile, 'utf8') === nextJs && !pending.length) return { status: 'unchanged', added: 0, count: current.skins.length, version: current.version, sourceCommit };
+    if (fs.readFileSync(currentFile, 'utf8') === nextJson && fs.readFileSync(scriptFile, 'utf8') === nextJs && !pending.length) return { status: 'unchanged', added: 0, repaired, count: current.skins.length, version: current.version, sourceCommit };
     const backup = `.l2d-update/backups/${id}`;
     atomicWrite(safePath(rootDir, `${backup}/catalog.json`), baselineJson);
     atomicWrite(safePath(rootDir, `${backup}/skins-data.js`), baselineJs);
@@ -166,7 +183,7 @@ export async function syncCatalog({ rootDir, nextCatalog, fetchImpl = fetch, sou
     atomicWrite(safePath(rootDir, '.l2d-update/transaction.json'), jsonText(journal));
     atomicWrite(safePath(rootDir, '.l2d-update/last-success.json'), jsonText(journal));
     fs.unlinkSync(safePath(rootDir, '.l2d-update/transaction.json'));
-    return { status: 'updated', added: nextCatalog.skins.length - current.skins.length, downloaded: pending.length, count: nextCatalog.skins.length, version: nextCatalog.version, backup, sourceCommit, statistics };
+    return { status: 'updated', added: nextCatalog.skins.length - current.skins.length, downloaded: pending.length, repaired, count: nextCatalog.skins.length, version: nextCatalog.version, backup, sourceCommit, statistics };
   } catch (error) {
     if (journal?.phase === 'prepared') {
       try { recoverInterrupted(rootDir); } catch (recovery) { throw new Error(`${error.message}；恢复尚未完成：${recovery.message}`); }
