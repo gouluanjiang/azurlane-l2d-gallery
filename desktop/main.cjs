@@ -59,7 +59,7 @@ function startUpdate(operation, { auto = false } = {}) {
   const done = new Promise(resolve => { finishedUpdate = resolve; });
   const script = operation === 'check' ? 'check-updates.mjs' : 'sync.mjs';
   const args = operation === 'check' ? ['--apply-local'] : operation === 'rollback' ? ['--rollback'] : ['--public'];
-  job = { phase: 'running', operation, auto, message: operation === 'check' ? '正在检查官方公告与原图…' : operation === 'rollback' ? '正在恢复上一版本…' : auto ? '正在自动同步云端图鉴…' : '正在同步云端已发布的图鉴…', lines: [], startedAt: new Date().toISOString() };
+  job = { phase: 'running', operation, auto, message: operation === 'check' ? '正在检查官方公告与原图…' : operation === 'rollback' ? '正在恢复上一版本…' : auto ? '正在自动检查更新…' : '正在检查更新…', lines: [], startedAt: new Date().toISOString() };
   notify();
   const env = { ...process.env, L2D_DATA_ROOT: libraryRoot };
   delete env.ELECTRON_RUN_AS_NODE;
@@ -85,7 +85,7 @@ function startUpdate(operation, { auto = false } = {}) {
       if (!auto && window && !window.isDestroyed()) window.webContents.reload();
       finishedUpdate?.({ ok: true, added, repaired });
     } else {
-      job = { ...job, phase: 'error', message: auto ? '自动同步未完成，现有图鉴已保留；原因见“更新过程”，可稍后点“同步云端”。' : '更新未完成，现有图鉴已保留。可重试或查看过程。', finishedAt: new Date().toISOString() };
+      job = { ...job, phase: 'error', message: auto ? '自动检查未完成，现有图鉴已保留；点这里查看原因，可稍后点“检查更新”。' : '更新未完成，现有图鉴已保留。可重试或查看过程。', finishedAt: new Date().toISOString() };
       let repaired = 0; try { if (operation === 'sync') repaired = readJson('data/sync-status.json').repaired ?? 0; } catch { /* no status written */ }
       notify();
       if (!auto && repaired && window && !window.isDestroyed()) window.webContents.reload();

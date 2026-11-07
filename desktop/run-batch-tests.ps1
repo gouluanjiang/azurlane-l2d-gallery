@@ -4,7 +4,7 @@ $projectRoot=(Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 # The full tryout (release 5) ships inside the gallery runtime; the frozen batch 1-4 editions were retired.
 $runtimeExe=Join-Path $projectRoot ".desktop\碧蓝航线图鉴.exe"
 if($StartRound -lt 1 -or $EndRound -gt 99 -or $StartRound -gt $EndRound){throw 'Invalid test rounds'}
-if($OnlySkin -and $Mode -ne 'interaction'){throw 'A focused diagnostic requires -Mode interaction'}
+# -OnlySkin narrows any mode to one skin for a quick focused check.
 for($round=$StartRound;$round -le $EndRound;$round++){
     $startedAt=[DateTime]::UtcNow
     $outputFolder=Join-Path $projectRoot "verification\batch-$Batch\round-$round"

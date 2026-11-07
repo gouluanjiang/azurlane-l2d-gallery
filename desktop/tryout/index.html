@@ -1,54 +1,50 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>L2D 试玩台 · 两款样例</title><link rel="stylesheet" href="player.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>L2D 试玩台</title><link rel="stylesheet" href="player.css"></head>
 <body>
   <header class="topbar">
-    <div class="brand"><img src="../icon.png" alt=""><div><h1>L2D 试玩台 <span id="release-label">试玩样例</span></h1><p>一边看攻略，一边发现角色的小动作。</p></div></div>
-    <div class="top-actions"><button id="open-browser">在浏览器打开 ↗</button><button id="back-gallery">返回图鉴</button></div>
-  </header>
-  <nav class="current-selection" aria-label="当前试玩皮肤"><img id="selected-art" alt=""><div class="selected-text"><strong id="selected-title">正在准备皮肤…</strong><span id="selected-meta"></span></div><span id="scope-summary"></span><button class="primary" id="choose-skin">切换皮肤</button></nav>
-  <div class="player-toolbar">
+    <img class="app-icon" src="../icon.png" alt="">
+    <nav class="current-selection" aria-label="当前试玩皮肤"><img id="selected-art" alt=""><div class="selected-text"><strong id="selected-title">正在准备皮肤…</strong><span id="selected-meta"></span></div></nav>
+    <button class="primary" id="choose-skin">切换皮肤</button>
+    <span id="form-switch" class="form-switch" role="group" aria-label="模型形态" hidden></span>
     <div class="load-state" role="status" aria-live="polite"><i id="state-dot"></i><strong id="state-message">正在准备试玩台…</strong><span id="elapsed"></span></div>
-    <div class="player-tools"><span id="form-switch" class="form-switch" role="group" aria-label="模型形态" hidden></span><span id="voice-state">语音待触发</span><button id="mute" aria-pressed="false">静音</button><button id="retry">重新载入</button><button id="toggle-sidebar" aria-expanded="true">收起侧栏</button></div>
-  </div>
+    <div class="player-tools">
+      <span id="voice-state">语音待触发</span>
+      <button id="mute" aria-pressed="false">静音</button>
+      <button id="retry">重新载入</button>
+      <button id="toggle-actions" aria-pressed="false" title="收起或展开模型左侧的动作、参数、部件栏">收起动作栏</button>
+      <button id="search-guide" hidden>搜玩法视频 ↗</button>
+      <button id="open-browser" title="在线模型由 l2d.su 提供">浏览器打开 ↗</button>
+      <button id="back-gallery">返回图鉴</button>
+    </div>
+  </header>
   <main class="workspace" id="workspace">
     <section class="stage" id="stage" aria-label="在线模型试玩区">
       <img id="loading-art" alt="本地立绘预览">
       <div class="stage-placeholder" id="placeholder">
         <div class="spinner" id="spinner" aria-hidden="true"></div>
         <h2 id="placeholder-title">正在准备互动模型</h2>
-        <p id="placeholder-message">首次打开需要加载模型资源，可以先阅读攻略或记录想尝试的操作。</p>
-        <span class="preview-label">背景为本地立绘预览</span>
+        <p id="placeholder-message">首次打开需要加载模型资源，请稍候。</p>
         <div id="failure-actions" hidden><button id="stage-retry" class="primary">重新尝试</button><button id="stage-browser">在浏览器打开 ↗</button></div>
       </div>
     </section>
-    <aside class="sidebar" id="sidebar" aria-label="玩法与笔记">
-      <div class="side-tabs" role="tablist" aria-label="侧栏内容"><button id="guide-tab" role="tab" aria-controls="guide-panel" aria-selected="true">玩法图解</button><button id="notes-tab" role="tab" aria-controls="notes-panel" aria-selected="false">我的笔记 <span id="note-count">0</span></button></div>
-      <section id="guide-panel" role="tabpanel" aria-labelledby="guide-tab">
-        <div class="guide-caption"><div><h2 id="guide-title">高清玩法图解</h2><p id="guide-caption">放大查看点位，再回到模型上试一试。</p></div><button id="expand-guide">展开大图</button></div>
-        <div class="guide-tools" id="guide-tools"><button data-viewer="small" data-zoom="out" aria-label="缩小图解">−</button><span id="small-scale">适应</span><button data-viewer="small" data-zoom="in" aria-label="放大图解">＋</button><button data-viewer="small" data-zoom="fit">适应</button><button data-viewer="small" data-zoom="original">100%</button></div>
-        <div class="guide-viewport" id="small-viewport" aria-label="可缩放拖动的玩法图解"><img id="small-image" alt="当前皮肤的高清玩法图解" draggable="false"></div>
-        <div class="guide-empty" id="guide-empty" hidden><span class="empty-mark">✦</span><h3>这款新装还没有本地图解</h3><p>可以直接试玩，也可以搜索玩法视频。发现有趣的操作后，记在自己的笔记里。</p><button class="primary" id="search-guide">搜索玩法视频 ↗</button><button id="start-note">记录我的发现</button></div>
-        <p class="guide-hint" id="guide-hint">滚轮缩放 · 按住拖动 · 双击切换原尺寸</p>
-      </section>
-      <section id="notes-panel" role="tabpanel" aria-labelledby="notes-tab" hidden>
-        <div class="notes-heading"><h2>留下这次发现</h2><p>按皮肤保存在本机，草稿也会自动保留。</p></div>
-        <form id="note-form"><fieldset id="note-fields">
-          <label>触发位置<input id="note-location" maxlength="200" placeholder="例如：头部、手边的道具…" autocomplete="off"></label>
-          <label>怎么操作<textarea id="note-steps" maxlength="4000" rows="3" placeholder="点击、按住或拖动的具体步骤"></textarea></label>
-          <label>出现了什么<textarea id="note-result" maxlength="2000" rows="2" placeholder="动作、台词或需要注意的小细节"></textarea></label>
-          <label class="check-label"><input id="note-triggered" type="checkbox">我已经成功触发</label>
-          <div class="note-actions"><button id="save-note" class="primary" type="submit">保存记录</button><button id="new-note" type="button" hidden>结束编辑</button><span id="draft-status" role="status" aria-live="polite">尚未输入</span></div>
-        </fieldset></form>
-        <div id="note-error" class="note-error" role="alert" hidden></div>
-        <div id="undo-row" class="undo-row" hidden><span>这条记录已移出列表。</span><button id="undo-note">撤销</button></div>
-        <div class="records-heading"><h3>我的玩法记录</h3><span id="record-count">0 条</span></div>
-        <div id="notes-list" class="notes-list"></div>
-      </section>
+    <aside class="sidebar" id="sidebar" aria-label="玩法图解">
+      <div class="guide-caption"><h2 id="guide-title">玩法图解</h2><button id="expand-guide">展开大图</button><button id="collapse-guide" title="收起玩法图解" aria-label="收起玩法图解">收起 ›</button></div>
+      <div class="guide-tools" id="guide-tools"><button data-viewer="small" data-zoom="out" aria-label="缩小图解">−</button><span id="small-scale">适应</span><button data-viewer="small" data-zoom="in" aria-label="放大图解">＋</button><button data-viewer="small" data-zoom="fit">适应</button><button data-viewer="small" data-zoom="original">100%</button></div>
+      <div class="guide-viewport" id="small-viewport" aria-label="可缩放拖动的玩法图解"><img id="small-image" alt="当前皮肤的高清玩法图解" draggable="false"></div>
+      <p class="guide-hint">滚轮缩放 · 按住拖动 · 双击切换原尺寸</p>
     </aside>
+    <button id="guide-rail" class="guide-rail" title="展开玩法图解" hidden>‹ 玩法图解</button>
   </main>
-  <footer><span id="skin-caption">在线模型由 l2d.su 提供</span><span>图解与笔记保存在本机</span></footer>
-  <dialog id="skin-picker" aria-labelledby="picker-title"><header class="picker-heading"><div><h2 id="picker-title">选择试玩皮肤</h2><p id="mapping-summary"></p></div><button id="close-picker">返回试玩 Esc</button></header><div class="picker-filters"><label>搜索角色或皮肤<input id="skin-search" type="search" placeholder="例如：狮、白沙幽梦…" autocomplete="off"></label><label>查看范围<select id="skin-status"><option value="playable">本批可试玩</option><option value="all">全部图鉴</option><option value="matched">已匹配 · 待接入</option><option value="review">待核对</option><option value="no-model">暂无 Live2D 模型</option></select></label></div><p id="picker-count" role="status" aria-live="polite"></p><nav id="samples" class="picker-grid" aria-label="皮肤匹配结果"></nav><p id="picker-empty" hidden>没有符合条件的皮肤。试试其他关键词或查看范围。</p><p class="picker-footnote">已匹配表示目录资料一致，仍需逐款实测后开放。待核对的皮肤保留原图、图解和视频搜索。</p></dialog>
-  <dialog id="guide-dialog" aria-labelledby="large-title"><div class="large-toolbar"><h2 id="large-title">高清玩法图解</h2><div class="guide-tools"><button data-viewer="large" data-zoom="out" aria-label="缩小大图">−</button><span id="large-scale">适应</span><button data-viewer="large" data-zoom="in" aria-label="放大大图">＋</button><button data-viewer="large" data-zoom="fit">适应</button><button data-viewer="large" data-zoom="original">100%</button><button id="close-guide">关闭大图 Esc</button></div></div><div id="large-viewport" class="guide-viewport"><img id="large-image" alt="完整高清玩法图解" draggable="false"></div></dialog>
+  <dialog id="skin-picker" aria-labelledby="picker-title">
+    <header class="picker-heading"><div><h2 id="picker-title">切换皮肤</h2><p id="mapping-summary"></p></div><button id="close-picker">返回试玩 Esc</button></header>
+    <div class="picker-filters"><label>搜索角色或皮肤<input id="skin-search" type="search" placeholder="例如：狮、白沙幽梦…" autocomplete="off"></label><label>实装年份<select id="skin-year"><option value="all">全部年份</option></select></label></div>
+    <section id="recent-box" class="recent-box" hidden><h3>最近试玩</h3><div id="recent-list" class="recent-list"></div></section>
+    <p id="picker-count" role="status" aria-live="polite"></p>
+    <nav id="samples" class="picker-grid" aria-label="可试玩皮肤"></nav>
+    <p id="picker-empty" hidden>没有符合条件的皮肤。试试其他关键词或年份。</p>
+    <p class="picker-footnote">在线模型由 l2d.su 提供，需要联网。</p>
+  </dialog>
+  <dialog id="guide-dialog" aria-labelledby="large-title"><div class="large-toolbar"><h2 id="large-title">玩法图解</h2><div class="guide-tools"><button data-viewer="large" data-zoom="out" aria-label="缩小大图">−</button><span id="large-scale">适应</span><button data-viewer="large" data-zoom="in" aria-label="放大大图">＋</button><button data-viewer="large" data-zoom="fit">适应</button><button data-viewer="large" data-zoom="original">100%</button><button id="close-guide">关闭大图 Esc</button></div></div><div id="large-viewport" class="guide-viewport"><img id="large-image" alt="完整高清玩法图解" draggable="false"></div></dialog>
   <script src="player.js"></script>
 </body></html>

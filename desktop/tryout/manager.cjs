@@ -42,6 +42,7 @@ class TryoutManager {
     handle('mute',value=>{if(typeof value!=='boolean')throw new Error('静音参数无效');this.model.setMuted(value);});
     handle('occlude',value=>{if(typeof value!=='boolean')throw new Error('窗口状态无效');this.model.setOccluded(value);});
     handle('bounds',bounds=>this.model.setBounds(bounds));
+    handle('panel',value=>{if(typeof value!=='boolean')throw new Error('动作栏参数无效');return this.model.setPanelHidden(value);});
     handle('notes',(id,revision,operation,value)=>{this.requireSample(id);return this.notes.update(id,revision,operation,value);});
     handle('browser',()=>shell.openExternal(this.current().url));
     handle('search',()=>shell.openExternal(`https://search.bilibili.com/all?keyword=${encodeURIComponent(`碧蓝航线 ${this.selected.character} ${this.selected.name} L2D 互动 玩法`)}`));

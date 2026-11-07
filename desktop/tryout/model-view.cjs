@@ -22,12 +22,19 @@ const embeddedStyle = `
   .browser-shared-header { display: none !important; }
   .favorite-action-button, .model-floating-actions button[aria-label="分享当前皮肤"] { display: none !important; }
 `;
+// Hides the site's left column (actions / parameters / parts) and gives its width to the model.
+const panelHiddenStyle = `
+  .app-shell { --selection-panel-width: 0px !important; }
+  .app-shell section.sidebar, .app-shell aside.sidebar, .browser-panel-frame { display: none !important; }
+  .app-shell .model-workspace { left: 8px !important; }
+  .browser-page-toolbar { left: 8px !important; }
+`;
 const shortUrl = value => { try { const u = new URL(value); return u.origin + u.pathname; } catch { return ''; } };
 
 class ModelView extends EventEmitter {
   constructor(window, { diagnosticDir, partition = 'persist:l2d-sample-online-v1', timeoutMs = 90000, stallMs = 30000 } = {}) {
     super(); this.window = window; this.timeoutMs = timeoutMs; this.stallMs = stallMs; this.diagnosticDir = diagnosticDir;
-    this.session = session.fromPartition(partition); this.generation = 0; this.muted = false; this.occluded = false;
+    this.session = session.fromPartition(partition); this.generation = 0; this.muted = false; this.occluded = false; this.panelHidden = false; this.panelCssKey = null;
     this.bounds = {x: 20, y: 150, width: 800, height: 650}; this.retired = [];
     this.state = { phase: 'idle', message: '选择一款皮肤开始试玩', elapsedMs: 0, audible: false };
     this.session.setPermissionRequestHandler((_wc, _permission, callback) => callback(false));
@@ -53,6 +60,13 @@ class ModelView extends EventEmitter {
     const x = Math.max(0, Math.min(width - 1, Math.round(bounds.x))), y = Math.max(0, Math.min(height - 1, Math.round(bounds.y)));
     this.bounds = { x, y, width: Math.max(1, Math.min(width - x, Math.round(bounds.width))), height: Math.max(1, Math.min(height - y, Math.round(bounds.height))) };
     this.view?.setBounds(this.bounds);
+  }
+  async setPanelHidden(value) { this.panelHidden = Boolean(value); await this.applyPanel(this.contents); }
+  async applyPanel(wc) {
+    if (!wc || wc.isDestroyed()) return;
+    if (this.panelCssKey) { const key = this.panelCssKey; this.panelCssKey = null; await wc.removeInsertedCSS(key).catch(() => {}); }
+    if (this.panelHidden) this.panelCssKey = await wc.insertCSS(panelHiddenStyle).catch(() => null);
+    wc.executeJavaScript('window.dispatchEvent(new Event("resize"))').catch(() => {});
   }
   setOccluded(value) { this.occluded = Boolean(value); this.updateVisibility(); }
   updateVisibility() { this.view?.setVisible(!this.occluded && !['idle','error'].includes(this.state.phase)); }
@@ -94,6 +108,7 @@ class ModelView extends EventEmitter {
       // WebContentsView construction on Windows.
       wc.setBackgroundThrottling(false);
       wc.insertCSS(embeddedStyle).catch(()=>{});
+      this.panelCssKey = null; if (this.panelHidden) this.applyPanel(wc);
       this.publish({phase:'loading',message:'正在准备模型资源…',elapsedMs:this.elapsed()});
     });
     const armDeadline = () => { clearTimeout(this.deadlineTimer); this.deadlineTimer = setTimeout(() => { if (current() && this.state.phase !== 'ready') this.fail('等待模型超过 90 秒，请重试或在浏览器打开。','MODEL_TIMEOUT'); }, this.timeoutMs); };
