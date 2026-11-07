@@ -117,3 +117,16 @@ test('missing images the current catalog already references are restored in plac
   for(const s of fresh.skins)assert.equal(sha256(fs.readFileSync(path.join(x.rootDir,s.artworkPath))),s.artworkSha256);
   assert.equal(fs.existsSync(path.join(x.rootDir,'.l2d-update/backups')),false);
 });
+test('a fresh install fetches the newest artworks first, then guides',async t=>{
+  const x=setup(t);
+  const dated=(name,date,guide)=>({...skin(name),releaseDate:date,artworkSource:`https://patchwiki.biligame.com/images/blhx/${encodeURIComponent(name)}.png`,
+    ...(guide?{guidePath:`assets/guides/${stableSkinId('测试角色',name)}.png`,guideSource:`https://patchwiki.biligame.com/images/blhx/${encodeURIComponent(name)}-guide.png`,guideSha256:sha256(image),guideBytes:image.length}:{})});
+  const fresh={...x.current,skins:[dated('旧皮肤','2020-01-01',true),dated('中间','2023-05-05',false),dated('最新','2026-09-08',true)]};
+  fs.mkdirSync(path.join(x.rootDir,'assets/guides'),{recursive:true});
+  for(const s of x.current.skins)fs.unlinkSync(path.join(x.rootDir,s.artworkPath));
+  fs.writeFileSync(path.join(x.rootDir,'data/catalog.json'),JSON.stringify(fresh,null,2)+'\n');fs.writeFileSync(path.join(x.rootDir,'data/skins-data.js'),serializeCatalog(fresh));
+  const order=[];const fetchImpl=async url=>{order.push(decodeURIComponent(new URL(url).pathname.split('/').pop()));return fetchOk();};
+  const result=await syncCatalog({rootDir:x.rootDir,nextCatalog:fresh,fetchImpl});
+  assert.equal(result.repaired,5);
+  assert.deepEqual(order,['最新.png','中间.png','旧皮肤.png','最新-guide.png','旧皮肤-guide.png']);
+});
