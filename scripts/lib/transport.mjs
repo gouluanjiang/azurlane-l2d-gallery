@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
 
 export const sha256 = data => createHash('sha256').update(data).digest('hex');
-const IMAGE_HOSTS = new Set(['patchwiki.biligame.com', 'wiki.biligame.com', 'i0.hdslb.com', 'i1.hdslb.com', 'i2.hdslb.com', '075fac25.pinme.dev', '417ce07b.pinme.dev', 'ed6b1227.pinme.dev']);
+// Artwork hosts. The pinme.dev guide hosts were removed with the guides (2026-11).
+const IMAGE_HOSTS = new Set(['patchwiki.biligame.com', 'wiki.biligame.com', 'i0.hdslb.com', 'i1.hdslb.com', 'i2.hdslb.com']);
 export function allowedImageUrl(value) {
   const url = new URL(value);
   if (url.protocol !== 'https:' || url.username || url.password || url.port || !IMAGE_HOSTS.has(url.hostname)) throw new Error('原图地址不是已核对的 HTTPS 图片来源');

@@ -52,7 +52,6 @@
     .badges { position:absolute; top:8px; left:8px; right:8px; display:flex; gap:6px; pointer-events:none; }
     .badge { padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700; line-height:1.6; backdrop-filter:blur(6px); }
     .badge-new { background:#ff6f91e6; color:#fff; }
-    .badge-guide { margin-left:auto; background:#11392ae0; color:#8ff0b9; border:1px solid rgba(100,221,160,.5); font-weight:400; }
     .info { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:flex-end; gap:8px; padding:46px 11px 10px; background:linear-gradient(180deg,transparent,rgba(5,11,21,.78) 42%,rgba(5,11,21,.95)); pointer-events:none; }
     .info-text { min-width:0; flex:1; }
     .name { overflow:hidden; color:#fff; font-size:16px; font-weight:800; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; text-shadow:0 1px 3px #000a; }
@@ -88,7 +87,6 @@
     .guide-message-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
     .guide-tools button:disabled { opacity:.45; cursor:default; }
     .guide-tools button { min-width:42px; background:rgba(12,25,43,.94); }
-    .guide-tools .viewer-accent { border-color:rgba(100,221,160,.62); background:#173d2d; color:#baffd6; }
     .guide-tools .tool-gap { width:14px; }
     .zoom-label { min-width:60px; color:#dcecff; text-align:center; font-variant-numeric:tabular-nums; }
     footer { margin-top:30px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; line-height:1.7; }
@@ -121,7 +119,6 @@
     <div class="filter-row">
       <button class="active" type="button" data-filter="all">全部<small id="countAll"></small></button>
       <button type="button" data-filter="new">新上线<small id="countNew"></small></button>
-      <button type="button" data-filter="ready">有玩法图解<small id="countReady"></small></button>
       <div class="type-row" role="group" aria-label="按类型筛选">
         <button type="button" data-type="L2D" aria-pressed="false">L2D<small data-type-count="L2D"></small></button>
         <button type="button" data-type="L2D+" aria-pressed="false">L2D+<small data-type-count="L2D+"></small></button>
@@ -154,16 +151,13 @@
         <p id="guideMessageText"></p>
         <div id="guideRecovery" class="guide-message-actions" hidden>
           <button id="retryImage" type="button">重试加载</button>
-          <button id="fallbackArtwork" type="button" hidden>查看皮肤原图</button>
           <button id="closeImageError" type="button">关闭查看器</button>
         </div>
       </div>
     </div>
     <div class="guide-tools" aria-label="图片查看工具">
       <span id="viewerActions" class="viewer-actions"></span>
-      <button id="viewGuideFromArtwork" class="viewer-accent" type="button" hidden>查看玩法图解</button>
-      <button id="viewArtworkFromGuide" type="button" hidden>返回原图</button>
-      <button id="searchVideo" type="button" hidden>搜索玩法视频 ↗</button>
+      <button id="searchVideo" type="button">搜索玩法视频 ↗</button>
       <span class="tool-gap"></span>
       <button id="zoomOut" type="button" aria-label="缩小图片">−</button>
       <button id="zoomFit" type="button">适应窗口</button>
@@ -173,7 +167,7 @@
     </div>
   </div>
 
-  <footer>原图来自碧蓝航线 WIKI，玩法图解来自玩家整理。点卡片查看原图，在查看器里用 ← → 翻看。</footer>
+  <footer>原图来自碧蓝航线 WIKI。点卡片查看原图，在查看器里用 ← → 翻看；“搜索玩法视频”在 Bilibili 查找这款皮肤的互动玩法。</footer>
 </main>
 <script src="data/skins-data.js"></script>
 <script>
@@ -188,8 +182,6 @@ const guideModal=document.querySelector('#guideModal');
 const guideStage=document.querySelector('#guideStage');
 const guideImage=document.querySelector('#guideImage');
 const guideClose=document.querySelector('#guideClose');
-const viewGuideFromArtwork=document.querySelector('#viewGuideFromArtwork');
-const viewArtworkFromGuide=document.querySelector('#viewArtworkFromGuide');
 const searchVideo=document.querySelector('#searchVideo');
 const viewerCaption=document.querySelector('#viewerCaption');
 const viewerCounter=document.querySelector('#viewerCounter');
@@ -198,7 +190,6 @@ const viewerNext=document.querySelector('#viewerNext');
 const guideMessage=document.querySelector('#guideMessage');
 const guideMessageText=document.querySelector('#guideMessageText');
 const guideRecovery=document.querySelector('#guideRecovery');
-const fallbackArtwork=document.querySelector('#fallbackArtwork');
 const zoomLabel=document.querySelector('#zoomLabel');
 const zoomButtons=['zoomOut','zoomIn','zoomFit','zoomActual'].map(id=>document.getElementById(id));
 const state={filter:'all',year:'all',type:'all',favoritesOnly:false,sort:'date-desc'};
@@ -209,12 +200,11 @@ const isFavorite=skin=>Boolean(favorites&&favorites.has(skin.id));
 // Skins released within this many days count as "新上线".
 const NEW_DAYS=60;
 let skins=[],skinById=new Map(),currentView=[],newSince='';
-let guideReturnFocus=null,viewerMode='artwork',activeViewer=null,imageReady=false;
+let guideReturnFocus=null,activeViewer=null,imageReady=false;
 let zoom=1,fitZoom=1,panX=0,panY=0,dragMoved=false;
 let pinchStartDistance=0,pinchStartZoom=1;
 const pointers=new Map();
 const searchUrl=(c,s)=>`https://search.bilibili.com/all?keyword=${encodeURIComponent('碧蓝航线 '+c+' '+s+' L2D 彩蛋 教程')}`;
-const hasLocalGuide=skin=>Boolean(skin.guidePath);
 const isNew=skin=>skin.releaseDate>=newSince;
 const typeClass=type=>type==='L2D+'?'type-l2d-plus':type==='双形态'?'type-dual':'type-l2d';
 function element(tag,className,text){
@@ -268,7 +258,6 @@ function updatePageMeta(data){
   const newCount=skins.filter(isNew).length;
   document.querySelector('#countAll').textContent=skins.length;
   document.querySelector('#countNew').textContent=newCount;
-  document.querySelector('#countReady').textContent=skins.filter(hasLocalGuide).length;
   for(const node of document.querySelectorAll('[data-type-count]')){
     const count=skins.filter(skin=>skin.type===node.dataset.typeCount).length;
     node.textContent=count; node.closest('button').hidden=!count;
@@ -288,7 +277,7 @@ function updateFavoriteCount(){
 function sortedView(){
   const term=q.value.trim().toLocaleLowerCase('zh-CN');
   const view=skins.filter(skin=>{
-    const matchesFilter=state.filter==='all'||(state.filter==='new'&&isNew(skin))||(state.filter==='ready'&&hasLocalGuide(skin));
+    const matchesFilter=state.filter==='all'||(state.filter==='new'&&isNew(skin));
     const matchesYear=state.year==='all'||skin.releaseDate.startsWith(state.year+'-');
     const matchesType=state.type==='all'||skin.type===state.type;
     const matchesFavorite=!state.favoritesOnly||isFavorite(skin);
@@ -316,7 +305,6 @@ function createCard(skin){
   media.append(image,fallback);
   const badges=element('div','badges');
   if(isNew(skin)) badges.append(element('span','badge badge-new','新'));
-  if(hasLocalGuide(skin)) badges.append(element('span','badge badge-guide','图解'));
   const info=element('div','info'),text=element('div','info-text');
   const name=element('div','name',skin.character); name.title=skin.character;
   const title=element('div','skin',skin.name); title.title=skin.name;
@@ -387,7 +375,6 @@ function updateImageState(status){
   imageReady=status==='ready'; guideImage.hidden=!imageReady;
   guideMessage.hidden=imageReady; guideRecovery.hidden=status!=='error';
   zoomButtons.forEach(button=>button.disabled=!imageReady);
-  fallbackArtwork.hidden=viewerMode!=='guide';
   if(status==='loading'){ guideMessageText.textContent='正在读取本地图片…'; zoomLabel.textContent='加载中'; }
   if(status==='error'){
     guideMessageText.textContent='这张图片还没有下载到本机，或文件已损坏。可以重试，或同步后再看。';
@@ -396,22 +383,17 @@ function updateImageState(status){
 }
 function updateViewerChrome(){
   const index=currentView.indexOf(activeViewer);
-  viewerCaption.replaceChildren(`${activeViewer.character}「${activeViewer.name}」`,element('small','',`${activeViewer.type} · ${activeViewer.releaseDate}${viewerMode==='guide'?' · 玩法图解':''}`));
+  viewerCaption.replaceChildren(`${activeViewer.character}「${activeViewer.name}」`,element('small','',`${activeViewer.type} · ${activeViewer.releaseDate}`));
   viewerCounter.textContent=index>=0?`${index+1} / ${currentView.length}`:'';
   viewerPrev.disabled=index<=0; viewerNext.disabled=index<0||index>=currentView.length-1;
-  viewGuideFromArtwork.hidden=viewerMode!=='artwork'||!activeViewer.guidePath;
-  viewArtworkFromGuide.hidden=viewerMode!=='guide';
-  searchVideo.hidden=Boolean(activeViewer.guidePath);
   for(const neighbour of [currentView[index-1],currentView[index+1]]) if(neighbour) new Image().src=neighbour.artworkPath;
   guideModal.dataset.skinId=activeViewer.id;
-  guideModal.dispatchEvent(new CustomEvent('viewer-change',{detail:{skinId:activeViewer.id,mode:viewerMode}}));
+  guideModal.dispatchEvent(new CustomEvent('viewer-change',{detail:{skinId:activeViewer.id,mode:'artwork'}}));
 }
-function setViewerMode(mode,{retry=false}={}){
+function showArtwork({retry=false}={}){
   if(!activeViewer) return;
-  viewerMode=mode;
-  const isArtwork=mode==='artwork',source=isArtwork?activeViewer.artworkPath:activeViewer.guidePath;
-  if(!source) return;
-  const label=`${activeViewer.character}「${activeViewer.name}」${isArtwork?'皮肤原图':'玩法图解'}`;
+  const source=activeViewer.artworkPath;
+  const label=`${activeViewer.character}「${activeViewer.name}」皮肤原图`;
   guideModal.setAttribute('aria-label',label); guideImage.alt=label;
   updateViewerChrome();
   pointers.clear(); guideStage.classList.remove('dragging'); panX=0; panY=0; dragMoved=false;
@@ -423,18 +405,18 @@ function setViewerMode(mode,{retry=false}={}){
     else updateImageState('error');
   }
 }
-function openViewer(trigger,mode){
+function openViewer(trigger){
   activeViewer=skinById.get(trigger.dataset.skinId);
-  if(!activeViewer||(mode==='guide'&&!activeViewer.guidePath)) return;
+  if(!activeViewer) return;
   if(guideModal.hidden) guideReturnFocus=trigger||document.activeElement;
   guideModal.hidden=false; document.body.classList.add('guide-open');
-  setViewerMode(mode); guideClose.focus();
+  showArtwork(); guideClose.focus();
 }
 function stepViewer(delta){
   const index=currentView.indexOf(activeViewer),next=currentView[index+delta];
   if(index<0||!next) return;
   activeViewer=next; guideReturnFocus=grid.querySelector(`[data-open-artwork][data-skin-id="${next.id}"]`)||guideReturnFocus;
-  setViewerMode('artwork');
+  showArtwork();
 }
 function closeGuide(){
   guideModal.hidden=true; document.body.classList.remove('guide-open'); pointers.clear(); guideStage.classList.remove('dragging');
@@ -442,7 +424,7 @@ function closeGuide(){
 }
 grid.addEventListener('click',event=>{
   const artwork=event.target.closest('[data-open-artwork]');
-  if(artwork) openViewer(artwork,'artwork');
+  if(artwork) openViewer(artwork);
 });
 document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
   state.filter=button.dataset.filter;
@@ -473,10 +455,7 @@ guideImage.addEventListener('load',()=>{ updateImageState('ready'); fitGuide(); 
 guideImage.addEventListener('error',()=>updateImageState('error'));
 guideClose.addEventListener('click',closeGuide);
 document.querySelector('#closeImageError').addEventListener('click',closeGuide);
-document.querySelector('#retryImage').addEventListener('click',()=>setViewerMode(viewerMode,{retry:true}));
-fallbackArtwork.addEventListener('click',()=>setViewerMode('artwork'));
-viewGuideFromArtwork.addEventListener('click',()=>setViewerMode('guide'));
-viewArtworkFromGuide.addEventListener('click',()=>setViewerMode('artwork'));
+document.querySelector('#retryImage').addEventListener('click',()=>showArtwork({retry:true}));
 searchVideo.addEventListener('click',()=>{ if(activeViewer) window.open(searchUrl(activeViewer.character,activeViewer.name),'_blank','noopener'); });
 viewerPrev.addEventListener('click',()=>stepViewer(-1));
 viewerNext.addEventListener('click',()=>stepViewer(1));

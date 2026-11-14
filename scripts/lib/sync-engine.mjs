@@ -53,8 +53,11 @@ export function checkCompatibility(current, next) {
     if (old.guideConfirmed === true && fresh.guideConfirmed !== true) throw new Error(`已确认的图解状态发生冲突：${old.name}`);
   }
 }
+// Only artworks are downloaded and checked. The gameplay guides were retired in 2026-11: their
+// catalog fields stay (existing records are never rewritten, and checkCompatibility still guards
+// them), but the program no longer downloads, verifies or shows guide images.
 function assetEntries(catalog) {
-  return catalog.skins.flatMap(s => [{ file: s.artworkPath, source: s.artworkSource, hash: s.artworkSha256, bytes: s.artworkBytes, kind: 'artwork', date: s.releaseDate }, ...(s.guidePath ? [{ file: s.guidePath, source: s.guideSource, hash: s.guideSha256, bytes: s.guideBytes, kind: 'guide', date: s.releaseDate }] : [])]);
+  return catalog.skins.map(s => ({ file: s.artworkPath, source: s.artworkSource, hash: s.artworkSha256, bytes: s.artworkBytes, kind: 'artwork', date: s.releaseDate }));
 }
 function verifyBytes(entry, bytes) {
   imageFormat(bytes);
@@ -139,7 +142,7 @@ export async function syncCatalog({ rootDir, nextCatalog, fetchImpl = fetch, sou
     // straight into place: no record changes, so it needs no transaction, and
     // every verified download is kept even when another one fails.
     const referenced = new Set(assetEntries(current).map(e => `${e.file}\0${e.hash}\0${e.bytes}`));
-    // The gallery lists the newest skins first, so their artworks are fetched first; guides follow.
+    // The gallery lists the newest skins first, so their artworks are fetched first.
     const repairs = entries.filter(e => referenced.has(`${e.file}\0${e.hash}\0${e.bytes}`) && !fs.existsSync(safePath(rootDir, e.file)))
       .sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'artwork' ? -1 : 1) || String(b.date).localeCompare(String(a.date)));
     const repairFailures = [];

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { syncCatalog, rollbackLast, acquireLock, safePath } from '../scripts/lib/sync-engine.mjs';
-import { stableSkinId, serializeCatalog } from '../scripts/lib/catalog.mjs';
+import { stableSkinId, serializeCatalog, validateCatalog } from '../scripts/lib/catalog.mjs';
 import { sha256, fetchImage, allowedImageUrl } from '../scripts/lib/transport.mjs';
 const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=', 'base64');
 const skin = name => ({ id: stableSkinId('测试角色',name), character:'测试角色',name,variant:'换装',type:'L2D',releaseDate:'2026-09-08',artworkPath:`assets/skins/${stableSkinId('测试角色',name)}.png`,guidePath:null,artworkSource:'https://patchwiki.biligame.com/images/blhx/test.png',guideSource:null,guideConfirmed:false,artworkSha256:sha256(image),artworkBytes:image.length });
@@ -99,9 +99,9 @@ test('image download refuses HTML masquerading as image and offsite redirect',as
   await assert.rejects(fetchImage('https://patchwiki.biligame.com/image.jpg',{fetchImpl:async()=>new Response('<html>'+'.'.repeat(80)+'</html>'),retries:0}),/图片格式/);
   await assert.rejects(fetchImage('https://patchwiki.biligame.com/image.jpg',{fetchImpl:async()=>new Response(null,{status:302,headers:{location:'http://127.0.0.1/private'}}),retries:0}),/来源/);
 });
-test('only the three existing verified guide hosts are allowed',()=>{
-  for(const host of ['075fac25.pinme.dev','417ce07b.pinme.dev','ed6b1227.pinme.dev']) assert.equal(allowedImageUrl(`https://${host}/image.png`).hostname,host);
-  assert.throws(()=>allowedImageUrl('https://arbitrary.pinme.dev/image.png'),/来源/);
+test('the retired guide hosts are no longer allowed',()=>{
+  assert.equal(allowedImageUrl('https://patchwiki.biligame.com/image.png').hostname,'patchwiki.biligame.com');
+  for(const host of ['075fac25.pinme.dev','417ce07b.pinme.dev','ed6b1227.pinme.dev','arbitrary.pinme.dev']) assert.throws(()=>allowedImageUrl(`https://${host}/image.png`),/来源/);
 });
 test('missing images the current catalog already references are restored in place, and partial progress survives a failure',async t=>{
   const x=setup(t);const extra=skin('另一款');
@@ -117,7 +117,7 @@ test('missing images the current catalog already references are restored in plac
   for(const s of fresh.skins)assert.equal(sha256(fs.readFileSync(path.join(x.rootDir,s.artworkPath))),s.artworkSha256);
   assert.equal(fs.existsSync(path.join(x.rootDir,'.l2d-update/backups')),false);
 });
-test('a fresh install fetches the newest artworks first, then guides',async t=>{
+test('a fresh install fetches the newest artworks first and no guides',async t=>{
   const x=setup(t);
   const dated=(name,date,guide)=>({...skin(name),releaseDate:date,artworkSource:`https://patchwiki.biligame.com/images/blhx/${encodeURIComponent(name)}.png`,
     ...(guide?{guidePath:`assets/guides/${stableSkinId('测试角色',name)}.png`,guideSource:`https://patchwiki.biligame.com/images/blhx/${encodeURIComponent(name)}-guide.png`,guideSha256:sha256(image),guideBytes:image.length}:{})});
@@ -127,6 +127,9 @@ test('a fresh install fetches the newest artworks first, then guides',async t=>{
   fs.writeFileSync(path.join(x.rootDir,'data/catalog.json'),JSON.stringify(fresh,null,2)+'\n');fs.writeFileSync(path.join(x.rootDir,'data/skins-data.js'),serializeCatalog(fresh));
   const order=[];const fetchImpl=async url=>{order.push(decodeURIComponent(new URL(url).pathname.split('/').pop()));return fetchOk();};
   const result=await syncCatalog({rootDir:x.rootDir,nextCatalog:fresh,fetchImpl});
-  assert.equal(result.repaired,5);
-  assert.deepEqual(order,['最新.png','中间.png','旧皮肤.png','最新-guide.png','旧皮肤-guide.png']);
+  assert.equal(result.repaired,3);
+  assert.deepEqual(order,['最新.png','中间.png','旧皮肤.png']);
+  // Guide records stay in the catalog, but their files are neither downloaded nor required.
+  assert.deepEqual(fs.readdirSync(path.join(x.rootDir,'assets/guides')),[]);
+  assert.equal(validateCatalog(fresh,{rootDir:x.rootDir,checkFiles:true}).guideCount,2);
 });

@@ -341,7 +341,7 @@
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
-5. **补玩法图解**：给皮肤写 `guidePath`、`guideSource`、`guideSha256`、`guideBytes`，来源必须在 `IMAGE_HOSTS` 内，经同步引擎提交，并通过 `npm run validate:local`。
+5. **玩法图解已停用（2026-11）**：程序不再下载、校验或显示图解，`IMAGE_HOSTS` 也去掉了 pinme.dev。`catalog.json` 里 68 款的 `guidePath`/`guideSource`/`guideSha256`/`guideBytes` 保留不动：同步引擎的兼容检查仍会比对这些字段，删除它们会让已有安装同步失败。新收录的皮肤照旧写 `guidePath: null`。
 
 **发布新版本**
 1. 在 `desktop/tryout/batch.cjs` 把第 5 版的 `version` 改为新号（如 `1.7.3-all`），提 PR，CI 通过后合并。
@@ -352,9 +352,10 @@
 - 机器人每周三、六会提交 `main` 上的目录；改动目录的 PR 要在 10:17 前合并，或合并前先同步 `main`。
 
 **已知未完成（不影响运行）**
-- 170 款没有本地玩法图解，新皮肤也不会自动带图解。
 - 新界面上还没跑完整的 198 款回归；摸头测试（interaction 模式）的点位按旧试玩区尺寸 1065×658 标定，需按新尺寸重新标定 `verification/batch-4/head-points.json` 后才能运行。
 - 第 15 轮有 10 款早期皮肤未检测到问候语音，抽查吹雪实际有声音，属于检测问题。
+
+**2026-11 停用玩法图解**：图解只覆盖 68 款且不再更新，却占首次下载的约 650 MB（原图约 170 MB），并依赖 pinme.dev。图鉴去掉“有玩法图解”筛选、“图解”标记和查看器图解模式，每款都可“搜索玩法视频”；试玩台去掉右侧图解栏和大图对话框，模型占满宽度；同步与 `validate:local` 不再处理图解文件；便携版不再建 `assets/guides`。目录字段保留（见排查手册第 5 条）；用户已下载的图解文件不删除。
 
 **2026-11 根目录清理**：删除旧命令行入口（`一键更新.cmd`、`本机检查更新.cmd`、`回退上次更新.cmd`、`打开图鉴.cmd`、`配置更新.ps1`、`scripts/sync.ps1`、`scripts/open.ps1`）和 GitHub CLI 同步路径；`download-guide-images.ps1` 移到 `scripts/legacy/`，`云端增量实测-2026-09-08.md` 移到 `docs/history/`；图鉴页面 `index-信浓泳装起.html`（旧收录范围的名字）改名为 `index.html`。命令行处理方法见第 4 节第 2 条。
 
