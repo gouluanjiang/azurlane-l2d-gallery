@@ -344,9 +344,10 @@
 5. **玩法图解已停用（2026-11）**：程序不再下载、校验或显示图解，`IMAGE_HOSTS` 也去掉了 pinme.dev。`catalog.json` 里 68 款的 `guidePath`/`guideSource`/`guideSha256`/`guideBytes` 保留不动：同步引擎的兼容检查仍会比对这些字段，删除它们会让已有安装同步失败。新收录的皮肤照旧写 `guidePath: null`。
 
 **发布新版本**
-1. 在 `desktop/tryout/batch.cjs` 把第 5 版的 `version` 改为新号（如 `1.7.3-all`），提 PR，CI 通过后合并。
+1. 把版本号改为新号（如 1.7.3）：`package.json`、`package-lock.json`（两处）、`desktop/tryout/batch.cjs` 第 5 版的 `version`（`1.7.3-all`）、`desktop/Launcher.cs` 与 `desktop/app.manifest`（`1.7.3.0`）。`node scripts/check-version.mjs` 检查它们是否一致（`npm test` 与 CI 也会检查），提 PR，CI 通过后合并。
 2. `npm run release:pack`，再运行 `.desktop\碧蓝航线图鉴.exe --self-test`（工作目录为项目文件夹）。
 3. `gh release create v<版本> --target <main 的完整 SHA>`，上传压缩包和 `.sha256`；从 Releases 重新下载核对校验值。
+   推送 tag 后 CI 会再跑一次，tag 与 `package.json` 版本不一致时失败；此时删除这个 Release 和 tag，改正版本后重新发布。
 
 **提交注意**
 - 机器人每周三、六会提交 `main` 上的目录；改动目录的 PR 要在 10:17 前合并，或合并前先同步 `main`。
