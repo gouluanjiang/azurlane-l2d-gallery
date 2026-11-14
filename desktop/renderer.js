@@ -8,6 +8,7 @@
   bar.className = 'desktop-bar'; bar.setAttribute('aria-label', '软件操作');
   bar.innerHTML = `<div class="desktop-brand"><img src="desktop/icon.png" alt=""><span>碧蓝航线图鉴<small id="desktop-summary"></small></span></div>
     <button id="desktop-details" class="desktop-status" type="button" title="查看更新过程"><span class="desktop-dot"></span><span id="desktop-message" role="status" aria-live="polite">正在载入图鉴…</span><span class="desktop-progress" hidden><i></i></span></button>
+    <a id="desktop-release" class="desktop-release" href="#" target="_blank" rel="noopener" hidden></a>
     <div class="desktop-actions"><button id="desktop-tryout" class="desktop-primary" hidden>▶ 试玩台</button><button id="desktop-sync">检查更新</button><button id="desktop-settings" aria-label="软件设置">设置</button></div>`;
   document.body.prepend(bar);
   document.querySelector('#desktop-summary').textContent = summary.replace(/^共 /, '');
@@ -132,12 +133,24 @@
   document.querySelector('#desktop-folder').addEventListener('click', () => api.openFolder());
   document.querySelector('#desktop-rollback').addEventListener('click', () => { settings.close(); confirm.showModal(); });
   document.querySelector('#desktop-confirm-rollback').addEventListener('click', () => { confirm.close(); start('rollback'); });
+  // New program version: a link to the release page, opened in the system browser
+  // (the window-open handler checks the address against desktop/policy.cjs).
+  const releaseLink = document.querySelector('#desktop-release');
+  const showRelease = release => {
+    releaseLink.hidden = !release;
+    if (!release) return;
+    releaseLink.href = release.url;
+    releaseLink.textContent = `新版本 ${release.version} 可下载`;
+    releaseLink.title = '在浏览器打开发行页，下载新版压缩包后解压覆盖到原文件夹';
+  };
+  api.onRelease?.(showRelease);
   api.onProgress(render);
   api.state().then(state => {
     hasRollback = state.hasRollback;
     document.querySelector('#desktop-no-backup').hidden = hasRollback;
     document.querySelector('#desktop-version').textContent = `桌面版 ${state.appVersion || '1.1.0'} · ${state.total} 款皮肤 · 资料更新至 ${state.updatedTo}`;
     render(state.job);
+    showRelease(state.newRelease);
     document.documentElement.dataset.desktopReady = 'true';
   }).catch(error => render({ phase: 'error', message: error.message, lines: [] }));
 })();
