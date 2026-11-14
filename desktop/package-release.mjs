@@ -14,10 +14,14 @@ const run = (command, args) => {
   const result = spawnSync(command, args, { cwd: root, stdio: 'inherit', windowsHide: true });
   if (result.status !== 0) throw new Error(`${command} ${args[0]} 失败`);
 };
+// Every file that carries the version must agree before anything is built.
+run(process.execPath, [path.join(root, 'scripts/check-version.mjs')]);
 if (!process.argv.includes('--skip-build')) run(process.execPath, [path.join(root, 'desktop/build.mjs')]);
 
 const runtime = path.join(root, '.desktop');
 const appPackage = JSON.parse(fs.readFileSync(path.join(runtime, 'resources/app/package.json'), 'utf8'));
+const sourcePackage = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+if (appPackage.version !== sourcePackage.version) throw new Error(`运行时版本 ${appPackage.version} 与 package.json ${sourcePackage.version} 不一致，请先构建`);
 // The runtime must have been built from the code in this checkout.
 for (const file of ['desktop/main.cjs', 'scripts/lib/sync-engine.mjs', 'desktop/tryout/batch.cjs']) {
   const text = f => fs.readFileSync(f, 'utf8').replace(/\r\n/g, '\n');
