@@ -34,6 +34,8 @@
     .filter-row { display:flex; gap:7px; margin-top:8px; overflow-x:auto; scrollbar-width:thin; }
     .filter-row button { flex:0 0 auto; white-space:nowrap; padding:6px 12px; font-size:14px; }
     .filter-row button small { margin-left:5px; color:inherit; opacity:.7; }
+    .type-row,.favorite-row { display:flex; gap:7px; padding-left:12px; border-left:1px solid var(--line); }
+    .favorite-row[hidden] { display:none; }
     .year-row { display:flex; gap:7px; margin-left:auto; padding-left:12px; border-left:1px solid var(--line); }
     .results-bar { margin:0 2px 12px; color:var(--muted); font-size:13px; }
     .results-bar strong { color:#eaf4ff; }
@@ -59,6 +61,9 @@
     .meta .type-l2d-plus { color:#d2baff; }
     .meta .type-dual { color:#ffd792; }
     .info button { pointer-events:auto; }
+    .card-favorite { flex:none; width:30px; height:30px; padding:0; border:1px solid rgba(255,255,255,.28); border-radius:50%; background:rgba(5,11,21,.55); color:#e6eefa; font-size:17px; line-height:1; cursor:pointer; }
+    .card-favorite:hover { border-color:#ffd36b; color:#ffd36b; }
+    .card-favorite[aria-pressed="true"] { border-color:#ffd36b; background:rgba(92,66,8,.8); color:#ffd36b; }
     .empty-state { display:none; padding:48px 20px; border:1px dashed var(--line); border-radius:18px; text-align:center; color:var(--muted); background:rgba(12,25,43,.65); }
     .empty-state.visible { display:block; }
     .empty-state button { margin-top:14px; }
@@ -117,6 +122,14 @@
       <button class="active" type="button" data-filter="all">全部<small id="countAll"></small></button>
       <button type="button" data-filter="new">新上线<small id="countNew"></small></button>
       <button type="button" data-filter="ready">有玩法图解<small id="countReady"></small></button>
+      <div class="type-row" role="group" aria-label="按类型筛选">
+        <button type="button" data-type="L2D" aria-pressed="false">L2D<small data-type-count="L2D"></small></button>
+        <button type="button" data-type="L2D+" aria-pressed="false">L2D+<small data-type-count="L2D+"></small></button>
+        <button type="button" data-type="双形态" aria-pressed="false">双形态<small data-type-count="双形态"></small></button>
+      </div>
+      <div id="favoriteFilter" class="favorite-row" hidden>
+        <button id="favoritesOnly" type="button" aria-pressed="false">★ 只看收藏<small id="countFavorites"></small></button>
+      </div>
       <div id="yearFilters" class="year-row" aria-label="按年份筛选">
         <button class="active" type="button" data-year="all">全部年份</button>
       </div>
@@ -188,7 +201,11 @@ const guideRecovery=document.querySelector('#guideRecovery');
 const fallbackArtwork=document.querySelector('#fallbackArtwork');
 const zoomLabel=document.querySelector('#zoomLabel');
 const zoomButtons=['zoomOut','zoomIn','zoomFit','zoomActual'].map(id=>document.getElementById(id));
-const state={filter:'all',year:'all',sort:'date-desc'};
+const state={filter:'all',year:'all',type:'all',favoritesOnly:false,sort:'date-desc'};
+// Favorites exist only in the desktop app, which stores them in .desktop-data and calls
+// window.l2dGallery.enableFavorites(). Opened directly in a browser the feature stays hidden.
+let favorites=null,saveFavorite=null;
+const isFavorite=skin=>Boolean(favorites&&favorites.has(skin.id));
 // Skins released within this many days count as "新上线".
 const NEW_DAYS=60;
 let skins=[],skinById=new Map(),currentView=[],newSince='';
@@ -252,6 +269,11 @@ function updatePageMeta(data){
   document.querySelector('#countAll').textContent=skins.length;
   document.querySelector('#countNew').textContent=newCount;
   document.querySelector('#countReady').textContent=skins.filter(hasLocalGuide).length;
+  for(const node of document.querySelectorAll('[data-type-count]')){
+    const count=skins.filter(skin=>skin.type===node.dataset.typeCount).length;
+    node.textContent=count; node.closest('button').hidden=!count;
+  }
+  updateFavoriteCount();
   document.querySelector('[data-filter="new"]').hidden=!newCount;
   const yearFilters=document.querySelector('#yearFilters');
   yearFilters.replaceChildren();
@@ -260,13 +282,18 @@ function updatePageMeta(data){
     button.type='button'; button.dataset.year=year; yearFilters.appendChild(button);
   }
 }
+function updateFavoriteCount(){
+  document.querySelector('#countFavorites').textContent=favorites?skins.filter(isFavorite).length:'';
+}
 function sortedView(){
   const term=q.value.trim().toLocaleLowerCase('zh-CN');
   const view=skins.filter(skin=>{
     const matchesFilter=state.filter==='all'||(state.filter==='new'&&isNew(skin))||(state.filter==='ready'&&hasLocalGuide(skin));
     const matchesYear=state.year==='all'||skin.releaseDate.startsWith(state.year+'-');
+    const matchesType=state.type==='all'||skin.type===state.type;
+    const matchesFavorite=!state.favoritesOnly||isFavorite(skin);
     const haystack=(skin.character+' '+skin.name).toLocaleLowerCase('zh-CN');
-    return matchesFilter&&matchesYear&&haystack.includes(term);
+    return matchesFilter&&matchesYear&&matchesType&&matchesFavorite&&haystack.includes(term);
   });
   return view.sort((a,b)=>{
     if(state.sort==='date-desc') return b.releaseDate.localeCompare(a.releaseDate)||a.character.localeCompare(b.character,'zh-CN');
@@ -296,8 +323,34 @@ function createCard(skin){
   const meta=element('div','meta');
   meta.append(element('span',typeClass(skin.type),skin.type),` · ${skin.releaseDate}`);
   text.append(name,title,meta); info.append(text);
+  if(favorites) info.append(favoriteButton(skin,label));
   card.append(media,badges,info);
   return card;
+}
+function favoriteButton(skin,label){
+  const button=element('button','card-favorite');
+  button.type='button'; button.dataset.favorite=skin.id;
+  const paint=()=>{
+    const on=isFavorite(skin);
+    button.textContent=on?'★':'☆'; button.setAttribute('aria-pressed',String(on));
+    button.setAttribute('aria-label',(on?'取消收藏':'收藏')+label); button.title=on?'取消收藏':'收藏';
+  };
+  paint();
+  button.addEventListener('click',()=>{
+    const on=!isFavorite(skin);
+    if(on) favorites.add(skin.id); else favorites.delete(skin.id);
+    paint(); updateFavoriteCount();
+    Promise.resolve(saveFavorite?.(skin.id,on)).then(saved=>{
+      if(Array.isArray(saved)) favorites=new Set(saved);
+      paint(); updateFavoriteCount();
+      if(state.favoritesOnly) render();
+    }).catch(()=>{
+      if(on) favorites.delete(skin.id); else favorites.add(skin.id);
+      paint(); updateFavoriteCount();
+      button.title='收藏未能保存，请重试';
+    });
+  });
+  return button;
 }
 function render(){
   currentView=sortedView();
@@ -307,7 +360,8 @@ function render(){
   grid.hidden=currentView.length===0; clearSearch.hidden=!q.value;
 }
 function resetFilters(){
-  state.filter='all'; state.year='all'; state.sort='date-desc'; q.value=''; sortOrder.value=state.sort;
+  state.filter='all'; state.year='all'; state.type='all'; state.favoritesOnly=false; state.sort='date-desc'; q.value=''; sortOrder.value=state.sort;
+  document.querySelectorAll('[data-type],#favoritesOnly').forEach(button=>{ button.classList.remove('active'); button.setAttribute('aria-pressed','false'); });
   document.querySelectorAll('[data-filter]').forEach(button=>button.classList.toggle('active',button.dataset.filter==='all'));
   document.querySelectorAll('[data-year]').forEach(button=>button.classList.toggle('active',button.dataset.year==='all'));
   render();
@@ -399,6 +453,17 @@ document.querySelector('#yearFilters').addEventListener('click',event=>{
   state.year=button.dataset.year;
   document.querySelectorAll('[data-year]').forEach(node=>node.classList.toggle('active',node===button)); render();
 });
+// Type: one at a time; clicking the selected type again shows every type.
+document.querySelectorAll('[data-type]').forEach(button=>button.addEventListener('click',()=>{
+  state.type=state.type===button.dataset.type?'all':button.dataset.type;
+  document.querySelectorAll('[data-type]').forEach(node=>{ const on=node.dataset.type===state.type; node.classList.toggle('active',on); node.setAttribute('aria-pressed',String(on)); });
+  render();
+}));
+document.querySelector('#favoritesOnly').addEventListener('click',event=>{
+  state.favoritesOnly=!state.favoritesOnly;
+  event.currentTarget.classList.toggle('active',state.favoritesOnly); event.currentTarget.setAttribute('aria-pressed',String(state.favoritesOnly));
+  render();
+});
 q.addEventListener('input',render);
 clearSearch.addEventListener('click',()=>{ q.value=''; q.focus(); render(); });
 sortOrder.addEventListener('change',()=>{ state.sort=sortOrder.value; render(); });
@@ -466,7 +531,15 @@ document.addEventListener('keydown',event=>{
   }
 });
 // Lets the desktop shell reload images that finished downloading after the page opened.
-window.l2dGallery={retryFailedImages(){ for(const card of grid.querySelectorAll('.card.image-failed')){ const img=card.querySelector('.thumb'); const src=img.getAttribute('src'); img.removeAttribute('src'); img.src=src; } }};
+window.l2dGallery={
+  retryFailedImages(){ for(const card of grid.querySelectorAll('.card.image-failed')){ const img=card.querySelector('.thumb'); const src=img.getAttribute('src'); img.removeAttribute('src'); img.src=src; } },
+  // Desktop only: ids saved in .desktop-data, and save(id,on) resolving to the saved ids.
+  enableFavorites(ids,save){
+    favorites=new Set(Array.isArray(ids)?ids:[]); saveFavorite=save;
+    document.querySelector('#favoriteFilter').hidden=false;
+    updateFavoriteCount(); render();
+  }
+};
 try{
   const data=validateData(window.L2D_SKINS_DATA);
   skins=data.skins; skinById=new Map(skins.map(skin=>[skin.id,skin]));

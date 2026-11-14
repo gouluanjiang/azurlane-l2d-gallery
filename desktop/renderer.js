@@ -14,6 +14,12 @@
   const message = document.querySelector('#desktop-message');
   const progress = bar.querySelector('.desktop-progress');
 
+  // Favorites live in .desktop-data/favorites.json; the page shows the stars and the
+  // “只看收藏” filter only once the desktop app hands them over.
+  if (api.favorites && window.l2dGallery?.enableFavorites) {
+    api.favorites().then(ids => window.l2dGallery.enableFavorites(ids, (id, on) => api.setFavorite(id, on))).catch(() => {});
+  }
+
   // Tryout: one button on each playable card, one in the image viewer, one in the top bar.
   let playable = new Map();
   const openTryout = id => api.openSample(id).catch(error => { message.textContent = error.message; });
