@@ -16,11 +16,14 @@
     "desktop:build": "node desktop/build.mjs",
     "audit:playable": "node scripts/audit-playable.mjs",
     "desktop:dev": "electron .",
-    "release:pack": "node desktop/package-release.mjs"
+    "release:pack": "node desktop/package-release.mjs",
+    "format": "prettier --write \"desktop/main.cjs\" \"desktop/tryout/*.cjs\" \"scripts/*.mjs\"",
+    "format:check": "prettier --check \"desktop/main.cjs\" \"desktop/tryout/*.cjs\" \"scripts/*.mjs\""
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",
-    "electron": "44.3.0"
+    "electron": "44.3.0",
+    "prettier": "3.9.10"
   },
   "main": "desktop/main.cjs"
 }
