@@ -15,10 +15,12 @@ export function readLegacyData(text) {
 
 export function extractLegacyGuides(html) {
   const match = /const\s+localGuides\s*=\s*new Set\((\[[\s\S]*?\])\);/.exec(html);
-  if (!match) throw new Error('Legacy HTML localGuides mapping not found; supply the original backup with --legacy-html');
+  if (!match)
+    throw new Error('Legacy HTML localGuides mapping not found; supply the original backup with --legacy-html');
   const context = vm.createContext({}, { codeGeneration: { strings: false, wasm: false } });
   const values = vm.runInContext(match[1], context, { timeout: 1000 });
-  if (!Array.isArray(values) || values.some(value => typeof value !== 'string')) throw new Error('Invalid legacy localGuides mapping');
+  if (!Array.isArray(values) || values.some(value => typeof value !== 'string'))
+    throw new Error('Invalid legacy localGuides mapping');
   if (new Set(values).size !== values.length) throw new Error('Duplicate identity in legacy localGuides mapping');
   return new Set(values);
 }
@@ -40,27 +42,45 @@ export function extractGuideSources(script) {
   return sources;
 }
 
-export function migrateLegacyCatalog(legacy, guides, { rootDir, guideSources = new Map(), includeFileEvidence = true } = {}) {
+export function migrateLegacyCatalog(
+  legacy,
+  guides,
+  { rootDir, guideSources = new Map(), includeFileEvidence = true } = {}
+) {
   if (!legacy || !Array.isArray(legacy.skins)) throw new Error('Legacy skins array is missing');
   const unusedGuides = new Set(guides);
   const skins = legacy.skins.map((row, index) => {
-    if (!Array.isArray(row) || row.length !== 6 || ![0, 1].includes(row[5])) throw new Error(`Invalid legacy row ${index}`);
+    if (!Array.isArray(row) || row.length !== 6 || ![0, 1].includes(row[5]))
+      throw new Error(`Invalid legacy row ${index}`);
     const [character, name, variant, type, releaseDate, confirmed] = row;
     const identity = `${character}\0${name}`;
     const guidePath = guides.has(identity) ? legacyGuidePath(character, name) : null;
     unusedGuides.delete(identity);
     const skin = {
-      id: stableSkinId(character, name), character, name, variant, type, releaseDate,
+      id: stableSkinId(character, name),
+      character,
+      name,
+      variant,
+      type,
+      releaseDate,
       artworkPath: `assets/skins/${String(index + 1).padStart(3, '0')}.jpg`,
-      guidePath, artworkSource: null, guideSource: guidePath ? (guideSources.get(guidePath) ?? null) : null,
-      guideConfirmed: Boolean(confirmed),
+      guidePath,
+      artworkSource: null,
+      guideSource: guidePath ? (guideSources.get(guidePath) ?? null) : null,
+      guideConfirmed: Boolean(confirmed)
     };
     return skin;
   });
   if (unusedGuides.size) throw new Error(`Legacy guides have no skin record: ${[...unusedGuides].join(', ')}`);
   const catalog = {
-    schemaVersion: 2, version: `${legacy.version}-schema2`,
-    updatedTo: skins.map(skin => skin.releaseDate).sort().at(-1), checkedAt: null, skins,
+    schemaVersion: 2,
+    version: `${legacy.version}-schema2`,
+    updatedTo: skins
+      .map(skin => skin.releaseDate)
+      .sort()
+      .at(-1),
+    checkedAt: null,
+    skins
   };
   // Validate identities and paths before reading any asset named by legacy data.
   validateCatalog(catalog, { rootDir, checkFiles: includeFileEvidence });
@@ -79,7 +99,9 @@ export function migrateLegacyCatalog(legacy, guides, { rootDir, guideSources = n
 
 export function main(args = process.argv.slice(2)) {
   let rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-  let dataPath, htmlPath, write = false;
+  let dataPath,
+    htmlPath,
+    write = false;
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
     if (arg === '--write') write = true;
@@ -116,5 +138,10 @@ export function main(args = process.argv.slice(2)) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
 }

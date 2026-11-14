@@ -29,8 +29,11 @@ export function versionSources() {
 }
 
 export function versionProblems({ version, sources }, tag) {
-  const problems = sources.filter(([, v]) => v !== version).map(([file, v]) => `${file} 是 ${v ?? '（缺失）'}，package.json 是 ${version}`);
-  if (tag !== undefined && tag !== `v${version}`) problems.push(`tag ${tag} 与 package.json 版本 ${version} 不一致（应为 v${version}）`);
+  const problems = sources
+    .filter(([, v]) => v !== version)
+    .map(([file, v]) => `${file} 是 ${v ?? '（缺失）'}，package.json 是 ${version}`);
+  if (tag !== undefined && tag !== `v${version}`)
+    problems.push(`tag ${tag} 与 package.json 版本 ${version} 不一致（应为 v${version}）`);
   return problems;
 }
 

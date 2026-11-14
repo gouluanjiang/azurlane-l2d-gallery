@@ -5,12 +5,28 @@
 //   null        anything else: treat it as this model failing
 const OFFLINE_ERRORS = new Set(['ERR_INTERNET_DISCONNECTED', 'ERR_NETWORK_CHANGED', 'ERR_NETWORK_IO_SUSPENDED']);
 const SITE_DOWN_ERRORS = new Set([
-  'ERR_NAME_NOT_RESOLVED', 'ERR_NAME_RESOLUTION_FAILED', 'ERR_ADDRESS_UNREACHABLE', 'ERR_CONNECTION_REFUSED',
-  'ERR_CONNECTION_RESET', 'ERR_CONNECTION_CLOSED', 'ERR_CONNECTION_FAILED', 'ERR_CONNECTION_TIMED_OUT', 'ERR_TIMED_OUT',
-  'ERR_EMPTY_RESPONSE', 'ERR_SSL_PROTOCOL_ERROR', 'ERR_CERT_COMMON_NAME_INVALID', 'ERR_CERT_DATE_INVALID',
-  'ERR_CERT_AUTHORITY_INVALID', 'ERR_QUIC_PROTOCOL_ERROR', 'ERR_HTTP2_PROTOCOL_ERROR'
+  'ERR_NAME_NOT_RESOLVED',
+  'ERR_NAME_RESOLUTION_FAILED',
+  'ERR_ADDRESS_UNREACHABLE',
+  'ERR_CONNECTION_REFUSED',
+  'ERR_CONNECTION_RESET',
+  'ERR_CONNECTION_CLOSED',
+  'ERR_CONNECTION_FAILED',
+  'ERR_CONNECTION_TIMED_OUT',
+  'ERR_TIMED_OUT',
+  'ERR_EMPTY_RESPONSE',
+  'ERR_SSL_PROTOCOL_ERROR',
+  'ERR_CERT_COMMON_NAME_INVALID',
+  'ERR_CERT_DATE_INVALID',
+  'ERR_CERT_AUTHORITY_INVALID',
+  'ERR_QUIC_PROTOCOL_ERROR',
+  'ERR_HTTP2_PROTOCOL_ERROR'
 ]);
-const errorName = value => String(value ?? '').trim().replace(/^net::/, '').toUpperCase();
+const errorName = value =>
+  String(value ?? '')
+    .trim()
+    .replace(/^net::/, '')
+    .toUpperCase();
 const serverError = status => Number.isInteger(status) && status >= 500 && status <= 599;
 
 // A main-frame load error (did-fail-load).
@@ -26,7 +42,8 @@ function classifyAttempt(attempt = {}, { online = true } = {}) {
   // Only the latest page answer counts: an early failure followed by a good reload is not an outage.
   const lastStatus = (attempt.mainStatuses || []).at(-1);
   const lastError = (attempt.networkErrors || []).filter(row => row.type === 'mainFrame').at(-1);
-  if (lastError && (!lastStatus || lastError.atMs > lastStatus.atMs)) return classifyLoadError(lastError.error, { online });
+  if (lastError && (!lastStatus || lastError.atMs > lastStatus.atMs))
+    return classifyLoadError(lastError.error, { online });
   return lastStatus && serverError(lastStatus.status) ? 'site-down' : null;
 }
 const MESSAGES = {
