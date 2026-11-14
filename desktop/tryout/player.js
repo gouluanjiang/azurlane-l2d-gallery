@@ -79,6 +79,10 @@
   const sendBounds=()=>{const rect=$('stage').getBoundingClientRect();api.bounds({x:rect.left+1,y:rect.top+1,width:rect.width-2,height:rect.height-2}).catch(showError);};
   new ResizeObserver(sendBounds).observe($('stage'));window.addEventListener('resize',sendBounds);
 
+  const FAILURES={
+    'site-down':{title:'l2d.su 网站暂时无法访问',detail:'在线模型由 l2d.su 提供，现在是这个网站连不上或出错，不是本程序的故障。图鉴、原图和玩法图解仍可正常使用；可以稍后点“重新尝试”，或“在浏览器打开”确认网站状态。'},
+    offline:{title:'电脑似乎没有联网',detail:'试玩需要联网。图鉴里已下载的原图和玩法图解仍可离线查看；联网后点“重新尝试”。'}
+  };
   function renderState(state) {
     if(state.sampleId&&current&&state.sampleId!==current.id)return;
     currentPhase=state.phase;document.body.dataset.phase=state.phase;
@@ -86,8 +90,11 @@
     $('elapsed').textContent=state.phase==='ready'?`${(state.readyMs/1000).toFixed(1)} 秒`:state.elapsedMs?`已等待 ${Math.floor(state.elapsedMs/1000)} 秒`:'';
     $('placeholder').hidden=state.phase==='ready';$('loading-art').hidden=state.phase==='ready';
     $('spinner').hidden=state.phase==='error';$('failure-actions').hidden=state.phase!=='error';
-    $('placeholder-title').textContent=state.phase==='error'?'模型暂时未能打开':'正在准备互动模型';
-    $('placeholder-message').textContent=state.phase==='error'?state.message:'首次打开需要加载模型资源，请稍候。';
+    // A whole-site outage or a missing network is not this program failing: say so plainly.
+    const failure=state.phase==='error'?(FAILURES[state.reason]||{title:'模型暂时未能打开',detail:state.message}):null;
+    $('placeholder-title').textContent=failure?failure.title:'正在准备互动模型';
+    $('placeholder-message').textContent=failure?failure.detail:'首次打开需要加载模型资源，请稍候。';
+    $('stage').dataset.reason=state.phase==='error'&&state.reason||'';
     $('voice-state').textContent=state.muted?'已静音':state.audible?'语音播放中':'';$('mute').setAttribute('aria-pressed',String(Boolean(state.muted)));$('mute').textContent=state.muted?'取消静音':'静音';
     $('stage').dataset.state=state.phase;
   }
