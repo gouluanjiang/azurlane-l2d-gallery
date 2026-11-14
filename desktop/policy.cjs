@@ -8,6 +8,21 @@ function externalUrl(value) {
   if (!allowed.has(url.hostname) && !(url.hostname === 'github.com' && /^\/gouluanjiang\/azurlane-l2d-gallery(?:\/|$)/.test(url.pathname))) throw new Error('不支持此链接');
   return url.href;
 }
+// Addresses the main process requests itself (the sync worker has its own checks in
+// scripts/lib/transport.mjs). Only the release feed: the new-version notice.
+const RELEASE_FEED = 'https://api.github.com/repos/gouluanjiang/azurlane-l2d-gallery/releases/latest';
+const FETCH_ALLOWED = new Set([RELEASE_FEED]);
+function fetchUrl(value) {
+  const url = new URL(value);
+  if (!FETCH_ALLOWED.has(url.href)) throw new Error('不允许访问此地址');
+  return url.href;
+}
+// A release page of this repository, opened in the system browser from the notice.
+function releasePage(value) {
+  const url = new URL(externalUrl(value));
+  if (url.hostname !== 'github.com' || url.search || url.hash || !/^\/gouluanjiang\/azurlane-l2d-gallery\/releases\/tag\/[^/]+$/.test(url.pathname)) throw new Error('不是本仓库的发行页');
+  return url.href;
+}
 function localResource(value, libraryRoot, appRoot) {
   const url = new URL(value);
   if (url.protocol !== 'l2d:' || url.hostname !== 'gallery' || url.username || url.password || url.port) throw new Error('无效页面');
@@ -24,4 +39,4 @@ function localResource(value, libraryRoot, appRoot) {
   if (!real.startsWith(fs.realpathSync(libraryRoot) + path.sep)) throw new Error('路径越界');
   return file;
 }
-module.exports = { externalUrl, localResource };
+module.exports = { externalUrl, localResource, RELEASE_FEED, fetchUrl, releasePage };

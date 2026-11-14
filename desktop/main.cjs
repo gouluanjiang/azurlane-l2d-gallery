@@ -4,6 +4,7 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { externalUrl, localResource } = require('./policy.cjs');
 const { FavoritesStore } = require('./favorites.cjs');
+const releaseCheck = require('./release-check.cjs');
 const argument = name => { const i = process.argv.indexOf(name); return i >= 0 ? process.argv[i + 1] : undefined; };
 const appRoot = path.resolve(__dirname, '..');
 // galleryTryout: the official gallery itself carries the tryout for that release
@@ -35,7 +36,7 @@ let job = { phase: 'idle', message: '已有图片可离线查看', lines: [] };
 const readJson = relative => JSON.parse(fs.readFileSync(path.join(libraryRoot, relative), 'utf8').replace(/^\uFEFF/, ''));
 function currentState() {
   const catalog = readJson('data/catalog.json');
-  return { job, appVersion: app.getVersion(), total: catalog.skins.length, version: catalog.version, updatedTo: catalog.updatedTo, checkedAt: catalog.checkedAt, hasRollback: fs.existsSync(path.join(libraryRoot, '.l2d-update/last-success.json')) };
+  return { job, appVersion: app.getVersion(), total: catalog.skins.length, version: catalog.version, updatedTo: catalog.updatedTo, checkedAt: catalog.checkedAt, hasRollback: fs.existsSync(path.join(libraryRoot, '.l2d-update/last-success.json')), newRelease: releaseCheck.noticeFrom(readSettings(), app.getVersion()) };
 }
 function notify() { if (window && !window.isDestroyed()) window.webContents.send('l2d:progress', job); }
 function authorized(event) {
@@ -46,7 +47,7 @@ const settingsFile = () => path.join(libraryRoot, '.desktop-data/auto-update.jso
 function readSettings() {
   let value = {};
   try { value = JSON.parse(fs.readFileSync(settingsFile(), 'utf8')); } catch { /* defaults below */ }
-  return { autoSync: value.autoSync !== false, autoTryout: value.autoTryout !== false, lastAutoSync: value.lastAutoSync || null, lastAutoTryout: value.lastAutoTryout || null };
+  return { autoSync: value.autoSync !== false, autoTryout: value.autoTryout !== false, lastAutoSync: value.lastAutoSync || null, lastAutoTryout: value.lastAutoTryout || null, lastReleaseCheck: value.lastReleaseCheck || null, latestRelease: value.latestRelease || null };
 }
 function writeSettings(patch) {
   const next = { ...readSettings(), ...patch }, file = settingsFile(), temp = `${file}.tmp`;
@@ -96,10 +97,21 @@ function startUpdate(operation, { auto = false } = {}) {
   return { started: true, done };
 }
 
+// Asks GitHub for the latest release (one request, only with 自动更新 on, at most every 12 h).
+// Failures stay silent and are retried on the next start; the notice never downloads anything.
+async function checkRelease() {
+  if (!releaseCheck.checkDue(readSettings())) return;
+  const latest = await releaseCheck.fetchLatestRelease({ fetchImpl: (url, options) => net.fetch(url, options), userAgent: `AzurLaneL2DGallery/${app.getVersion()}` });
+  writeSettings({ lastReleaseCheck: new Date().toISOString(), latestRelease: latest });
+  const notice = releaseCheck.noticeFrom(readSettings(), app.getVersion());
+  if (window && !window.isDestroyed()) window.webContents.send('l2d:release', notice);
+}
+
 // Runs once after start: sync the published catalog (at most every 12 h), then let the
 // tryout look up skins that are still in review. Reloads the page only when something changed.
 async function autoUpdate() {
   const settings = readSettings(), now = Date.now();
+  checkRelease().catch(() => { /* no notice this time; retried on the next start */ });
   let added = 0, repaired = 0, opened = 0;
   if (settings.autoSync && !(Date.parse(settings.lastAutoSync || '') > now - 12 * 3600000)) {
     const started = startUpdate('sync', { auto: true });
@@ -169,7 +181,9 @@ else {
       authorized(event);
       const allowed = {};
       for (const key of ['autoSync', 'autoTryout']) if (typeof patch?.[key] === 'boolean') allowed[key] = patch[key];
-      return writeSettings(allowed);
+      const next = writeSettings(allowed);
+      if ('autoSync' in allowed) window.webContents.send('l2d:release', releaseCheck.noticeFrom(next, app.getVersion()));
+      return next;
     });
     ipcMain.handle('l2d:folder', event => { authorized(event); return shell.openPath(libraryRoot); });
     const favorites = new FavoritesStore(libraryRoot);
