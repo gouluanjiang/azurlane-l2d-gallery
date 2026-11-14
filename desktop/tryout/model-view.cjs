@@ -1,9 +1,10 @@
-const { WebContentsView, session } = require('electron');
+const { WebContentsView, session, net } = require('electron');
 const { EventEmitter } = require('node:events');
 const fs = require('node:fs');
 const path = require('node:path');
 const { inspectScript, modelIsReady } = require('./readiness.cjs');
 const { allowedModelUrl, alternateModelUrl } = require('./samples.cjs');
+const siteStatus = require('./site-status.cjs');
 
 const embeddedStyle = `
   .app-shell { --selection-panel-width: 238px !important; }
@@ -86,8 +87,8 @@ class ModelView extends EventEmitter {
     await this.release();
     if (generation !== this.generation || this.window.isDestroyed()) return;
     this.sample = sample;
-    this.attempt = { sampleId: sample.id, onlineId: sample.onlineId, started: Date.now(), startedAt: new Date().toISOString(), generation, observations: [], networkErrors: [], consoleErrors: [] };
-    this.publish({phase:'connecting',sampleId:sample.id,message:'正在连接在线模型…',elapsedMs:0,readyMs:null,audible:false,muted:this.muted,error:null});
+    this.attempt = { sampleId: sample.id, onlineId: sample.onlineId, started: Date.now(), startedAt: new Date().toISOString(), generation, observations: [], networkErrors: [], consoleErrors: [], mainStatuses: [] };
+    this.publish({phase:'connecting',sampleId:sample.id,message:'正在连接在线模型…',elapsedMs:0,readyMs:null,audible:false,muted:this.muted,error:null,reason:null});
     const view = new WebContentsView({webPreferences:{session:this.session,nodeIntegration:false,nodeIntegrationInSubFrames:false,nodeIntegrationInWorker:false,contextIsolation:true,sandbox:true,webSecurity:true,webviewTag:false,allowRunningInsecureContent:false,spellcheck:false,backgroundThrottling:true}});
     const wc = view.webContents; this.view = view; this.contents = wc;
     // The remote viewer initializes from visibility/animation callbacks. Keeping
@@ -98,10 +99,15 @@ class ModelView extends EventEmitter {
     const current = () => generation === this.generation && wc === this.contents && !wc.isDestroyed();
     wc.on('will-attach-webview', event => event.preventDefault());
     for (const name of ['will-navigate','will-redirect']) wc.on(name, (event, url) => { if (!allowedModelUrl(url, sample)) event.preventDefault(); });
+    wc.on('did-navigate', (_event, url, status) => { if (current()) { this.attempt.mainStatuses.push({ url: shortUrl(url), status, atMs: this.elapsed() }); this.attempt.mainStatuses = this.attempt.mainStatuses.slice(-10); } });
     wc.on('did-navigate-in-page', (_event, url, mainFrame) => { if (mainFrame && current() && !allowedModelUrl(url,sample)) this.fail('页面切换到了其他皮肤，请重新载入当前样例。',`MODEL_CHANGED ${shortUrl(url)}`); });
     wc.on('console-message', details => { if (current() && details.level === 'error') { this.attempt.consoleErrors.push(details.message.slice(0,500)); this.attempt.consoleErrors = this.attempt.consoleErrors.slice(-15); } });
     wc.on('render-process-gone', (_event, details) => { if (current()) this.fail('模型画面已停止，可重新载入。', `RENDERER_${details.reason}`); });
-    wc.on('did-fail-load', (_event, code, description, _url, mainFrame) => { if (current() && mainFrame && code !== -3) this.fail('在线页面未能打开，请检查网络后重试。',description); });
+    wc.on('did-fail-load', (_event, code, description, _url, mainFrame) => {
+      if (!current() || !mainFrame || code === -3) return;
+      const reason = siteStatus.classifyLoadError(description, { online: net.isOnline() });
+      this.fail(siteStatus.MESSAGES[reason] || '在线页面未能打开，请检查网络后重试。', description, reason);
+    });
     wc.on('dom-ready', () => {
       if (!current() || this.state.phase === 'error') return;
       // Applying this after attachment avoids a hidden render surface during
@@ -111,7 +117,7 @@ class ModelView extends EventEmitter {
       this.panelCssKey = null; if (this.panelHidden) this.applyPanel(wc);
       this.publish({phase:'loading',message:'正在准备模型资源…',elapsedMs:this.elapsed()});
     });
-    const armDeadline = () => { clearTimeout(this.deadlineTimer); this.deadlineTimer = setTimeout(() => { if (current() && this.state.phase !== 'ready') this.fail('等待模型超过 90 秒，请重试或在浏览器打开。','MODEL_TIMEOUT'); }, this.timeoutMs); };
+    const armDeadline = () => { clearTimeout(this.deadlineTimer); this.deadlineTimer = setTimeout(() => { if (current() && this.state.phase !== 'ready') { const reason = siteStatus.classifyAttempt(this.attempt, { online: net.isOnline() }); this.fail(siteStatus.MESSAGES[reason] || '等待模型超过 90 秒，请重试或在浏览器打开。', 'MODEL_TIMEOUT', reason); } }, this.timeoutMs); };
     armDeadline();
     const poll = async () => {
       if (!current() || this.state.phase === 'error') return;
@@ -152,6 +158,12 @@ class ModelView extends EventEmitter {
           const progressKey = `${ui.mounted}|${ui.title}|${ui.loading}|${ui.progress}`;
           const retries = this.attempt.autoRetries || [];
           if (progressKey !== this.attempt.progressKey) { this.attempt.progressKey = progressKey; this.attempt.progressAt = this.elapsed(); }
+          else if (retries.length >= 2 && this.elapsed() - this.attempt.progressAt >= this.stallMs && siteStatus.classifyAttempt(this.attempt, { online: net.isOnline() })) {
+            // Both automatic reloads are used and the page still gets a server error (or no
+            // connection): say so now instead of waiting out the deadline. No further request is made.
+            const reason = siteStatus.classifyAttempt(this.attempt, { online: net.isOnline() });
+            this.fail(siteStatus.MESSAGES[reason], `SITE_${reason.toUpperCase()}`, reason); return;
+          }
           else if (retries.length < 2 && this.elapsed() - this.attempt.progressAt >= this.stallMs) {
             this.attempt.autoRetries = [...retries, { atMs: this.elapsed(), stalledOn: progressKey.slice(0, 200) }];
             this.attempt.autoRetry = this.attempt.autoRetries[0];
@@ -179,9 +191,9 @@ class ModelView extends EventEmitter {
     wc.loadURL(sample.url).catch(error => { if (current() && this.state.phase !== 'error') this.fail('连接中断，可重新载入模型。',error.code || error.message); });
     this.pollTimer=setTimeout(poll,400); this.record();
   }
-  fail(message, code) {
+  fail(message, code, reason = null) {
     clearTimeout(this.pollTimer); clearTimeout(this.deadlineTimer);
-    this.publish({phase:'error',message,error:String(code).slice(0,300),elapsedMs:this.elapsed(),audible:false});
+    this.publish({phase:'error',message,error:String(code).slice(0,300),reason,elapsedMs:this.elapsed(),audible:false});
     this.updateVisibility();
     if (this.contents && !this.contents.isDestroyed()) { this.contents.setAudioMuted(true); this.contents.stop(); }
     this.record(); this.emit('load-error',this.state);
