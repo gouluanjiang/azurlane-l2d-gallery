@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { externalUrl, localResource } = require('./policy.cjs');
+const { FavoritesStore } = require('./favorites.cjs');
 const releaseCheck = require('./release-check.cjs');
 const argument = name => { const i = process.argv.indexOf(name); return i >= 0 ? process.argv[i + 1] : undefined; };
 const appRoot = path.resolve(__dirname, '..');
@@ -185,6 +186,9 @@ else {
       return next;
     });
     ipcMain.handle('l2d:folder', event => { authorized(event); return shell.openPath(libraryRoot); });
+    const favorites = new FavoritesStore(libraryRoot);
+    ipcMain.handle('l2d:favorites', event => { authorized(event); return favorites.list(); });
+    ipcMain.handle('l2d:favorite-set', (event, id, on) => { authorized(event); return favorites.set(id, on); });
     if (sampleBuild) {
       const {TryoutManager}=require('./tryout/manager.cjs');
       tryout=new TryoutManager({libraryRoot,parent:window,catalog:readJson('data/catalog.json'),testing:sampleTest,testRound,batch:batchBuild,gallery:galleryTryout>0});
