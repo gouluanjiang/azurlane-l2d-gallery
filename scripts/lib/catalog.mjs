@@ -126,7 +126,8 @@ export function validateCatalog(catalog, { rootDir, checkFiles = false } = {}) {
       const canonicalPath = value.toLocaleLowerCase('en-US');
       if (assetPaths.has(canonicalPath)) errors.push(`${label}.${kind}Path is duplicated: ${value}`);
       assetPaths.add(canonicalPath);
-      if (!checkFiles || !projectRoot) continue;
+      // Guide files are no longer downloaded (retired 2026-11); only their metadata is checked.
+      if (!checkFiles || !projectRoot || kind === 'guide') continue;
       try {
         const absolute = realpathSync(path.resolve(projectRoot, ...value.split('/')));
         if (!inside(path.resolve(projectRoot, 'assets', folder), absolute)) { errors.push(`${label}.${kind}Path resolves outside assets/${folder}`); continue; }

@@ -89,7 +89,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     await until(()=>gallery(`document.querySelectorAll('[data-tryout]').length===${sampleCount}&&document.querySelectorAll('[data-model-status]').length===${tryout.availability.length-sampleCount}`),'gallery availability badges',12000);
     const original=await gallery("({cards:document.querySelectorAll('.card').length,originals:document.querySelectorAll('[data-open-artwork]').length,guides:document.querySelectorAll('.badge-guide').length})");
     // The catalog keeps growing through cloud sync; compare with the loaded catalog, not a fixed size.
-    const catalogSize=tryout.availability.length,guideCount=tryout.availability.filter(s=>s.guidePath).length;
+    const catalogSize=tryout.availability.length,guideCount=0; // guides retired 2026-11
     assert.deepEqual(original,{cards:catalogSize,originals:catalogSize,guides:guideCount});
     await gallery("document.getElementById('search').value='午夜频道';document.getElementById('search').dispatchEvent(new Event('input',{bubbles:true}));");
     await until(()=>gallery('document.querySelectorAll("[data-tryout]").length===1'),'filtered entry',4000);
@@ -151,8 +151,7 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
         await remote(`document.querySelector('button[aria-label="触摸区域"]:not([aria-pressed="true"])')?.click()`);await pause(350);
         load.capture=await capture(`skin-${sample.onlineId}`);
         await remote(`document.querySelector('button[aria-label="触摸区域"][aria-pressed="true"]')?.click()`);
-        if(sample.guidePath){await until(()=>local('document.getElementById("small-image").naturalWidth>1000'),'guide image',8000);load.guideWidth=await local('document.getElementById("small-image").naturalWidth');}
-        else assert.equal(await local('document.getElementById("sidebar").hidden'),true);
+        assert.equal(await local('!document.getElementById("search-guide").hidden&&!document.getElementById("sidebar")'),true);
       }
       if(mode==='interaction')await touchHead(sample);
       if(!deep){await silent();await remote(`document.querySelector('button[aria-label="触摸区域"]:not([aria-pressed="true"])')?.click()`);await pause(500);load.capture=await capture('idle-'+sample.onlineId);}
@@ -172,24 +171,20 @@ async function run({window,tryout,libraryRoot,testRound,errors}) {
     }
     if(deep){
       await choose(tryout.samples[0].id);
-      await click('expand-guide');await until(()=>local('document.getElementById("guide-dialog").open'),'guide dialog',3000);assert.equal(tryout.model.occluded,true);await click('close-guide');await until(()=>!tryout.model.occluded,'model restored',3000);
-      // The guide panel collapses to a rail and the stage widens; the rail brings it back.
+      // No guide panel any more: the model area takes the whole width of the window.
       const stageWidth=()=>local("document.getElementById('stage').getBoundingClientRect().width");
-      const withGuide=await stageWidth();
-      await click('collapse-guide');await until(()=>local("!document.getElementById('guide-rail').hidden&&document.getElementById('sidebar').hidden"),'guide collapsed',3000);
-      const collapsedWidth=await stageWidth();assert(collapsedWidth>withGuide+250,`stage did not widen: ${withGuide} -> ${collapsedWidth}`);
-      await click('guide-rail');await until(()=>local("!document.getElementById('sidebar').hidden&&document.getElementById('guide-rail').hidden"),'guide restored',3000);
+      const fullWidth=await stageWidth();assert(fullWidth>await local('innerWidth')-60,`stage is not full width: ${fullWidth}`);
       // The site's left column hides inside the model view and the model takes its width.
       const siteLayout=()=>remote("(()=>{const s=document.querySelector('.app-shell section.sidebar');const w=document.querySelector('.model-workspace').getBoundingClientRect();return {column:s?getComputedStyle(s).display:'missing',left:Math.round(w.left),width:Math.round(w.width)};})()");
       const columnShown=await siteLayout();
       await click('toggle-actions');const columnHidden=await until(async()=>{const v=await siteLayout();return v.column==='none'&&v.left<=8?v:false;},'action column hidden',4000);
       assert(columnHidden.width>columnShown.width+150,`model did not widen: ${JSON.stringify([columnShown,columnHidden])}`);
-      await click('collapse-guide');await until(()=>local("document.getElementById('sidebar').hidden"),'guide collapsed for capture',3000);await pause(1500);const bothCollapsed=await capture('collapsed-both');const toolbarLeft=await remote("Math.round(document.querySelector('.browser-page-toolbar')?.getBoundingClientRect().left??-1)");assert(toolbarLeft<=8,'site toolbar still offset: '+toolbarLeft);await click('guide-rail');
+      await pause(1500);const bothCollapsed=await capture('collapsed-both');const toolbarLeft=await remote("Math.round(document.querySelector('.browser-page-toolbar')?.getBoundingClientRect().left??-1)");assert(toolbarLeft<=8,'site toolbar still offset: '+toolbarLeft);
       await click('toggle-actions');await until(async()=>{const v=await siteLayout();return v.column!=='none'&&v.left>8;},'action column restored',4000);
-      step('guide-and-action-column-collapse',{withGuide,collapsedWidth,columnShown,columnHidden,bothCollapsed,toolbarLeft});
+      step('action-column-collapse',{fullWidth,columnShown,columnHidden,bothCollapsed,toolbarLeft});
       await click('mute');await until(()=>tryout.model.contents.isAudioMuted(),'mute',3000);await click('mute');
       tryout.window.setContentSize(1120,740);await pause(600);
-      const layout=await local("({overflow:document.body.scrollWidth>innerWidth,stage:document.getElementById('stage').getBoundingClientRect().toJSON(),sidebar:document.getElementById('sidebar').getBoundingClientRect().toJSON()})");assert.equal(layout.overflow,false);assert(layout.stage.width>500&&layout.stage.height>350);step('guide-mute-and-minimum-window',layout);
+      const layout=await local("({overflow:document.body.scrollWidth>innerWidth,stage:document.getElementById('stage').getBoundingClientRect().toJSON()})");assert.equal(layout.overflow,false);assert(layout.stage.width>500&&layout.stage.height>350);step('mute-and-minimum-window',layout);
       tryout.window.setContentSize(1527,944);await pause(500);
       const generation=tryout.model.generation;
       tryout.model.session.webRequest.onBeforeRequest({urls:['https://l2d.su/*']},(_d,cb)=>cb({cancel:true}));

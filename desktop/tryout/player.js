@@ -2,50 +2,16 @@
   'use strict';
   const api=window.l2dTryout, $=id=>document.getElementById(id);
   let samples=[], availability=[], current, switching=false, closing=false, currentPhase='idle';
-  // The guide panel is open by default; collapsing it is remembered for skins that have one.
-  let guideCollapsed=localStorage.getItem('l2d-guide-collapsed')==='1';
   const RECENT_KEY='l2d-tryout-recent', RECENT_MAX=8;
   const recentIds=()=>{try{const value=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');return Array.isArray(value)?value.filter(id=>typeof id==='string'):[];}catch{return [];}};
   const remember=id=>localStorage.setItem(RECENT_KEY,JSON.stringify([id,...recentIds().filter(x=>x!==id)].slice(0,RECENT_MAX)));
   const resource=relative=>'l2d://gallery/'+relative.split('/').map(encodeURIComponent).join('/');
   function showError(error) { $('state-message').textContent=error.message||String(error);document.body.dataset.phase='error'; }
 
-  function makeViewer(prefix) {
-    const viewport=$(prefix+'-viewport'),image=$(prefix+'-image'),label=$(prefix+'-scale');
-    const view={scale:1,fitScale:1,x:0,y:0,loaded:false};
-    const apply=()=>{image.style.transform=`translate(calc(-50% + ${view.x}px),calc(-50% + ${view.y}px)) scale(${view.scale})`;label.textContent=Math.abs(view.scale-view.fitScale)<.001?'适应':`${Math.round(view.scale*100)}%`;};
-    const fit=()=>{if(!image.naturalWidth||!viewport.clientWidth||!viewport.clientHeight)return;view.fitScale=Math.min((viewport.clientWidth-16)/image.naturalWidth,(viewport.clientHeight-16)/image.naturalHeight,1);view.scale=view.fitScale;view.x=view.y=0;apply();};
-    const zoom=(scale,point)=>{const previous=view.scale;view.scale=Math.max(Math.min(view.fitScale,.1)/2,Math.min(4,scale));if(point){view.x=point.x-(point.x-view.x)*view.scale/previous;view.y=point.y-(point.y-view.y)*view.scale/previous;}apply();};
-    image.addEventListener('load',()=>{view.loaded=true;fit();});
-    new ResizeObserver(()=>{if(view.loaded)fit();}).observe(viewport);
-    viewport.addEventListener('wheel',event=>{if(!view.loaded)return;event.preventDefault();const rect=viewport.getBoundingClientRect();zoom(view.scale*Math.exp(-event.deltaY*.0015),{x:event.clientX-rect.left-rect.width/2,y:event.clientY-rect.top-rect.height/2});},{passive:false});
-    let dragging;
-    viewport.addEventListener('pointerdown',event=>{if(event.button!==0||!view.loaded)return;dragging={x:event.clientX,y:event.clientY,px:view.x,py:view.y};viewport.setPointerCapture(event.pointerId);viewport.classList.add('dragging');});
-    viewport.addEventListener('pointermove',event=>{if(!dragging)return;view.x=dragging.px+event.clientX-dragging.x;view.y=dragging.py+event.clientY-dragging.y;apply();});
-    const stop=()=>{dragging=null;viewport.classList.remove('dragging');};viewport.addEventListener('pointerup',stop);viewport.addEventListener('pointercancel',stop);
-    viewport.addEventListener('dblclick',()=>Math.abs(view.scale-view.fitScale)<.001?zoom(1):fit());
-    for(const b of document.querySelectorAll(`[data-viewer="${prefix}"]`))b.addEventListener('click',()=>{if(b.dataset.zoom==='fit')fit();else zoom(b.dataset.zoom==='original'?1:view.scale*(b.dataset.zoom==='in'?1.3:1/1.3));});
-    return {fit,setSource(src){view.loaded=false;image.src=src;}};
-  }
-  const small=makeViewer('small'),large=makeViewer('large');
-  // Guide panel: shown for skins with a local guide; collapses to a narrow rail on the right.
-  function layoutSidebar() {
-    const hasGuide=Boolean(current?.guidePath), hidden=!hasGuide||guideCollapsed;
-    $('sidebar').hidden=hidden;$('guide-rail').hidden=!hasGuide||!guideCollapsed;
-    $('workspace').classList.toggle('side-hidden',!hasGuide);$('workspace').classList.toggle('side-rail',hasGuide&&guideCollapsed);
-    $('search-guide').hidden=hasGuide;
-    if(!hidden)requestAnimationFrame(()=>small.fit());
-  }
-  const setGuideCollapsed=value=>{guideCollapsed=value;localStorage.setItem('l2d-guide-collapsed',value?'1':'0');layoutSidebar();};
-  $('collapse-guide').addEventListener('click',()=>setGuideCollapsed(true));
-  $('guide-rail').addEventListener('click',()=>setGuideCollapsed(false));
   // The site's own left column (actions / parameters / parts) inside the model view.
   let actionsCollapsed=localStorage.getItem('l2d-actions-collapsed')==='1';
   const renderActionsToggle=()=>{$('toggle-actions').textContent=actionsCollapsed?'展开动作栏':'收起动作栏';$('toggle-actions').setAttribute('aria-pressed',String(actionsCollapsed));};
   $('toggle-actions').addEventListener('click',()=>{actionsCollapsed=!actionsCollapsed;localStorage.setItem('l2d-actions-collapsed',actionsCollapsed?'1':'0');renderActionsToggle();api.panel(actionsCollapsed).catch(showError);});
-  $('expand-guide').addEventListener('click',async()=>{await api.occlude(true);$('guide-dialog').showModal();large.fit();});
-  $('close-guide').addEventListener('click',()=>$('guide-dialog').close());
-  $('guide-dialog').addEventListener('close',()=>api.occlude(false).catch(showError));
   $('choose-skin').addEventListener('click',async()=>{try{await api.occlude(true);renderPicker();$('skin-picker').showModal();$('skin-search').focus();}catch(e){showError(e);}});
   $('close-picker').addEventListener('click',()=>$('skin-picker').close());
   $('skin-picker').addEventListener('close',()=>api.occlude(false).catch(showError));
@@ -57,7 +23,7 @@
     b.setAttribute('aria-label',`${playable?'试玩':'暂不能试玩'}：${row.character}「${row.name}」`);
     const img=document.createElement('img');img.src=resource(row.artworkPath);img.alt='';img.loading='lazy';
     const text=document.createElement('span'),title=document.createElement('strong'),sub=document.createElement('small');
-    title.textContent=`${row.character} · ${row.name}`;sub.textContent=`${row.type} · ${row.releaseDate}${row.guidePath?' · 有图解':''}`;
+    title.textContent=`${row.character} · ${row.name}`;sub.textContent=`${row.type} · ${row.releaseDate}`;
     text.append(title,sub);
     if(!playable){const reason=document.createElement('small');reason.className='match-reason';reason.textContent=row.status==='no-model'?'网站上暂无 Live2D 模型':`试玩模型待核对${row.reason?`：${row.reason}`:''}`;text.append(reason);}
     b.append(img,text);
@@ -80,8 +46,8 @@
   new ResizeObserver(sendBounds).observe($('stage'));window.addEventListener('resize',sendBounds);
 
   const FAILURES={
-    'site-down':{title:'l2d.su 网站暂时无法访问',detail:'在线模型由 l2d.su 提供，现在是这个网站连不上或出错，不是本程序的故障。图鉴、原图和玩法图解仍可正常使用；可以稍后点“重新尝试”，或“在浏览器打开”确认网站状态。'},
-    offline:{title:'电脑似乎没有联网',detail:'试玩需要联网。图鉴里已下载的原图和玩法图解仍可离线查看；联网后点“重新尝试”。'}
+    'site-down':{title:'l2d.su 网站暂时无法访问',detail:'在线模型由 l2d.su 提供，现在是这个网站连不上或出错，不是本程序的故障。图鉴和原图仍可正常使用；可以稍后点“重新尝试”，或“在浏览器打开”确认网站状态。'},
+    offline:{title:'电脑似乎没有联网',detail:'试玩需要联网。图鉴里已下载的原图仍可离线查看；联网后点“重新尝试”。'}
   };
   function renderState(state) {
     if(state.sampleId&&current&&state.sampleId!==current.id)return;
@@ -122,8 +88,6 @@
       document.title=`${target.character}「${target.name}」 · L2D 试玩台`;
       $('loading-art').src=resource(target.artworkPath);
       renderForms(target,0);
-      if(target.guidePath){const url=resource(target.guidePath);small.setSource(url);large.setSource(url);$('large-title').textContent=`${target.character} · 玩法图解`;}
-      layoutSidebar();
       renderState({phase:'connecting',sampleId:id,message:'正在连接在线模型…',elapsedMs:0});
       await api.select(id);sendBounds();
     }catch(error){showError(error);}finally{switching=false;$('choose-skin').disabled=false;}

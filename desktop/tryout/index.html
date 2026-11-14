@@ -13,7 +13,7 @@
       <button id="mute" aria-pressed="false">静音</button>
       <button id="retry">重新载入</button>
       <button id="toggle-actions" aria-pressed="false" title="收起或展开模型左侧的动作、参数、部件栏">收起动作栏</button>
-      <button id="search-guide" hidden>搜玩法视频 ↗</button>
+      <button id="search-guide">搜玩法视频 ↗</button>
       <button id="open-browser" title="在线模型由 l2d.su 提供">浏览器打开 ↗</button>
       <button id="back-gallery">返回图鉴</button>
     </div>
@@ -28,13 +28,6 @@
         <div id="failure-actions" hidden><button id="stage-retry" class="primary">重新尝试</button><button id="stage-browser">在浏览器打开 ↗</button></div>
       </div>
     </section>
-    <aside class="sidebar" id="sidebar" aria-label="玩法图解">
-      <div class="guide-caption"><h2 id="guide-title">玩法图解</h2><button id="expand-guide">展开大图</button><button id="collapse-guide" title="收起玩法图解" aria-label="收起玩法图解">收起 ›</button></div>
-      <div class="guide-tools" id="guide-tools"><button data-viewer="small" data-zoom="out" aria-label="缩小图解">−</button><span id="small-scale">适应</span><button data-viewer="small" data-zoom="in" aria-label="放大图解">＋</button><button data-viewer="small" data-zoom="fit">适应</button><button data-viewer="small" data-zoom="original">100%</button></div>
-      <div class="guide-viewport" id="small-viewport" aria-label="可缩放拖动的玩法图解"><img id="small-image" alt="当前皮肤的高清玩法图解" draggable="false"></div>
-      <p class="guide-hint">滚轮缩放 · 按住拖动 · 双击切换原尺寸</p>
-    </aside>
-    <button id="guide-rail" class="guide-rail" title="展开玩法图解" hidden>‹ 玩法图解</button>
   </main>
   <dialog id="skin-picker" aria-labelledby="picker-title">
     <header class="picker-heading"><div><h2 id="picker-title">切换皮肤</h2><p id="mapping-summary"></p></div><button id="close-picker">返回试玩 Esc</button></header>
@@ -45,6 +38,5 @@
     <p id="picker-empty" hidden>没有符合条件的皮肤。试试其他关键词或年份。</p>
     <p class="picker-footnote">在线模型由 l2d.su 提供，需要联网。</p>
   </dialog>
-  <dialog id="guide-dialog" aria-labelledby="large-title"><div class="large-toolbar"><h2 id="large-title">玩法图解</h2><div class="guide-tools"><button data-viewer="large" data-zoom="out" aria-label="缩小大图">−</button><span id="large-scale">适应</span><button data-viewer="large" data-zoom="in" aria-label="放大大图">＋</button><button data-viewer="large" data-zoom="fit">适应</button><button data-viewer="large" data-zoom="original">100%</button><button id="close-guide">关闭大图 Esc</button></div></div><div id="large-viewport" class="guide-viewport"><img id="large-image" alt="完整高清玩法图解" draggable="false"></div></dialog>
   <script src="player.js"></script>
 </body></html>

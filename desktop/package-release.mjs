@@ -28,7 +28,7 @@ for (const file of ['desktop/main.cjs', 'scripts/lib/sync-engine.mjs', 'desktop/
   if (text(path.join(root, file)) !== text(path.join(runtime, 'resources/app', file))) throw new Error(`运行时与源码不一致，请先构建：${file}`);
 }
 const catalog = JSON.parse(fs.readFileSync(path.join(root, 'data/catalog.json'), 'utf8'));
-const sourceless = catalog.skins.filter(s => !s.artworkSource || (s.guidePath && !s.guideSource));
+const sourceless = catalog.skins.filter(s => !s.artworkSource);
 if (sourceless.length) throw new Error(`${sourceless.length} 款皮肤缺少公开图片来源，新电脑无法补齐：${sourceless[0].character}「${sourceless[0].name}」`);
 
 const out = path.join(root, '.local-tools', 'release');
@@ -46,14 +46,14 @@ for (const file of ['碧蓝航线图鉴.exe', 'update-config.json', 'data/catalo
   fs.mkdirSync(path.dirname(path.join(stage, file)), { recursive: true });
   fs.copyFileSync(path.join(root, file), path.join(stage, file));
 }
-for (const folder of ['assets/skins', 'assets/guides']) fs.mkdirSync(path.join(stage, folder), { recursive: true });
-const guides = catalog.skins.filter(s => s.guidePath).length;
+fs.mkdirSync(path.join(stage, 'assets/skins'), { recursive: true });
+const artworkMb = Math.round(catalog.skins.reduce((sum, s) => sum + (s.artworkBytes || 0), 0) / 1e6);
 fs.writeFileSync(path.join(stage, '使用说明.txt'), `碧蓝航线图鉴 ${appPackage.version}（Windows x64 便携版）\r
 \r
 1. 把整个“碧蓝航线图鉴”文件夹解压到普通位置，例如 D:\\碧蓝航线图鉴。\r
    不要放在需要管理员权限的文件夹（如 C:\\Program Files）里。\r
 2. 双击“碧蓝航线图鉴.exe”。\r
-3. 首次启动会自动下载并校验 ${catalog.skins.length} 张原图和 ${guides} 张玩法图解（约 800 MB），\r
+3. 首次启动会自动下载并校验 ${catalog.skins.length} 张原图（约 ${artworkMb} MB），\r
    图片来自 BiliWiki 等公开来源，完成后页面自动刷新。中途断网也没关系，\r
    已下载的图片会保留，下次启动或点“检查更新”会继续。\r
 \r
