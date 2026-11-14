@@ -9,6 +9,7 @@ body.desktop main{padding-top:14px}
 .desktop-dot{width:7px;height:7px;flex:none;background:#61dca2;border-radius:50%}
 .desktop-bar[data-phase=running] .desktop-dot{background:#ffc66d;animation:desktop-pulse 1s ease-in-out infinite}.desktop-bar[data-phase=error] .desktop-dot{background:#ff7f9b}.desktop-bar[data-phase=success] #desktop-message{color:#86e5bb}
 .desktop-progress{position:absolute;left:12px;right:12px;bottom:2px;height:3px;border-radius:2px;background:#1d3550;overflow:hidden}.desktop-progress i{display:block;height:100%;width:0;background:#62e4ef;transition:width .4s ease}
+.desktop-release{flex:none;padding:7px 12px;border:1px solid #62d1c4;border-radius:10px;background:#123a3a;color:#bff6ec;font-size:14px;text-decoration:none;white-space:nowrap}.desktop-release:hover{background:#1b4f4d}.desktop-release:focus-visible{outline:2px solid #65e1ef;outline-offset:3px}.desktop-release[hidden]{display:none}
 .desktop-actions,.desktop-setting-actions{display:flex;flex-wrap:wrap;gap:8px}
 .desktop-actions button,.desktop-dialog button{font-family:inherit;font-size:15px;line-height:1.5;padding:8px 15px;border:1px solid #355275;background:#142a43;color:#e8f5ff;border-radius:10px;cursor:pointer;transition:background .15s}
 .desktop-actions button:hover,.desktop-dialog button:hover{background:#21466c}

@@ -8,6 +8,11 @@ contextBridge.exposeInMainWorld('l2dDesktop', {
   samples: () => ipcRenderer.invoke('l2d:samples'),
   availability: () => ipcRenderer.invoke('l2d:availability'),
   openSample: id => ipcRenderer.invoke('l2d:sample', id),
+  onRelease: callback => {
+    const listener = (_event, value) => callback(value);
+    ipcRenderer.on('l2d:release', listener);
+    return () => ipcRenderer.removeListener('l2d:release', listener);
+  },
   onProgress: callback => {
     const listener = (_event, value) => callback(value);
     ipcRenderer.on('l2d:progress', listener);
