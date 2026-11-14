@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Windows.Forms;
 [assembly: AssemblyTitle("碧蓝航线图鉴")]
 [assembly: AssemblyDescription("碧蓝航线 L2D 原图与玩法图解桌面软件")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.7.2.0")]
+[assembly: AssemblyFileVersion("1.7.2.0")]
 static class Launcher {
     [STAThread]
     static void Main() {

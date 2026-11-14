@@ -136,7 +136,7 @@
   api.state().then(state => {
     hasRollback = state.hasRollback;
     document.querySelector('#desktop-no-backup').hidden = hasRollback;
-    document.querySelector('#desktop-version').textContent = `桌面版 ${state.appVersion || '1.1.0'} · ${state.total} 款皮肤 · 资料更新至 ${state.updatedTo}`;
+    document.querySelector('#desktop-version').textContent = `桌面版${state.appVersion ? ` ${state.appVersion}` : ''} · ${state.total} 款皮肤 · 资料更新至 ${state.updatedTo}`;
     render(state.job);
     document.documentElement.dataset.desktopReady = 'true';
   }).catch(error => render({ phase: 'error', message: error.message, lines: [] }));
