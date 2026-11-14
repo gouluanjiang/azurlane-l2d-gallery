@@ -101,10 +101,10 @@ export function main(args = process.argv.slice(2)) {
     return;
   }
   dataPath ??= path.join(rootDir, 'data', 'skins-data.js');
-  htmlPath ??= path.join(rootDir, 'index-信浓泳装起.html');
+  htmlPath ??= path.join(rootDir, 'index.html');
   const legacy = readLegacyData(readFileSync(dataPath, 'utf8'));
   const guides = extractLegacyGuides(readFileSync(htmlPath, 'utf8'));
-  const sourceScript = path.join(rootDir, 'download-guide-images.ps1');
+  const sourceScript = path.join(rootDir, 'scripts/legacy/download-guide-images.ps1');
   const guideSources = existsSync(sourceScript) ? extractGuideSources(readFileSync(sourceScript, 'utf8')) : new Map();
   const catalog = migrateLegacyCatalog(legacy, guides, { rootDir, guideSources });
   if (write) {

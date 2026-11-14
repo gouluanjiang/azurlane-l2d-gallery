@@ -3,7 +3,9 @@
 )
 
 $ErrorActionPreference = 'Stop'
-$guideDir = Join-Path $PSScriptRoot 'assets\guides'
+# Legacy (2026-08): the first guide download, kept for its exact source file-name mapping.
+# Every guide's exact address now lives in data/catalog.json (guideSource); the sync engine downloads from there.
+$guideDir = Join-Path $PSScriptRoot '..\..\assets\guides'
 New-Item -ItemType Directory -Path $guideDir -Force | Out-Null
 
 $catalogs = @(

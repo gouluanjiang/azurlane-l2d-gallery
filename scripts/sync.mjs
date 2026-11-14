@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getRemoteCatalog, getPublicSnapshot } from './lib/transport.mjs';
+import { getPublicSnapshot } from './lib/transport.mjs';
 import { syncCatalog, rollbackLast, readJson, atomicWrite, jsonText } from './lib/sync-engine.mjs';
 import { validateCatalog } from './lib/catalog.mjs';
 
@@ -12,7 +12,8 @@ try {
   else {
     console.log('正在读取云端图鉴的确定版本……');
     const config = readJson(path.join(rootDir, 'update-config.json'));
-    const { catalog, commit, snapshotSha256, transport } = process.argv.includes('--public') ? await getPublicSnapshot(config) : getRemoteCatalog(rootDir, config);
+    // Always the public, login-free download (the desktop app still passes --public; it is accepted and ignored).
+    const { catalog, commit, snapshotSha256, transport } = await getPublicSnapshot(config);
     validateCatalog(catalog);
     result = await syncCatalog({ rootDir, nextCatalog: catalog, sourceCommit: commit, progress: console.log });
     if (snapshotSha256) result.sourceSnapshotSha256 = snapshotSha256;

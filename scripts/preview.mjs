@@ -8,8 +8,8 @@ const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; char
 const server = http.createServer((req,res) => {
   try {
     const url = new URL(req.url,'http://127.0.0.1');
-    const relative = url.pathname === '/' ? 'index-信浓泳装起.html' : decodeURIComponent(url.pathname.slice(1));
-    if (!(relative === 'index-信浓泳装起.html' || relative.startsWith('data/') || relative.startsWith('assets/'))) throw new Error('not public');
+    const relative = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname.slice(1));
+    if (!(relative === 'index.html' || relative.startsWith('data/') || relative.startsWith('assets/'))) throw new Error('not public');
     const file = safePath(root,relative); const stat = fs.statSync(file);
     if (!stat.isFile()) throw new Error('not file');
     res.writeHead(200,{'Content-Type':types[path.extname(file)] || 'application/octet-stream','Content-Length':stat.size,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});
