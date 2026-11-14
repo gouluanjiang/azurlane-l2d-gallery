@@ -233,8 +233,8 @@ function isLocalImagePath(value,folder){
   return value.split('/').every(part=>part&&part!=='.'&&part!=='..'&&!part.includes('%'));
 }
 function validateData(data){
-  if(!data||typeof data!=='object'||Array.isArray(data)) throw new Error('未找到 data/skins-data.js，请保留完整目录，或运行同目录的“一键更新.cmd”恢复数据后重试。');
-  if(data.schemaVersion!==2) throw new Error('数据格式版本不匹配，请通过“一键更新.cmd”同步与本页配套的数据。');
+  if(!data||typeof data!=='object'||Array.isArray(data)) throw new Error('未找到 data/skins-data.js，请保留完整目录；桌面版可点“检查更新”恢复数据后重试。');
+  if(data.schemaVersion!==2) throw new Error('数据格式版本不匹配，请在桌面版点“检查更新”同步与本页配套的数据。');
   if(typeof data.version!=='string'||!data.version.trim()||!isDate(data.updatedTo)) throw new Error('数据版本或更新日期无效，请重新同步数据。');
   if(data.checkedAt!==null&&data.checkedAt!==undefined&&(typeof data.checkedAt!=='string'||!Number.isFinite(Date.parse(data.checkedAt)))) throw new Error('上次检查时间格式无效，请重新同步数据。');
   if(!Array.isArray(data.skins)||!data.skins.length) throw new Error('皮肤数据为空或格式错误，请重新同步数据。');
