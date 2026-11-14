@@ -7,7 +7,10 @@ import { parseCatalogScript, validateCatalog } from './lib/catalog.mjs';
 
 const args = process.argv.slice(2);
 let rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-let catalogPath, mirrorPath, checkFiles = true, checkMirror = true;
+let catalogPath,
+  mirrorPath,
+  checkFiles = true,
+  checkMirror = true;
 try {
   for (let index = 0; index < args.length; index++) {
     const arg = args[index];
@@ -25,7 +28,8 @@ try {
   mirrorPath ??= path.join(rootDir, 'data', 'skins-data.js');
   const catalog = JSON.parse(readFileSync(catalogPath, 'utf8').replace(/^\uFEFF/, ''));
   const stats = validateCatalog(catalog, { rootDir, checkFiles });
-  if (checkMirror && !isDeepStrictEqual(catalog, parseCatalogScript(readFileSync(mirrorPath, 'utf8')))) throw new Error('data/skins-data.js does not match canonical catalog.json; regenerate the mirror');
+  if (checkMirror && !isDeepStrictEqual(catalog, parseCatalogScript(readFileSync(mirrorPath, 'utf8'))))
+    throw new Error('data/skins-data.js does not match canonical catalog.json; regenerate the mirror');
   console.log(JSON.stringify({ ...stats, checkFiles, checkMirror }, null, 2));
 } catch (error) {
   console.error(error.message);
