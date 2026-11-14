@@ -12,7 +12,7 @@ fs.mkdirSync(staging, { recursive: true });
 const compile = spawnSync('powershell.exe', ['-NoProfile','-ExecutionPolicy','Bypass','-File',path.join(root,'desktop/build-launcher.ps1'),'-ProjectRoot',root,'-OutputName','碧蓝航线图鉴.exe'], { cwd:root, stdio:'inherit', windowsHide:true });
 if (compile.status !== 0) throw new Error('无法编译图形入口');
 for (const name of ['desktop','scripts']) fs.cpSync(path.join(root,name),path.join(staging,name),{recursive:true});
-let html = fs.readFileSync(path.join(root,'index-信浓泳装起.html'),'utf8');
+let html = fs.readFileSync(path.join(root,'index.html'),'utf8');
 html = html.replace('</head>','<link rel="stylesheet" href="desktop/desktop.css">\n</head>').replace('</body>','<script src="desktop/renderer.js"></script>\n</body>');
 fs.writeFileSync(path.join(staging,'index.html'),html);
 // The official gallery carries the full tryout release (every verified skin).

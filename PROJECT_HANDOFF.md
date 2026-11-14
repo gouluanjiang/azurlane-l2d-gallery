@@ -73,7 +73,7 @@
 
 ## 4. 本机使用和环境
 
-1. 日常双击 `碧蓝航线图鉴.exe`，在软件窗口使用检查更新、从官方公告直接检查与设置（含回退）。源码目录里的 `index-信浓泳装起.html` 可以直接用浏览器打开浏览。
+1. 日常双击 `碧蓝航线图鉴.exe`，在软件窗口使用检查更新、从官方公告直接检查与设置（含回退）。源码目录里的 `index.html` 可以直接用浏览器打开浏览。
 2. 程序打不开、需要在命令行处理时（需要 Node.js 22+，在项目文件夹里运行）：`node scripts/sync.mjs` 同步云端目录，`node scripts/check-updates.mjs --apply-local` 直接读取官方公告，`node scripts/sync.mjs --rollback` 恢复最近一次成功同步前的数据。都不需要登录 GitHub。保持 `.l2d-update` 备份，回退不会清除新增原图。
 
 开发常用命令：`npm test`、`npm run validate`（元数据）、`npm run validate:local`（含本地图片）、`npm run preview`。预览仅绑定 `127.0.0.1`；真实浏览器验收可用 localhost，不能以脚本语法/静态检查冒充浏览器结果。
@@ -356,6 +356,6 @@
 - 新界面上还没跑完整的 198 款回归；摸头测试（interaction 模式）的点位按旧试玩区尺寸 1065×658 标定，需按新尺寸重新标定 `verification/batch-4/head-points.json` 后才能运行。
 - 第 15 轮有 10 款早期皮肤未检测到问候语音，抽查吹雪实际有声音，属于检测问题。
 
-**2026-11 根目录清理**：删除旧命令行入口（`一键更新.cmd`、`本机检查更新.cmd`、`回退上次更新.cmd`、`打开图鉴.cmd`、`配置更新.ps1`、`scripts/sync.ps1`、`scripts/open.ps1`）和 GitHub CLI 同步路径；`download-guide-images.ps1` 移到 `scripts/legacy/`，`云端增量实测-2026-09-08.md` 移到 `docs/history/`。命令行处理方法见第 4 节第 2 条。
+**2026-11 根目录清理**：删除旧命令行入口（`一键更新.cmd`、`本机检查更新.cmd`、`回退上次更新.cmd`、`打开图鉴.cmd`、`配置更新.ps1`、`scripts/sync.ps1`、`scripts/open.ps1`）和 GitHub CLI 同步路径；`download-guide-images.ps1` 移到 `scripts/legacy/`，`云端增量实测-2026-09-08.md` 移到 `docs/history/`；图鉴页面 `index-信浓泳装起.html`（旧收录范围的名字）改名为 `index.html`。命令行处理方法见第 4 节第 2 条。
 
 **2026-11-07 本机清理**：删除试玩测试配置文件、构建缓存、本地发布包和验证截图（`verification` 中的 JSON 报告与 `head-points.json` 等标定文件保留）。
