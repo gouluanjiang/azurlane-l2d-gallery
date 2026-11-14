@@ -38,7 +38,7 @@
 | 当前目录与文件 | **102 款、102 张原图、68 款有图解、0 款待接入、34 款缺图解**，更新至 2026-09-08。170 个图片引用、文件大小/SHA-256、JSON/JS 镜像均通过；原有 95 张原图与 68 张图解全部保留。35 项单元测试通过。 |
 | 本机直接检查 | `本机检查更新.cmd` 对应的 PowerShell 入口已联网通过：新增 0、总数 102、待核对 0；不依赖 GitHub Actions 额度或 GitHub 登录。该次已验收版本为 `20260912T085228244Z-b101b7589b33`，检查时间 `2026-09-12T08:52:28.244Z`；证据保留在 `verification/completion-report.json` 的 `directLocalCheck`。 |
 
-当前已同步的云端版本为 `20260912T092314483Z-b101b7589b33`，`checkedAt=2026-09-12T09:23:14.483Z`，提交 `be8aad51318970f36111cbfd799c91f0ba52833c`。真正增量实测先移除四款与活动目录中的四张原图；云端重新发现并校验四款，本机同步返回新增 4、下载 4，再次同步 `unchanged`。170 个文件及 JSON/JS 镜像校验通过，102 条完整记录与移除前逐条完全一致。详见 [云端增量实测](./云端增量实测-2026-09-08.md) 和 `verification/september-replay-acceptance.json`。
+当前已同步的云端版本为 `20260912T092314483Z-b101b7589b33`，`checkedAt=2026-09-12T09:23:14.483Z`，提交 `be8aad51318970f36111cbfd799c91f0ba52833c`。真正增量实测先移除四款与活动目录中的四张原图；云端重新发现并校验四款，本机同步返回新增 4、下载 4，再次同步 `unchanged`。170 个文件及 JSON/JS 镜像校验通过，102 条完整记录与移除前逐条完全一致。详见 [云端增量实测](./docs/history/云端增量实测-2026-09-08.md) 和 `verification/september-replay-acceptance.json`。
 
 ## 3. 已实现的数据与更新工程
 
@@ -63,21 +63,18 @@
 
 ### 本地同步与回退
 
-- `一键更新.cmd` → `scripts/sync.ps1` → `scripts/sync.mjs`：读取远端确定提交的目录，暂存缺少的图片，核对格式/大小/SHA-256 后更新 JSON 与 JS 镜像。
-- `本机检查更新.cmd` → `scripts/sync.ps1 -CheckSources` → `scripts/check-updates.mjs --apply-local`：直接读取公开公告与 WIKI、核对新原图，再通过同一事务同步引擎应用到本地。需要立即查新、不等待云端排期时使用，无需 GitHub 登录。
-- `回退上次更新.cmd`：恢复最近一次成功同步前的数据；已下载图片保留，不删除原图。
+- 桌面版“检查更新” → `scripts/sync.mjs`：从公开仓库读取确定提交的目录（不需要 GitHub 登录），暂存缺少的图片，核对格式/大小/SHA-256 后更新 JSON 与 JS 镜像。
+- “从官方公告直接检查” → `scripts/check-updates.mjs --apply-local`：直接读取公开公告与 WIKI、核对新原图，再通过同一事务同步引擎应用到本地。
+- “设置 → 回退上次更新” → `scripts/sync.mjs --rollback`：恢复最近一次成功同步前的数据；已下载图片保留，不删除原图。
+- 2026-11 起不再提供 `一键更新.cmd`、`本机检查更新.cmd`、`回退上次更新.cmd`、`打开图鉴.cmd`、`配置更新.ps1` 和对应的 `scripts/sync.ps1`、`scripts/open.ps1`，也不再有通过 GitHub CLI 同步的路径（`local-config.json` 不再读取）；记录保留在 Git 历史里。
 - 更新使用锁、事务记录与备份，校验失败或检测到已有记录/本地修改冲突时停止；不会静默覆盖手工修改。中断恢复和回退信息保存在 `.l2d-update`。
 - `data/sync-status.json` 记录仓库同步结果；本机直接检查结果在 `data/update-report.json`，失败尝试在 `data/update-attempt.json`。页面版本与 `checkedAt` 来自当前目录；页面本身不联网检查更新。
 - 本地同步处理数据和图片，不自动升级 HTML 或程序文件。
-- Windows PowerShell 5 的 Node 版本检查参数引号问题已修复，主目录真实 PowerShell 同步、重复同步与本机检查入口均已验证。
 
 ## 4. 本机使用和环境
 
-1. 日常双击 `碧蓝航线图鉴.exe`，在软件窗口使用同步、检查与设置。旧 `打开图鉴.cmd` 和 `index-信浓泳装起.html` 仍可兼容使用；以下环境配置仅适用于旧命令行入口。
-2. 本机检查、同步和回退需要 Node.js 22+。仓库同步入口目前仍使用本机已登录的 GitHub CLI；`local-config.json` 已保存 CLI 路径，不保存令牌，也不提交 Git。
-3. 换电脑或 CLI 路径变化时，从项目目录运行 `powershell -NoProfile -ExecutionPolicy Bypass -File .\配置更新.ps1`；不在 PATH 的 CLI 可使用 `-GhPath` 指定完整路径。脚本检查 `gh auth status`，已有登录直接使用。
-4. 日常使用 `一键更新.cmd` 同步云端已发布版本；需要立即查新时使用 `本机检查更新.cmd`。完成后刷新/重新打开图鉴；失败先看窗口及对应报告，修复网络或配置后重试。
-5. 需要恢复最近一次成功同步前的数据时双击 `回退上次更新.cmd`。保持 `.l2d-update` 备份，回退不会清除新增原图。
+1. 日常双击 `碧蓝航线图鉴.exe`，在软件窗口使用检查更新、从官方公告直接检查与设置（含回退）。源码目录里的 `index-信浓泳装起.html` 可以直接用浏览器打开浏览。
+2. 程序打不开、需要在命令行处理时（需要 Node.js 22+，在项目文件夹里运行）：`node scripts/sync.mjs` 同步云端目录，`node scripts/check-updates.mjs --apply-local` 直接读取官方公告，`node scripts/sync.mjs --rollback` 恢复最近一次成功同步前的数据。都不需要登录 GitHub。保持 `.l2d-update` 备份，回退不会清除新增原图。
 
 开发常用命令：`npm test`、`npm run validate`（元数据）、`npm run validate:local`（含本地图片）、`npm run preview`。预览仅绑定 `127.0.0.1`；真实浏览器验收可用 localhost，不能以脚本语法/静态检查冒充浏览器结果。
 
@@ -97,7 +94,7 @@
 - [I🐔N 260122–260723](https://417ce07b.pinme.dev)
 - [用户补充目录，含 U-2501](https://ed6b1227.pinme.dev)
 
-前两个目录主要覆盖 2024-08-15 之后的皮肤，不能据此断言更早皮肤没有图解。`download-guide-images.ps1` 保留精确来源文件名映射与人工别名；不得改成模糊猜测。旧下载脚本默认跳过已有图片，重新运行前先检查目标，避免覆盖。
+前两个目录主要覆盖 2024-08-15 之后的皮肤，不能据此断言更早皮肤没有图解。`scripts/legacy/download-guide-images.ps1`（2026-11 从根目录移入）保留精确来源文件名映射与人工别名；不得改成模糊猜测。旧下载脚本默认跳过已有图片，重新运行前先检查目标，避免覆盖。
 
 ## 6. 历史完成阶段
 
@@ -358,5 +355,7 @@
 - 170 款没有本地玩法图解，新皮肤也不会自动带图解。
 - 新界面上还没跑完整的 198 款回归；摸头测试（interaction 模式）的点位按旧试玩区尺寸 1065×658 标定，需按新尺寸重新标定 `verification/batch-4/head-points.json` 后才能运行。
 - 第 15 轮有 10 款早期皮肤未检测到问候语音，抽查吹雪实际有声音，属于检测问题。
+
+**2026-11 根目录清理**：删除旧命令行入口（`一键更新.cmd`、`本机检查更新.cmd`、`回退上次更新.cmd`、`打开图鉴.cmd`、`配置更新.ps1`、`scripts/sync.ps1`、`scripts/open.ps1`）和 GitHub CLI 同步路径；`download-guide-images.ps1` 移到 `scripts/legacy/`，`云端增量实测-2026-09-08.md` 移到 `docs/history/`。命令行处理方法见第 4 节第 2 条。
 
 **2026-11-07 本机清理**：删除试玩测试配置文件、构建缓存、本地发布包和验证截图（`verification` 中的 JSON 报告与 `head-points.json` 等标定文件保留）。
