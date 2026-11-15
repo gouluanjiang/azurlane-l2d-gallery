@@ -16,6 +16,9 @@ exports.run = async ({window,libraryRoot,errors,currentState,liveSync}) => {
   assert.equal(initial.guideUi,0); // gameplay guides were retired in 2026-11
   assert.equal(initial.nodeExposed,'undefined');
   assert.equal(initial.bridge,'function');
+  // Each card's favorite star and tryout button must be clickable, not covered by one another.
+  const cardButtons = await until(()=>evaluate("(()=>{const card=document.querySelector('article.card');const star=card?.querySelector('.card-favorite'),play=card?.querySelector('.card-play');if(!star||!play)return null;card.scrollIntoView({block:'center'});const hit=e=>{const r=e.getBoundingClientRect();return document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)===e||e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));};const a=star.getBoundingClientRect(),b=play.getBoundingClientRect();return {star:hit(star),play:hit(play),overlap:!(a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)};})()"),'卡片收藏与试玩按钮');
+  assert.deepEqual(cardButtons,{star:true,play:true,overlap:false});
   await evaluate("document.querySelector('#search').value='午夜频道';document.querySelector('#search').dispatchEvent(new Event('input',{bubbles:true}));");
   assert.equal(await evaluate("document.querySelectorAll('article.card').length"),1);
   await evaluate("document.querySelector('[data-open-artwork]').click()");
