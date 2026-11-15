@@ -60,7 +60,7 @@
     .meta .type-l2d-plus { color:#d2baff; }
     .meta .type-dual { color:#ffd792; }
     .info button { pointer-events:auto; }
-    .card-favorite { flex:none; width:30px; height:30px; padding:0; border:1px solid rgba(255,255,255,.28); border-radius:50%; background:rgba(5,11,21,.55); color:#e6eefa; font-size:17px; line-height:1; cursor:pointer; }
+    .card-favorite { flex:none; width:30px; height:30px; margin-left:auto; padding:0; border:1px solid rgba(255,255,255,.28); border-radius:50%; background:rgba(5,11,21,.55); color:#e6eefa; font-size:17px; line-height:1; cursor:pointer; pointer-events:auto; backdrop-filter:blur(6px); }
     .card-favorite:hover { border-color:#ffd36b; color:#ffd36b; }
     .card-favorite[aria-pressed="true"] { border-color:#ffd36b; background:rgba(92,66,8,.8); color:#ffd36b; }
     .empty-state { display:none; padding:48px 20px; border:1px dashed var(--line); border-radius:18px; text-align:center; color:var(--muted); background:rgba(12,25,43,.65); }
@@ -311,7 +311,8 @@ function createCard(skin){
   const meta=element('div','meta');
   meta.append(element('span',typeClass(skin.type),skin.type),` · ${skin.releaseDate}`);
   text.append(name,title,meta); info.append(text);
-  if(favorites) info.append(favoriteButton(skin,label));
+  // The star sits in the top-right corner: the caption row also holds the desktop "▶ 试玩" button.
+  if(favorites) badges.append(favoriteButton(skin,label));
   card.append(media,badges,info);
   return card;
 }
