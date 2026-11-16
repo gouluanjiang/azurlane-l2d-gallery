@@ -72,6 +72,9 @@ app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 protocol.registerSchemesAsPrivileged([
   { scheme: 'l2d', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }
 ]);
+// Heights of the gallery and tryout top bars (index.html / desktop/tryout/player.css); the
+// window buttons drawn over them use the same height.
+const TITLE_BAR = { gallery: 64, tryout: 54 };
 let window,
   worker,
   quitting = false;
@@ -401,6 +404,10 @@ else {
       });
       window = new BrowserWindow({
         title: '碧蓝航线图鉴',
+        // No system title bar: the page's top bar takes its place (drag regions in the page CSS) and
+        // Windows draws only the minimize / maximize / close buttons over its right end.
+        titleBarStyle: 'hidden',
+        titleBarOverlay: { color: '#00000000', symbolColor: '#c5d2e6', height: TITLE_BAR.gallery },
         width: 1440,
         height: 940,
         minWidth: 1120,
@@ -502,7 +509,10 @@ else {
           gallery: galleryTryout > 0,
           favorites,
           onState: value => {
-            if (!window.isDestroyed()) window.webContents.send('l2d:tryout', value);
+            if (window.isDestroyed()) return;
+            // The window buttons match the height of whichever top bar is in front.
+            window.setTitleBarOverlay({ height: value.open ? TITLE_BAR.tryout : TITLE_BAR.gallery });
+            window.webContents.send('l2d:tryout', value);
           },
           onFavorites: ids => {
             if (!window.isDestroyed()) window.webContents.send('l2d:favorites', ids);

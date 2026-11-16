@@ -21,9 +21,11 @@
 
 <p align="center"><img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-gallery.jpg" alt="图鉴首页：左边是全部皮肤，右边是选中皮肤的大图和进入试玩" width="900"></p>
 
-| 铺满视图 | 全屏看原图 | 试玩台 |
-| --- | --- | --- |
-| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-wide.jpg" alt="铺满视图：原图占满窗口" width="290"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-viewer.jpg" alt="原图查看器" width="290"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-tryout.jpg" alt="试玩台：在线 Live2D 模型和动作列表" width="290"> |
+| 铺满视图 | 全屏看原图 |
+| --- | --- |
+| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-wide.jpg" alt="铺满视图：原图占满窗口" width="440"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-viewer.jpg" alt="原图查看器" width="440"> |
+| **试玩台** | **试玩台（收起动作栏）** |
+| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-tryout.jpg" alt="试玩台：在线 Live2D 模型和动作列表" width="440"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-tryout-collapsed.jpg" alt="试玩台收起动作栏后，模型占满宽度" width="440"> |
 
 > 截图挂在 [1.8.0 发行页](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/tag/v1.8.0)，不在仓库里。
 
@@ -71,7 +73,7 @@
 2. 等状态显示“可以开始试玩”（一般 5～15 秒，取决于网络）。
 3. 在模型上点头部、身体等位置，或在左侧的“动作”列表直接播放；不知道点哪里时点工具栏的“搜玩法视频”。
 4. 点左上角的皮肤名可以切换皮肤：搜索角色或皮肤名、按年份找、只看收藏，最近玩过的排在最上面；工具栏的 ‹ › 直接换上一款、下一款。
-5. 点左上角的 ← 回到图鉴。模型不会关掉，图鉴右上角会出现“继续试玩”，点它马上回来，不用重新加载。
+5. 点左上角的 ← 回到图鉴（或按 Esc）。模型不会关掉，图鉴右上角会出现“继续试玩”，点它马上回来，不用重新加载。
 
 > 双形态皮肤在皮肤名旁边多一个“Live2D / Spine 动态立绘”切换。
 
