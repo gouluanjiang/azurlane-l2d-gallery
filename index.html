@@ -4,204 +4,315 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>碧蓝航线 L2D 玩法合集</title>
+  <title>碧蓝航线 L2D 图鉴</title>
   <style>
-    :root { color-scheme:dark; --bg:#07111f; --panel:#101d31; --panel-2:#14243b; --line:#263c5f; --blue:#68b5ff; --cyan:#62e4ef; --muted:#9eb2cf; --red:#ff7f9b; --green:#64dda0; --amber:#ffc66d; --purple:#bd9cff; }
+    /* 配色、字体与动效节奏。试玩台（desktop/tryout/player.css）用的是同一套数值。 */
+    :root { color-scheme:dark; --bg:#080d17; --panel:#0f1726; --panel-2:#152033; --line:#22314a; --text:#e9f0fb; --muted:#8a9bb6; --cyan:#56d6e6; --gold:#f3c56b; --red:#ff7f9b; --ease:cubic-bezier(.22,1,.36,1); --cut:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px); --cut-s:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px); }
     * { box-sizing:border-box; }
-    body { min-height:100vh; margin:0; background:radial-gradient(circle at 50% -10%,#173357 0,#0b1829 30%,var(--bg) 65%); color:#eef6ff; font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
-    main { width:min(1680px,96vw); margin:auto; padding:22px 0 56px; }
-    .site-header { display:flex; align-items:baseline; flex-wrap:wrap; gap:6px 16px; margin-bottom:14px; }
-    h1 { margin:0; font-size:26px; letter-spacing:.02em; }
-    .subtitle { margin:0; color:var(--muted); font-size:14px; }
+    html,body { height:100%; margin:0; }
+    body { display:flex; flex-direction:column; overflow:hidden; background:var(--bg); color:var(--text); font:14px/1.5 "Microsoft YaHei UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+    button,input,select { font:inherit; color:inherit; }
+    button { padding:0; border:0; background:none; cursor:pointer; }
+    img { display:block; }
     [hidden] { display:none!important; }
-    .data-error { margin:18px 0; padding:20px; border:1px solid var(--red); border-radius:14px; background:#331c2c; line-height:1.7; }
-    .data-error strong { color:#ffb0c2; }
-    .data-error p { margin:6px 0 12px; }
-    .toolbar-shell { position:sticky; top:0; z-index:50; margin:0 -10px 14px; padding:10px; border-radius:0 0 14px 14px; background:rgba(7,17,31,.88); backdrop-filter:blur(16px) saturate(135%); box-shadow:0 12px 30px rgba(0,0,0,.18); }
-    .toolbar { display:flex; gap:9px; align-items:center; }
-    .search-wrap { position:relative; flex:1 1 360px; min-width:220px; }
-    input,select,button { font:inherit; }
-    input,select { width:100%; padding:10px 14px; border:1px solid var(--line); border-radius:11px; outline:none; background:#0b182a; color:#fff; }
-    input { padding-right:42px; }
-    input:focus,select:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(104,181,255,.15); }
-    select { width:auto; min-width:170px; cursor:pointer; }
-    button { padding:8px 13px; border:1px solid var(--line); border-radius:10px; background:var(--panel); color:#edf6ff; cursor:pointer; transition:border-color .18s ease,background .18s ease,color .18s ease; }
-    button:hover { border-color:#527ab1; }
-    button:focus-visible,a:focus-visible { outline:3px solid rgba(104,181,255,.65); outline-offset:2px; }
-    button.active { border-color:#70baff; background:#1d66ad; color:#fff; }
-    .clear-search { position:absolute; top:50%; right:7px; width:30px; height:30px; padding:0; border:0; border-radius:50%; transform:translateY(-50%); background:transparent; color:var(--muted); font-size:21px; }
-    .clear-search:hover { background:#172a45; color:#fff; }
-    .filter-row { display:flex; gap:7px; margin-top:8px; overflow-x:auto; scrollbar-width:thin; }
-    .filter-row button { flex:0 0 auto; white-space:nowrap; padding:6px 12px; font-size:14px; }
-    .filter-row button small { margin-left:5px; color:inherit; opacity:.7; }
-    .type-row,.favorite-row { display:flex; gap:7px; padding-left:12px; border-left:1px solid var(--line); }
-    .favorite-row[hidden] { display:none; }
-    .year-row { display:flex; gap:7px; margin-left:auto; padding-left:12px; border-left:1px solid var(--line); }
-    .results-bar { margin:0 2px 12px; color:var(--muted); font-size:13px; }
-    .results-bar strong { color:#eaf4ff; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
-    .card { position:relative; aspect-ratio:2/3; min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:14px; background:#0b1626; box-shadow:0 10px 26px rgba(0,0,0,.22); content-visibility:auto; contain-intrinsic-size:auto 300px; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
-    .card:hover { transform:translateY(-3px); border-color:#5b86ba; box-shadow:0 18px 40px rgba(0,0,0,.36); }
-    .media-trigger { position:absolute; inset:0; display:block; width:100%; height:100%; padding:0; border:0; border-radius:0; background:transparent; color:inherit; cursor:zoom-in; }
-    .media-trigger:focus-visible { outline:3px solid var(--blue); outline-offset:-3px; }
-    .thumb { display:block; width:100%; height:100%; object-fit:cover; object-position:center top; transition:transform .3s ease; }
-    .card:hover .thumb { transform:scale(1.03); }
-    .fallback { position:absolute; inset:0; display:none; place-items:center; padding:24px; text-align:center; color:var(--muted); font-size:13px; line-height:1.7; background:linear-gradient(160deg,#13253d,#0a1524); }
-    .card.image-failed .fallback { display:grid; }
-    .card.image-failed .thumb { visibility:hidden; }
-    .badges { position:absolute; top:8px; left:8px; right:8px; display:flex; gap:6px; pointer-events:none; }
-    .badge { padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700; line-height:1.6; backdrop-filter:blur(6px); }
-    .badge-new { background:#ff6f91e6; color:#fff; }
-    .info { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:flex-end; gap:8px; padding:46px 11px 10px; background:linear-gradient(180deg,transparent,rgba(5,11,21,.78) 42%,rgba(5,11,21,.95)); pointer-events:none; }
-    .info-text { min-width:0; flex:1; }
-    .name { overflow:hidden; color:#fff; font-size:16px; font-weight:800; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; text-shadow:0 1px 3px #000a; }
-    .skin { overflow:hidden; margin-top:1px; color:#d8e8ff; font-size:13px; line-height:1.45; text-overflow:ellipsis; white-space:nowrap; }
-    .meta { display:flex; align-items:center; gap:4px; min-height:24px; margin-top:3px; color:#9fb4cf; font-size:12px; white-space:nowrap; }
-    .meta .type-l2d-plus { color:#d2baff; }
-    .meta .type-dual { color:#ffd792; }
-    .info button { pointer-events:auto; }
-    .card-favorite { flex:none; width:30px; height:30px; margin-left:auto; padding:0; border:1px solid rgba(255,255,255,.28); border-radius:50%; background:rgba(5,11,21,.55); color:#e6eefa; font-size:17px; line-height:1; cursor:pointer; pointer-events:auto; backdrop-filter:blur(6px); }
-    .card-favorite:hover { border-color:#ffd36b; color:#ffd36b; }
-    .card-favorite[aria-pressed="true"] { border-color:#ffd36b; background:rgba(92,66,8,.8); color:#ffd36b; }
-    .empty-state { display:none; padding:48px 20px; border:1px dashed var(--line); border-radius:18px; text-align:center; color:var(--muted); background:rgba(12,25,43,.65); }
-    .empty-state.visible { display:block; }
-    .empty-state button { margin-top:14px; }
-    body.guide-open { overflow:hidden; }
-    .guide-modal { position:fixed; inset:0; z-index:1000; display:grid; grid-template-rows:auto 1fr auto; padding:10px 12px; background:rgba(0,4,11,.95); backdrop-filter:blur(9px); }
-    .viewer-head { display:flex; align-items:center; gap:14px; min-height:44px; padding:0 64px 6px 6px; }
+    :focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+    .num { font-family:Bahnschrift,"Segoe UI",sans-serif; font-variant-numeric:tabular-nums; letter-spacing:.02em; }
+    .ic { width:1.15em; height:1.15em; flex:none; }
+    .on > .ic .star, [aria-pressed="true"] > .ic .star { fill:currentColor; }
+    .glass { background:#131d30d9; backdrop-filter:blur(22px) saturate(150%); border:1px solid #ffffff1c; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; height:36px; padding:0 14px; border:1px solid var(--line); background:var(--panel-2); clip-path:var(--cut-s); font-size:13.5px; white-space:nowrap; transition:background .2s,border-color .2s,transform .3s var(--ease),color .2s; }
+    .btn:hover { background:#1d2d47; } .btn:active { transform:scale(.96); } .btn:disabled { opacity:.45; cursor:default; }
+    .btn[aria-pressed="true"] { color:var(--gold); }
+    .iconbtn { position:relative; display:grid; place-items:center; width:36px; height:36px; border-radius:8px; color:var(--muted); font-size:17px; transition:background .2s,color .2s,transform .3s var(--ease); }
+    .iconbtn:hover { background:#ffffff12; color:var(--text); } .iconbtn:active { transform:scale(.9); } .iconbtn:disabled { opacity:.3; cursor:default; }
+    .iconbtn[aria-pressed="true"] { color:var(--gold); }
+    .primary { position:relative; display:inline-flex; align-items:center; justify-content:center; gap:9px; height:46px; padding:0 26px; overflow:hidden; background:linear-gradient(180deg,#ffd98a,#eeb44e); color:#231803; font-size:16px; font-weight:700; letter-spacing:.08em; clip-path:var(--cut); transition:filter .2s,transform .3s var(--ease); }
+    .primary::after { content:""; position:absolute; inset:0; background:linear-gradient(105deg,transparent 35%,#fff9 50%,transparent 65%); transform:translateX(-120%); transition:transform .7s var(--ease); }
+    .primary:hover { filter:brightness(1.07); } .primary:hover::after { transform:translateX(120%); } .primary:active { transform:scale(.97); }
+    .data-error { margin:18px; padding:20px; border:1px solid var(--red); background:#331c2c; line-height:1.7; clip-path:var(--cut); }
+    .data-error strong { color:#ffb0c2; } .data-error p { margin:6px 0 12px; }
+
+    /* 顶部：悬浮搜索条 */
+    .top { position:relative; z-index:20; display:flex; align-items:center; gap:10px; height:72px; padding:0 16px; flex:none; }
+    .brand { display:flex; align-items:center; gap:10px; font-size:16px; font-weight:700; letter-spacing:.12em; white-space:nowrap; }
+    .brand i { width:8px; height:22px; background:var(--gold); clip-path:polygon(0 0,100% 20%,100% 100%,0 80%); }
+    .brand img { width:26px; height:26px; }
+    .top .space { flex:1; }
+    .float { position:relative; }
+    .pill { display:flex; align-items:center; height:48px; padding:0 6px; border-radius:999px; }
+    .search-wrap { display:flex; align-items:center; gap:9px; padding:0 4px 0 12px; color:var(--muted); font-size:16px; }
+    #search { width:210px; padding:0; border:0; outline:0; background:none; color:var(--text); font-size:14px; transition:width .5s var(--ease); }
+    #search:focus { width:270px; } #search::-webkit-search-cancel-button { display:none; }
+    .clear-search { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; color:var(--muted); font-size:14px; }
+    .clear-search:hover { background:#ffffff1a; color:var(--text); }
+    .pill .div { width:1px; height:20px; margin:0 4px; background:#ffffff24; }
+    .seg { position:relative; display:flex; }
+    .seg button { position:relative; z-index:1; height:36px; padding:0 15px; border-radius:999px; color:var(--muted); font-size:13.5px; transition:color .3s; }
+    .seg button:hover { color:var(--text); } .seg button.active { color:#0b1220; font-weight:600; }
+    .seg .seg-thumb { position:absolute; top:0; left:0; width:0; height:36px; border-radius:999px; background:#f1f5fb; transition:transform .5s var(--ease),width .5s var(--ease); }
+    .filter-button { display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 14px; border-radius:999px; font-size:13.5px; transition:background .2s; }
+    .filter-button:hover, .filter-button[aria-expanded="true"] { background:#ffffff14; }
+    .filter-button i { display:none; width:6px; height:6px; border-radius:50%; background:var(--gold); } .filter-button.has i { display:block; }
+    .results { padding:0 12px 0 6px; color:var(--muted); font-size:12.5px; white-space:nowrap; }
+    .pop { position:absolute; top:58px; left:50%; width:min(460px,92vw); padding:16px 18px; border-radius:20px; opacity:0; visibility:hidden; transform:translate(-50%,-10px) scale(.96); transform-origin:top; transition:opacity .2s,transform .4s var(--ease),visibility 0s .2s; }
+    .pop.open { opacity:1; visibility:visible; transform:translate(-50%,0); transition:opacity .2s,transform .4s var(--ease); }
+    .pop h4 { margin:0 0 8px; color:var(--muted); font-size:12px; font-weight:500; } .pop h4:not(:first-child) { margin-top:14px; }
+    .chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .chips button { height:30px; padding:0 13px; border-radius:999px; background:#ffffff12; font-size:13px; transition:background .2s,color .2s,transform .3s var(--ease); }
+    .chips button:hover { background:#ffffff24; } .chips button:active { transform:scale(.94); }
+    .chips button.active { background:#f1f5fb; color:#0b1220; font-weight:600; }
+    .chips small { margin-left:5px; opacity:.6; font-size:11.5px; }
+    .pop-reset { margin-top:14px; color:var(--muted); font-size:12.5px; text-decoration:underline; }
+    .rbtn { display:inline-flex; align-items:center; justify-content:center; gap:7px; height:44px; min-width:44px; padding:0 13px; border-radius:999px; font-size:13px; white-space:nowrap; transition:background .2s,transform .3s var(--ease),color .2s; }
+    .rbtn:hover { background:#1d2a44; } .rbtn:active { transform:scale(.93); } .rbtn .ic { font-size:17px; } .rbtn[aria-pressed="true"] { color:var(--cyan); }
+    .app-actions { display:flex; align-items:center; gap:10px; }
+
+    /* 主体：网格 + 右侧详情 */
+    .cols { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) clamp(300px,27vw,400px); }
+    body.wide .cols { grid-template-columns:minmax(0,1fr); } body.wide .detail { display:none; }
+    .main { display:flex; flex-direction:column; min-width:0; min-height:0; }
+    .bar { display:flex; align-items:center; gap:10px; height:36px; padding:0 18px; flex:none; color:var(--muted); font-size:13px; }
+    .bar b { color:var(--text); font-size:15px; }
+    .bar .chip { display:inline-flex; align-items:center; gap:5px; height:24px; padding:0 4px 0 10px; border-radius:999px; background:#56d6e61f; color:var(--cyan); font-size:12px; }
+    .bar .chip button { display:grid; place-items:center; width:18px; height:18px; border-radius:50%; font-size:12px; } .bar .chip button:hover { background:#56d6e633; }
+    .grid { flex:1; overflow:auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(136px,1fr)); grid-auto-rows:max-content; align-content:start; gap:12px; padding:6px 18px 30px; scrollbar-width:thin; scrollbar-color:#2a3b58 transparent; }
+    .card { position:relative; aspect-ratio:2/3; min-width:0; overflow:hidden; background:var(--panel); clip-path:var(--cut); contain:layout paint; }
+    .grid.intro .card { animation:rise .7s var(--ease) both; animation-delay:calc(var(--i,0)*26ms); }
+    @keyframes rise { from { opacity:0; transform:translateY(22px) scale(.97); } }
+    .media-trigger { position:absolute; inset:0; display:block; width:100%; height:100%; outline-offset:-2px; cursor:pointer; }
+    .thumb { width:100%; height:100%; object-fit:cover; object-position:center top; transition:transform .9s var(--ease); }
+    .card:hover .thumb, .card:focus-within .thumb { transform:scale(1.06); }
+    /* 悬停时其余卡片变暗：只改一层遮罩的不透明度，不重绘图片 */
+    .card::before { content:""; position:absolute; inset:0; z-index:1; background:#05080e; opacity:0; pointer-events:none; transition:opacity .45s ease; }
+    .grid:hover .card:not(:hover)::before { opacity:.42; }
+    .card::after { content:""; position:absolute; inset:0; z-index:3; border:2px solid transparent; clip-path:var(--cut); pointer-events:none; transition:border-color .3s; }
+    .card.selected::after { border-color:var(--gold); }
+    .fallback { position:absolute; inset:0; display:none; place-items:center; padding:18px; background:linear-gradient(160deg,#13253d,#0a1524); color:var(--muted); font-size:12.5px; line-height:1.7; text-align:center; }
+    .card.image-failed .fallback { display:grid; } .card.image-failed .thumb { visibility:hidden; }
+    .cap { position:absolute; z-index:2; left:0; right:0; bottom:0; padding:30px 10px 8px; background:linear-gradient(transparent,#060a12eb); font-size:13px; font-weight:600; pointer-events:none; transform:translateY(19px); transition:transform .5s var(--ease),opacity .35s; }
+    .cap .name, .cap .skin { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cap .skin { margin-top:1px; color:#cfd9e8; font-size:11.5px; font-weight:400; opacity:0; transition:opacity .35s; }
+    .card:hover .cap, .card:focus-within .cap { transform:none; }
+    .card:hover .cap .skin, .card:focus-within .cap .skin { opacity:1; }
+    .badges { position:absolute; z-index:2; top:0; left:0; display:flex; flex-direction:column; align-items:flex-start; gap:4px; pointer-events:none; }
+    .badge { padding:2px 9px 2px 12px; font-size:11px; font-weight:700; clip-path:polygon(0 0,100% 0,calc(100% - 7px) 100%,0 100%); }
+    .badge-new { background:var(--cyan); color:#04232a; }
+    .badge.model-availability { background:#2c3646ee; color:#c4cfdd; font-weight:400; } .badge.model-availability[data-model-status="review"] { color:#ffd18b; }
+    .card-ops { position:absolute; z-index:2; top:6px; right:6px; display:flex; flex-direction:column; gap:5px; }
+    .card-ops button { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#060a12cc; color:#fff; font-size:14px; opacity:0; transform:scale(.8); backdrop-filter:blur(8px); transition:opacity .3s,transform .4s var(--ease),background .2s,color .2s; }
+    .card:hover .card-ops button, .card:focus-within .card-ops button, .card-ops .card-favorite[aria-pressed="true"] { opacity:1; transform:none; }
+    .card-ops button:hover { background:var(--gold); color:#231803; }
+    .card-ops .card-favorite[aria-pressed="true"] { background:none; backdrop-filter:none; color:var(--gold); filter:drop-shadow(0 1px 2px #000); }
+    .card:hover .card-favorite[aria-pressed="true"], .card:focus-within .card-favorite[aria-pressed="true"] { background:#060a12cc; backdrop-filter:blur(8px); filter:none; }
+    .card:hover .card-favorite[aria-pressed="true"]:hover { background:var(--gold); color:#231803; }
+    .empty-state { display:none; flex:1; place-content:center; justify-items:center; gap:14px; padding:40px 20px; color:var(--muted); text-align:center; }
+    .empty-state.visible { display:grid; }
+
+    /* 铺满视图：原图占满窗口，文字和按钮悬停才出现 */
+    body.wide .grid { grid-template-columns:repeat(auto-fill,minmax(205px,1fr)); gap:3px; padding:0 3px 3px; }
+    body.wide .card { clip-path:none; } body.wide .card::after { display:none; } body.wide .media-trigger { cursor:zoom-in; }
+    body.wide .cap { padding:64px 14px 12px; font-size:16px; opacity:0; transform:translateY(12px); }
+    body.wide .cap .skin { font-size:12.5px; }
+    body.wide .card:hover .cap, body.wide .card:focus-within .cap { opacity:1; transform:none; }
+    body.wide .card-ops { top:auto; right:10px; bottom:10px; flex-direction:row; }
+    body.wide .card-ops button { width:36px; height:36px; font-size:16px; }
+    body.wide .cap .name, body.wide .cap .skin { padding-right:90px; }
+
+    /* 右侧详情 */
+    .detail { view-transition-name:detail; display:flex; flex-direction:column; gap:12px; min-height:0; padding:16px; overflow:hidden; border-left:1px solid var(--line); background:linear-gradient(180deg,#101a2c,#0a101c); }
+    .detail-art { position:relative; flex:1; min-height:0; overflow:hidden; background:#070b13; clip-path:var(--cut); cursor:zoom-in; }
+    .detail-art img { position:absolute; inset:-3%; width:106%; height:106%; object-fit:cover; object-position:center top; transition:transform .8s var(--ease); }
+    .detail-art .zoom-tip { position:absolute; z-index:2; right:10px; bottom:10px; display:flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:#000a; font-size:12px; opacity:0; transform:translateY(6px); transition:opacity .3s,transform .5s var(--ease); pointer-events:none; }
+    .detail-art:hover .zoom-tip, .detail-art:focus-visible .zoom-tip { opacity:1; transform:none; }
+    .detail h2 { margin:0; font-size:24px; line-height:1.2; letter-spacing:.04em; }
+    .detail .skin-name { margin-top:3px; color:#c9d6ea; font-size:15px; }
+    .detail .meta { display:flex; align-items:center; gap:8px; margin-top:9px; color:var(--muted); font-size:12px; }
+    .type-pill { padding:1px 9px; border:1px solid var(--line); border-radius:999px; }
+    .type-pill.type-l2d-plus { color:#cdb6ff; border-color:#cdb6ff55; } .type-pill.type-dual { color:var(--gold); border-color:#f3c56b55; }
+    .detail .row { display:flex; gap:8px; } .detail .row > * { flex:1; } .detail .row .btn { height:38px; }
+
+    /* 原图查看器 */
+    body.guide-open .top, body.guide-open .cols { pointer-events:none; }
+    .guide-modal { position:fixed; inset:0; z-index:1000; outline:0; }
+    .viewer-bg { position:absolute; inset:0; background:#04070cf2; backdrop-filter:blur(18px); opacity:0; transition:opacity .34s ease; }
+    .guide-modal.shown .viewer-bg { opacity:1; }
+    .viewer-ui { transition:opacity .28s ease; opacity:0; } .guide-modal.shown .viewer-ui { opacity:1; }
+    .viewer-head { position:absolute; top:0; left:0; right:0; display:flex; align-items:center; gap:14px; height:58px; padding:0 18px; }
     .viewer-caption { min-width:0; overflow:hidden; font-size:18px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
-    .viewer-caption small { margin-left:10px; color:var(--muted); font-size:13px; font-weight:400; }
-    .viewer-counter { margin-left:auto; color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
-    .guide-stage { position:relative; min-width:0; min-height:0; overflow:hidden; border-radius:12px; cursor:grab; touch-action:none; }
-    .guide-stage.dragging { cursor:grabbing; }
-    .guide-stage img { position:absolute; left:50%; top:50%; display:block; max-width:none; max-height:none; transform-origin:center; user-select:none; -webkit-user-drag:none; will-change:transform; box-shadow:0 22px 70px rgba(0,0,0,.7); }
-    .viewer-nav { position:absolute; z-index:3; top:50%; width:52px; height:84px; padding:0; border:1px solid rgba(255,255,255,.18); border-radius:14px; transform:translateY(-50%); background:rgba(5,10,18,.6); color:#fff; font-size:34px; line-height:1; }
-    .viewer-nav:hover { background:rgba(29,102,173,.85); }
-    .viewer-nav:disabled { opacity:.25; cursor:default; }
-    #viewerPrev { left:10px; } #viewerNext { right:10px; }
-    .guide-close { position:fixed; z-index:1002; top:12px; right:16px; width:42px; height:42px; padding:0; border:1px solid rgba(255,255,255,.55); border-radius:50%; background:rgba(5,10,18,.88); color:#fff; font-size:28px; line-height:1; }
-    .guide-tools { z-index:1001; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:7px; padding:9px; }
+    .viewer-caption small { margin-left:12px; color:var(--muted); font-size:13px; font-weight:400; }
+    .viewer-counter { margin-left:auto; color:var(--muted); font-size:13px; white-space:nowrap; }
+    .guide-stage { position:absolute; inset:58px 90px 86px; overflow:hidden; touch-action:none; }
+    .guide-stage.zoomed { cursor:grab; } .guide-stage.dragging { cursor:grabbing; }
+    .viewer-frame { position:absolute; will-change:transform; box-shadow:0 30px 90px #000c; }
+    .viewer-frame img { position:absolute; inset:0; width:100%; height:100%; user-select:none; -webkit-user-drag:none; }
+    #guideImage { opacity:0; transition:opacity .3s ease; } #guideImage.ready { opacity:1; }
+    .viewer-nav { position:absolute; top:58px; bottom:86px; display:grid; place-items:center; width:90px; color:#fff8; font-size:30px; transition:color .2s,background .3s; }
+    .viewer-nav:hover { color:#fff; background:linear-gradient(90deg,#ffffff10,transparent); }
+    #viewerNext { right:0; } #viewerNext:hover { background:linear-gradient(270deg,#ffffff10,transparent); }
+    .viewer-nav:disabled { opacity:.15; pointer-events:none; }
+    .guide-tools { position:absolute; left:50%; bottom:20px; display:flex; align-items:center; gap:6px; padding:6px; border:1px solid var(--line); background:#101a2cee; clip-path:var(--cut); transform:translateX(-50%); }
+    .guide-tools .primary { height:38px; padding:0 20px; font-size:14.5px; }
     .viewer-actions { display:contents; }
-    .guide-message { position:absolute; z-index:2; inset:0; display:grid; place-content:center; gap:12px; padding:24px; text-align:center; color:#dbe9ff; cursor:default; touch-action:auto; }
+    .guide-tools .sep { width:1px; height:20px; margin:0 4px; background:var(--line); }
+    .zoom-label { min-width:48px; color:var(--muted); font-size:12.5px; text-align:center; }
+    .guide-message { position:absolute; z-index:2; inset:0; display:grid; place-content:center; gap:12px; padding:24px; color:#dbe9ff; text-align:center; }
     .guide-message p { margin:0; line-height:1.7; }
-    .guide-message-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
-    .guide-tools button:disabled { opacity:.45; cursor:default; }
-    .guide-tools button { min-width:42px; background:rgba(12,25,43,.94); }
-    .guide-tools .tool-gap { width:14px; }
-    .zoom-label { min-width:60px; color:#dcecff; text-align:center; font-variant-numeric:tabular-nums; }
-    footer { margin-top:30px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; line-height:1.7; }
-    @media(max-width:980px){ .toolbar{flex-wrap:wrap}.search-wrap{flex-basis:100%}select{flex:1}.year-row{margin-left:0;padding-left:0;border-left:0} }
-    @media(max-width:700px){ main{width:94vw;padding-top:16px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.guide-modal{padding:4px}.viewer-nav{width:40px;height:64px} }
-    @media(prefers-reduced-motion:reduce){ *,*::before,*::after{transition:none!important} }
+    .guide-message-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+
+    /* 筛选时网格淡入；切换视图时整页平滑过渡 */
+    ::view-transition-old(root), ::view-transition-new(root) { animation-duration:.34s; animation-timing-function:ease; }
+    ::view-transition-old(detail):only-child { animation:.34s var(--ease) both detail-out; }
+    ::view-transition-new(detail):only-child { animation:.5s var(--ease) both detail-in; }
+    @keyframes detail-out { to { opacity:0; transform:translateX(70px); } } @keyframes detail-in { from { opacity:0; transform:translateX(70px); } }
+
+    @media (max-width:1300px) { #search { width:150px; } #search:focus { width:190px; } }
+    @media (max-width:900px) { .cols { grid-template-columns:minmax(0,1fr); } .detail, #viewToggle { display:none; } .brand span { display:none; } .results { display:none; } .guide-stage { inset:58px 8px 86px; } .viewer-nav { width:44px; z-index:3; } }
+    @media (max-width:640px) { #search, #search:focus { width:96px; } .seg button { padding:0 10px; } .grid, body.wide .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:.01ms!important; animation-delay:0s!important; transition-duration:.01ms!important; } }
   </style>
 </head>
 <body>
-<main>
-  <header class="site-header">
-    <h1>碧蓝航线 L2D 图鉴</h1>
-    <p class="subtitle" id="summary">正在读取本地数据…</p>
+  <header class="top">
+    <div class="brand" id="brand"><i></i><span>L2D 图鉴</span></div>
+    <span class="space"></span>
+    <div class="float">
+      <section class="pill glass" aria-label="搜索与筛选">
+        <label class="search-wrap"><span id="searchIcon"></span><input id="search" type="search" autocomplete="off" placeholder="搜索角色或皮肤名" aria-label="搜索角色名或皮肤名"></label>
+        <button id="clearSearch" class="clear-search" type="button" aria-label="清空搜索" hidden></button>
+        <span class="div"></span>
+        <div class="seg" id="modeSwitch" role="group" aria-label="浏览范围">
+          <span class="seg-thumb"></span>
+          <button class="active" type="button" data-filter="all">全部</button>
+          <button type="button" data-filter="new">新上线</button>
+          <button id="favoritesOnly" type="button" aria-pressed="false" hidden>收藏</button>
+        </div>
+        <span class="div"></span>
+        <button class="filter-button" id="filterButton" type="button" aria-expanded="false" aria-controls="filterPanel"><span id="filterIcon"></span>筛选<i></i></button>
+        <span class="results num" aria-live="polite"><span id="resultCount"></span></span>
+      </section>
+      <div class="pop glass" id="filterPanel">
+        <h4>类型</h4>
+        <div class="chips" role="group" aria-label="按类型筛选">
+          <button type="button" data-type="L2D" aria-pressed="false">L2D<small data-type-count="L2D"></small></button>
+          <button type="button" data-type="L2D+" aria-pressed="false">L2D+<small data-type-count="L2D+"></small></button>
+          <button type="button" data-type="双形态" aria-pressed="false">双形态<small data-type-count="双形态"></small></button>
+        </div>
+        <h4>上线年份</h4>
+        <div class="chips num" id="yearFilters" aria-label="按年份筛选"><button class="active" type="button" data-year="all">全部</button></div>
+        <h4>排序</h4>
+        <div class="chips" id="sortChips" role="group" aria-label="排序方式">
+          <button class="active" type="button" data-sort="date-desc">从新到旧</button>
+          <button type="button" data-sort="date-asc">从早到晚</button>
+          <button type="button" data-sort="name">按角色名</button>
+        </div>
+        <select id="sortOrder" aria-label="皮肤排序方式" hidden><option value="date-desc">实装时间：从新到旧</option><option value="date-asc">实装时间：从早到晚</option><option value="name">角色名排序</option></select>
+        <button class="pop-reset" id="clearFilters" type="button" hidden>清除筛选</button>
+      </div>
+    </div>
+    <span class="space"></span>
+    <button class="rbtn glass" id="viewToggle" type="button" aria-pressed="false" title="铺满 / 标准（W）"></button>
+    <div class="app-actions" id="appActions"></div>
   </header>
-  <div id="dataError" class="data-error" role="alert" hidden><strong>本地数据无法读取</strong><p id="dataErrorDetail"></p><button id="reloadData" type="button">重新加载页面</button></div>
+  <div id="dataError" class="data-error" role="alert" hidden><strong>本地数据无法读取</strong><p id="dataErrorDetail"></p><button id="reloadData" class="btn" type="button">重新加载页面</button></div>
   <noscript><div class="data-error">请启用浏览器 JavaScript，再重新打开本页以加载本地图鉴。</div></noscript>
 
-  <section class="toolbar-shell" aria-label="皮肤筛选工具">
-    <div class="toolbar">
-      <div class="search-wrap">
-        <input id="search" type="search" autocomplete="off" placeholder="搜索角色名或皮肤名…" aria-label="搜索角色名或皮肤名">
-        <button id="clearSearch" class="clear-search" type="button" aria-label="清空搜索" hidden>×</button>
-      </div>
-      <select id="sortOrder" aria-label="皮肤排序方式">
-        <option value="date-desc">实装时间：从新到旧</option>
-        <option value="date-asc">实装时间：从早到晚</option>
-        <option value="name">角色名排序</option>
-      </select>
-    </div>
-    <div class="filter-row">
-      <button class="active" type="button" data-filter="all">全部<small id="countAll"></small></button>
-      <button type="button" data-filter="new">新上线<small id="countNew"></small></button>
-      <div class="type-row" role="group" aria-label="按类型筛选">
-        <button type="button" data-type="L2D" aria-pressed="false">L2D<small data-type-count="L2D"></small></button>
-        <button type="button" data-type="L2D+" aria-pressed="false">L2D+<small data-type-count="L2D+"></small></button>
-        <button type="button" data-type="双形态" aria-pressed="false">双形态<small data-type-count="双形态"></small></button>
-      </div>
-      <div id="favoriteFilter" class="favorite-row" hidden>
-        <button id="favoritesOnly" type="button" aria-pressed="false">★ 只看收藏<small id="countFavorites"></small></button>
-      </div>
-      <div id="yearFilters" class="year-row" aria-label="按年份筛选">
-        <button class="active" type="button" data-year="all">全部年份</button>
-      </div>
-    </div>
-  </section>
-
-  <div class="results-bar" aria-live="polite"><span id="resultCount">正在读取本地数据…</span></div>
-  <div id="grid" class="grid"></div>
-  <div id="emptyState" class="empty-state">
-    没有找到符合当前条件的皮肤。
-    <br><button id="resetFilters" type="button">清空搜索与筛选</button>
+  <div class="cols" id="content">
+    <main class="main">
+      <div class="bar" id="bar"><b id="viewTitle">全部皮肤</b><span id="summary" hidden>正在读取本地数据…</span><span id="activeChips"></span></div>
+      <div id="grid" class="grid intro"></div>
+      <div id="emptyState" class="empty-state">没有找到符合当前条件的皮肤。<button id="resetFilters" class="btn" type="button">清空搜索与筛选</button></div>
+    </main>
+    <aside class="detail" id="detail" aria-label="当前选中的皮肤">
+      <button class="detail-art" id="detailArt" type="button" aria-label="查看原图"><span class="zoom-tip" id="zoomTip"></span></button>
+      <div id="detailInfo"></div>
+      <div class="row" id="detailPlayRow" hidden><button class="primary" id="detailPlay" type="button"></button></div>
+      <div class="row"><button class="btn" id="detailFavorite" type="button" aria-pressed="false" hidden></button><button class="btn" id="detailVideo" type="button"></button></div>
+    </aside>
   </div>
 
-  <div id="guideModal" class="guide-modal" role="dialog" aria-modal="true" aria-label="图片查看器" hidden>
-    <div class="viewer-head"><div id="viewerCaption" class="viewer-caption"></div><span id="viewerCounter" class="viewer-counter"></span></div>
-    <button id="guideClose" class="guide-close" type="button" aria-label="关闭图片查看器">×</button>
+  <div id="guideModal" class="guide-modal" role="dialog" aria-modal="true" aria-label="图片查看器" tabindex="-1" hidden>
+    <div class="viewer-bg"></div>
     <div id="guideStage" class="guide-stage">
-      <img id="guideImage" alt="" draggable="false">
-      <button id="viewerPrev" class="viewer-nav" type="button" aria-label="上一款（←）">‹</button>
-      <button id="viewerNext" class="viewer-nav" type="button" aria-label="下一款（→）">›</button>
+      <div class="viewer-frame" id="viewerFrame"><img id="guidePreview" alt="" draggable="false"><img id="guideImage" alt="" draggable="false"></div>
       <div id="guideMessage" class="guide-message" role="status" hidden>
         <p id="guideMessageText"></p>
         <div id="guideRecovery" class="guide-message-actions" hidden>
-          <button id="retryImage" type="button">重试加载</button>
-          <button id="closeImageError" type="button">关闭查看器</button>
+          <button id="retryImage" class="btn" type="button">重试加载</button>
+          <button id="closeImageError" class="btn" type="button">关闭查看器</button>
         </div>
       </div>
     </div>
-    <div class="guide-tools" aria-label="图片查看工具">
-      <span id="viewerActions" class="viewer-actions"></span>
-      <button id="searchVideo" type="button">搜索玩法视频 ↗</button>
-      <span class="tool-gap"></span>
-      <button id="zoomOut" type="button" aria-label="缩小图片">−</button>
-      <button id="zoomFit" type="button">适应窗口</button>
-      <span id="zoomLabel" class="zoom-label">适应</span>
-      <button id="zoomActual" type="button">100%</button>
-      <button id="zoomIn" type="button" aria-label="放大图片">＋</button>
+    <div class="viewer-ui">
+      <div class="viewer-head"><div id="viewerCaption" class="viewer-caption"></div><span id="viewerCounter" class="viewer-counter num"></span><button id="guideClose" class="iconbtn" type="button" aria-label="关闭图片查看器（Esc）"></button></div>
+      <button id="viewerPrev" class="viewer-nav" type="button" aria-label="上一款（←）"></button>
+      <button id="viewerNext" class="viewer-nav" type="button" aria-label="下一款（→）"></button>
+      <div class="guide-tools" aria-label="图片查看工具">
+        <span id="viewerActions" class="viewer-actions"></span>
+        <button id="viewerFavorite" class="iconbtn" type="button" aria-pressed="false" title="收藏（F）" hidden></button>
+        <button id="searchVideo" class="iconbtn" type="button" title="搜索玩法视频" aria-label="搜索玩法视频"></button>
+        <span class="sep"></span>
+        <button id="zoomOut" class="iconbtn" type="button" aria-label="缩小图片" title="缩小（-）"></button>
+        <span id="zoomLabel" class="zoom-label num">适应</span>
+        <button id="zoomIn" class="iconbtn" type="button" aria-label="放大图片" title="放大（+）"></button>
+        <button id="zoomFit" class="iconbtn" type="button" aria-label="适应窗口" title="适应窗口（0）"></button>
+      </div>
     </div>
   </div>
-
-  <footer>原图来自碧蓝航线 WIKI。点卡片查看原图，在查看器里用 ← → 翻看；“搜索玩法视频”在 Bilibili 查找这款皮肤的互动玩法。</footer>
-</main>
 <script src="data/skins-data.js"></script>
 <script>
 'use strict';
-const grid=document.querySelector('#grid');
-const q=document.querySelector('#search');
-const sortOrder=document.querySelector('#sortOrder');
-const clearSearch=document.querySelector('#clearSearch');
-const emptyState=document.querySelector('#emptyState');
-const resultCount=document.querySelector('#resultCount');
-const guideModal=document.querySelector('#guideModal');
-const guideStage=document.querySelector('#guideStage');
-const guideImage=document.querySelector('#guideImage');
-const guideClose=document.querySelector('#guideClose');
-const searchVideo=document.querySelector('#searchVideo');
-const viewerCaption=document.querySelector('#viewerCaption');
-const viewerCounter=document.querySelector('#viewerCounter');
-const viewerPrev=document.querySelector('#viewerPrev');
-const viewerNext=document.querySelector('#viewerNext');
-const guideMessage=document.querySelector('#guideMessage');
-const guideMessageText=document.querySelector('#guideMessageText');
-const guideRecovery=document.querySelector('#guideRecovery');
-const zoomLabel=document.querySelector('#zoomLabel');
-const zoomButtons=['zoomOut','zoomIn','zoomFit','zoomActual'].map(id=>document.getElementById(id));
-const state={filter:'all',year:'all',type:'all',favoritesOnly:false,sort:'date-desc'};
-// Favorites exist only in the desktop app, which stores them in .desktop-data and calls
-// window.l2dGallery.enableFavorites(). Opened directly in a browser the feature stays hidden.
-let favorites=null,saveFavorite=null;
+const $=selector=>document.querySelector(selector);
+const grid=$('#grid'),q=$('#search'),sortOrder=$('#sortOrder'),clearSearch=$('#clearSearch'),emptyState=$('#emptyState'),resultCount=$('#resultCount');
+const guideModal=$('#guideModal'),guideStage=$('#guideStage'),viewerFrame=$('#viewerFrame'),guideImage=$('#guideImage'),guidePreview=$('#guidePreview'),guideClose=$('#guideClose');
+const viewerCaption=$('#viewerCaption'),viewerCounter=$('#viewerCounter'),viewerPrev=$('#viewerPrev'),viewerNext=$('#viewerNext'),guideMessage=$('#guideMessage'),guideMessageText=$('#guideMessageText'),guideRecovery=$('#guideRecovery'),zoomLabel=$('#zoomLabel');
+const zoomButtons=['zoomOut','zoomIn','zoomFit'].map(id=>document.getElementById(id));
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ms=value=>reducedMotion?0:value;
+const EASE='cubic-bezier(.22,1,.36,1)';
+// One drawn icon set (instead of keyboard symbols), shared with the desktop additions.
+const ICONS={
+  play:'<path d="M7.5 4.8v14.4L19 12z" fill="currentColor" stroke="none"/>',
+  star:'<path class="star" d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18"/>',
+  left:'<path d="M14.5 5l-7 7 7 7"/>',right:'<path d="M9.5 5l7 7-7 7"/>',
+  sliders:'<path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/>',
+  video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor" stroke="none"/>',
+  panel:'<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M14.5 4.5v15"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',
+  fit:'<path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/>',
+  reload:'<path d="M19.5 12a7.5 7.5 0 11-2.2-5.3"/><path d="M19.6 4.3v4.2h-4.2"/>',
+  download:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+  folder:'<path d="M3.5 7a2 2 0 012-2h4l2 2.5h7a2 2 0 012 2V17a2 2 0 01-2 2h-13a2 2 0 01-2-2z"/>',
+  warn:'<path d="M12 4l9 15.5H3z"/><path d="M12 10v4.5M12 17.2v.3"/>'
+};
+const icon=name=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
+for(const [selector,name] of [['#searchIcon','search'],['#clearSearch','close'],['#filterIcon','sliders'],['#guideClose','close'],['#viewerPrev','left'],['#viewerNext','right'],['#searchVideo','video'],['#zoomOut','minus'],['#zoomIn','plus'],['#zoomFit','fit'],['#viewerFavorite','star']]) $(selector).innerHTML=icon(name);
+$('#zoomTip').innerHTML=icon('fit')+'看原图'; $('#detailVideo').innerHTML=icon('video')+'玩法视频'; $('#detailPlay').innerHTML=icon('play')+'进入试玩';
+
+// What the view remembers between starts (the search text is not kept).
+const STORE_KEY='l2d-gallery-view';
+function loadView(){ try{ const value=JSON.parse(localStorage.getItem(STORE_KEY)); return value&&typeof value==='object'?value:{}; }catch{ return {}; } }
+function saveView(patch){ try{ localStorage.setItem(STORE_KEY,JSON.stringify({...loadView(),...patch})); }catch{ /* private mode: nothing is remembered */ } }
+const saved=loadView();
+const pick=(value,allowed,fallback)=>allowed.includes(value)?value:fallback;
+const state={filter:pick(saved.filter,['all','new'],'all'),year:typeof saved.year==='string'?saved.year:'all',type:pick(saved.type,['all','L2D','L2D+','双形态'],'all'),favoritesOnly:false,sort:pick(saved.sort,['date-desc','date-asc','name'],'date-desc')};
+let wide=saved.wide===true;
+// “收藏”筛选要等桌面版交出收藏名单后才能恢复。
+let restoreFavoritesOnly=saved.favoritesOnly===true;
+// Favorites and the tryout exist only in the desktop app, which hands them over through
+// window.l2dGallery (see desktop/renderer.js). Opened directly in a browser they stay hidden.
+let favorites=null,saveFavorite=null,tryout=null;
 const isFavorite=skin=>Boolean(favorites&&favorites.has(skin.id));
+const isPlayable=skin=>Boolean(tryout&&tryout.playable.has(skin.id));
+// The desktop app serves small card images (desktop/thumbs.cjs); a browser uses the artwork itself.
+const useThumbs=Boolean(window.l2dDesktop);
+const thumbPath=skin=>useThumbs?'thumbs/'+skin.artworkPath:skin.artworkPath;
 // Skins released within this many days count as "新上线".
 const NEW_DAYS=60;
-let skins=[],skinById=new Map(),currentView=[],newSince='';
-let guideReturnFocus=null,activeViewer=null,imageReady=false;
-let zoom=1,fitZoom=1,panX=0,panY=0,dragMoved=false;
+let skins=[],skinById=new Map(),currentView=[],newSince='',selected=null;
+let guideReturnFocus=null,activeViewer=null,imageReady=false,closing=null;
+let zoom=1,panX=0,panY=0,dragMoved=false,base={w:1,h:1},natural={w:1000,h:1500};
 let pinchStartDistance=0,pinchStartZoom=1;
 const pointers=new Map();
 const searchUrl=(c,s)=>`https://search.bilibili.com/all?keyword=${encodeURIComponent('碧蓝航线 '+c+' '+s+' L2D 彩蛋 教程')}`;
@@ -223,8 +334,8 @@ function isLocalImagePath(value,folder){
   return value.split('/').every(part=>part&&part!=='.'&&part!=='..'&&!part.includes('%'));
 }
 function validateData(data){
-  if(!data||typeof data!=='object'||Array.isArray(data)) throw new Error('未找到 data/skins-data.js，请保留完整目录；桌面版可点“检查更新”恢复数据后重试。');
-  if(data.schemaVersion!==2) throw new Error('数据格式版本不匹配，请在桌面版点“检查更新”同步与本页配套的数据。');
+  if(!data||typeof data!=='object'||Array.isArray(data)) throw new Error('未找到 data/skins-data.js，请保留完整目录；桌面版可在设置里点“检查更新”恢复数据后重试。');
+  if(data.schemaVersion!==2) throw new Error('数据格式版本不匹配，请在桌面版的设置里点“检查更新”同步与本页配套的数据。');
   if(typeof data.version!=='string'||!data.version.trim()||!isDate(data.updatedTo)) throw new Error('数据版本或更新日期无效，请重新同步数据。');
   if(data.checkedAt!==null&&data.checkedAt!==undefined&&(typeof data.checkedAt!=='string'||!Number.isFinite(Date.parse(data.checkedAt)))) throw new Error('上次检查时间格式无效，请重新同步数据。');
   if(!Array.isArray(data.skins)||!data.skins.length) throw new Error('皮肤数据为空或格式错误，请重新同步数据。');
@@ -243,36 +354,31 @@ function validateData(data){
   return data;
 }
 function showDataError(error){
-  document.querySelector('#dataError').hidden=false;
-  document.querySelector('#dataErrorDetail').textContent=error.message||'数据无法加载，请重新同步后重试。';
-  document.querySelector('#summary').textContent='本地数据不可用';
-  document.querySelectorAll('.toolbar-shell,.results-bar').forEach(node=>node.hidden=true);
-  grid.hidden=true;
-  emptyState.classList.remove('visible');
+  $('#dataError').hidden=false;
+  $('#dataErrorDetail').textContent=error.message||'数据无法加载，请重新同步后重试。';
+  $('#summary').textContent='本地数据不可用';
+  $('#content').hidden=true; $('.float').hidden=true; $('#viewToggle').hidden=true;
 }
 function updatePageMeta(data){
   const dates=skins.map(skin=>skin.releaseDate).sort();
   document.title=`碧蓝航线 L2D 图鉴（更新至 ${data.updatedTo}）`;
   newSince=new Date(Date.now()-NEW_DAYS*864e5).toISOString().slice(0,10);
-  document.querySelector('#summary').textContent=`共 ${skins.length} 款 · ${dates[0]} 至 ${dates[dates.length-1]} · 资料更新至 ${data.updatedTo}`;
+  $('#summary').textContent=`共 ${skins.length} 款 · ${dates[0]} 至 ${dates[dates.length-1]} · 资料更新至 ${data.updatedTo}`;
   const newCount=skins.filter(isNew).length;
-  document.querySelector('#countAll').textContent=skins.length;
-  document.querySelector('#countNew').textContent=newCount;
   for(const node of document.querySelectorAll('[data-type-count]')){
     const count=skins.filter(skin=>skin.type===node.dataset.typeCount).length;
     node.textContent=count; node.closest('button').hidden=!count;
   }
-  updateFavoriteCount();
-  document.querySelector('[data-filter="new"]').hidden=!newCount;
-  const yearFilters=document.querySelector('#yearFilters');
+  $('[data-filter="new"]').hidden=!newCount;
+  if(!newCount&&state.filter==='new') state.filter='all';
+  const years=[...new Set(dates.map(date=>date.slice(0,4)))].reverse();
+  if(state.year!=='all'&&!years.includes(state.year)) state.year='all';
+  const yearFilters=$('#yearFilters');
   yearFilters.replaceChildren();
-  for(const year of ['all',...[...new Set(dates.map(date=>date.slice(0,4)))].reverse()]){
-    const button=element('button',year==='all'?'active':'',year==='all'?'全部年份':year);
+  for(const year of ['all',...years]){
+    const button=element('button','',year==='all'?'全部':year);
     button.type='button'; button.dataset.year=year; yearFilters.appendChild(button);
   }
-}
-function updateFavoriteCount(){
-  document.querySelector('#countFavorites').textContent=favorites?skins.filter(isFavorite).length:'';
 }
 function sortedView(){
   const term=q.value.trim().toLocaleLowerCase('zh-CN');
@@ -290,188 +396,316 @@ function sortedView(){
     return a.releaseDate.localeCompare(b.releaseDate)||a.character.localeCompare(b.character,'zh-CN');
   });
 }
-function createCard(skin){
-  const card=element('article','card'); card.dataset.skinId=skin.id;
+function paintFavorite(button,skin,label){
+  const on=isFavorite(skin);
+  button.setAttribute('aria-pressed',String(on));
+  button.setAttribute('aria-label',(on?'取消收藏':'收藏')+label); button.title=on?'取消收藏（F）':'收藏（F）';
+}
+function toggleFavorite(skin){
+  if(!favorites||!skin) return;
+  const on=!isFavorite(skin);
+  if(on) favorites.add(skin.id); else favorites.delete(skin.id);
+  refreshFavorites();
+  Promise.resolve(saveFavorite?.(skin.id,on)).then(saved=>{
+    if(Array.isArray(saved)){ favorites=new Set(saved); refreshFavorites(); }
+  }).catch(()=>{
+    if(on) favorites.delete(skin.id); else favorites.add(skin.id);
+    refreshFavorites();
+  });
+}
+// Repaints every star in place; the grid is rebuilt only when "收藏" is the current filter.
+function refreshFavorites(){
+  if(state.favoritesOnly){ render({keepScroll:true}); }
+  else for(const button of grid.querySelectorAll('.card-favorite')){ const skin=skinById.get(button.dataset.favorite); paintFavorite(button,skin,`${skin.character}「${skin.name}」`); }
+  paintDetail(false); paintViewerFavorite();
+}
+function createCard(skin,index){
+  const card=element('article','card'+(skin===selected?' selected':'')); card.dataset.skinId=skin.id; card.style.setProperty('--i',Math.min(index,30));
   const label=`${skin.character}「${skin.name}」`;
   const media=element('button','media-trigger');
   media.type='button'; media.dataset.openArtwork=''; media.dataset.skinId=skin.id;
-  media.setAttribute('aria-label',`查看${label}皮肤原图`);
+  media.setAttribute('aria-label',`${label}，${skin.type}，${skin.releaseDate}`);
   const image=element('img','thumb');
   image.alt=''; image.loading='lazy'; image.decoding='async';
   image.addEventListener('error',()=>card.classList.add('image-failed'));
   image.addEventListener('load',()=>card.classList.remove('image-failed'));
-  image.src=skin.artworkPath;
-  const fallback=element('div','fallback','原图暂未下载到本机');
-  media.append(image,fallback);
+  image.src=thumbPath(skin);
+  media.append(image,element('div','fallback','原图暂未下载到本机'));
   const badges=element('div','badges');
-  if(isNew(skin)) badges.append(element('span','badge badge-new','新'));
-  const info=element('div','info'),text=element('div','info-text');
-  const name=element('div','name',skin.character); name.title=skin.character;
-  const title=element('div','skin',skin.name); title.title=skin.name;
-  const meta=element('div','meta');
-  meta.append(element('span',typeClass(skin.type),skin.type),` · ${skin.releaseDate}`);
-  text.append(name,title,meta); info.append(text);
-  // The star sits in the top-right corner: the caption row also holds the desktop "▶ 试玩" button.
-  if(favorites) badges.append(favoriteButton(skin,label));
-  card.append(media,badges,info);
+  if(isNew(skin)) badges.append(element('span','badge badge-new','NEW'));
+  const status=tryout?.pending.get(skin.id);
+  if(status){ const tag=element('span','badge model-availability',status.status==='no-model'?'暂无在线模型':'试玩待核对'); tag.dataset.modelStatus=status.status; tag.title=status.reason||''; badges.append(tag); }
+  const caption=element('div','cap');
+  caption.append(element('span','name',skin.character),element('span','skin',skin.name));
+  const ops=element('div','card-ops');
+  if(favorites){
+    const star=element('button','card-favorite'); star.type='button'; star.dataset.favorite=skin.id; star.innerHTML=icon('star');
+    paintFavorite(star,skin,label); ops.append(star);
+  }
+  if(isPlayable(skin)){
+    const play=element('button','card-play'); play.type='button'; play.dataset.tryout=skin.id; play.innerHTML=icon('play');
+    play.setAttribute('aria-label',`试玩${label}`); play.title='试玩（P）'; ops.append(play);
+  }
+  card.append(media,badges,caption,ops);
   return card;
 }
-function favoriteButton(skin,label){
-  const button=element('button','card-favorite');
-  button.type='button'; button.dataset.favorite=skin.id;
-  const paint=()=>{
-    const on=isFavorite(skin);
-    button.textContent=on?'★':'☆'; button.setAttribute('aria-pressed',String(on));
-    button.setAttribute('aria-label',(on?'取消收藏':'收藏')+label); button.title=on?'取消收藏':'收藏';
-  };
-  paint();
-  button.addEventListener('click',()=>{
-    const on=!isFavorite(skin);
-    if(on) favorites.add(skin.id); else favorites.delete(skin.id);
-    paint(); updateFavoriteCount();
-    Promise.resolve(saveFavorite?.(skin.id,on)).then(saved=>{
-      if(Array.isArray(saved)) favorites=new Set(saved);
-      paint(); updateFavoriteCount();
-      if(state.favoritesOnly) render();
-    }).catch(()=>{
-      if(on) favorites.delete(skin.id); else favorites.add(skin.id);
-      paint(); updateFavoriteCount();
-      button.title='收藏未能保存，请重试';
-    });
-  });
-  return button;
-}
-function render(){
-  currentView=sortedView();
-  grid.replaceChildren(...currentView.map(createCard));
-  resultCount.replaceChildren('显示 ',element('strong','',currentView.length),` / ${skins.length} 款`);
-  emptyState.classList.toggle('visible',currentView.length===0);
-  grid.hidden=currentView.length===0; clearSearch.hidden=!q.value;
-}
-function resetFilters(){
-  state.filter='all'; state.year='all'; state.type='all'; state.favoritesOnly=false; state.sort='date-desc'; q.value=''; sortOrder.value=state.sort;
-  document.querySelectorAll('[data-type],#favoritesOnly').forEach(button=>{ button.classList.remove('active'); button.setAttribute('aria-pressed','false'); });
-  document.querySelectorAll('[data-filter]').forEach(button=>button.classList.toggle('active',button.dataset.filter==='all'));
-  document.querySelectorAll('[data-year]').forEach(button=>button.classList.toggle('active',button.dataset.year==='all'));
-  render();
-}
-function applyGuideTransform(){
-  guideImage.style.transform=`translate(calc(-50% + ${panX}px),calc(-50% + ${panY}px)) scale(${zoom})`;
-  zoomLabel.textContent=Math.abs(zoom-fitZoom)<.005?'适应':`${Math.round(zoom*100)}%`;
-}
-function computeFitZoom(){
-  if(!imageReady||!guideImage.naturalWidth||!guideStage.clientWidth) return;
-  guideImage.style.width=guideImage.naturalWidth+'px'; guideImage.style.height=guideImage.naturalHeight+'px';
-  fitZoom=Math.min(Math.max(1,guideStage.clientWidth-24)/guideImage.naturalWidth,Math.max(1,guideStage.clientHeight-24)/guideImage.naturalHeight,1);
-}
-function setZoom(next,{resetPan=false}={}){
-  if(!imageReady) return;
-  computeFitZoom(); zoom=Math.max(fitZoom,Math.min(4,next));
-  if(resetPan){ panX=0; panY=0; }
-  applyGuideTransform();
-}
-function fitGuide(){ computeFitZoom(); setZoom(fitZoom,{resetPan:true}); }
-function actualGuide(){ setZoom(1,{resetPan:true}); }
-function updateImageState(status){
-  imageReady=status==='ready'; guideImage.hidden=!imageReady;
-  guideMessage.hidden=imageReady; guideRecovery.hidden=status!=='error';
-  zoomButtons.forEach(button=>button.disabled=!imageReady);
-  if(status==='loading'){ guideMessageText.textContent='正在读取本地图片…'; zoomLabel.textContent='加载中'; }
-  if(status==='error'){
-    guideMessageText.textContent='这张图片还没有下载到本机，或文件已损坏。可以重试，或同步后再看。';
-    zoomLabel.textContent='加载失败';
+function paintControls(){
+  const mode=state.favoritesOnly?$('#favoritesOnly'):$(`[data-filter="${state.filter}"]`);
+  document.querySelectorAll('[data-filter]').forEach(button=>button.classList.toggle('active',button===mode));
+  $('#favoritesOnly').classList.toggle('active',state.favoritesOnly); $('#favoritesOnly').setAttribute('aria-pressed',String(state.favoritesOnly));
+  const thumb=$('.seg-thumb'); thumb.style.width=mode.offsetWidth+'px'; thumb.style.transform=`translateX(${mode.offsetLeft}px)`;
+  document.querySelectorAll('[data-type]').forEach(node=>{ const on=node.dataset.type===state.type; node.classList.toggle('active',on); node.setAttribute('aria-pressed',String(on)); });
+  document.querySelectorAll('[data-year]').forEach(node=>node.classList.toggle('active',node.dataset.year===state.year));
+  document.querySelectorAll('[data-sort]').forEach(node=>node.classList.toggle('active',node.dataset.sort===state.sort));
+  sortOrder.value=state.sort;
+  const filtered=state.type!=='all'||state.year!=='all';
+  $('#filterButton').classList.toggle('has',filtered||state.sort!=='date-desc'); $('#clearFilters').hidden=!filtered;
+  $('#viewToggle').setAttribute('aria-pressed',String(wide)); $('#viewToggle').innerHTML=icon(wide?'panel':'fit')+(wide?'标准':'铺满');
+  document.body.classList.toggle('wide',wide);
+  $('#viewTitle').textContent=state.favoritesOnly?'我的收藏':state.filter==='new'?'新上线':'全部皮肤';
+  const chips=$('#activeChips'); chips.replaceChildren();
+  for(const [label,key] of [[q.value.trim()&&`“${q.value.trim()}”`,'search'],[state.type!=='all'&&state.type,'type'],[state.year!=='all'&&state.year+' 年','year']]){
+    if(!label) continue;
+    const chip=element('span','chip',label),remove=element('button'); remove.type='button'; remove.dataset.clear=key; remove.innerHTML=icon('close'); remove.setAttribute('aria-label',`取消条件：${label}`);
+    chip.append(remove); chips.append(chip,' ');
   }
 }
+function render({keepScroll=false,animate=true}={}){
+  saveView({filter:state.filter,year:state.year,type:state.type,favoritesOnly:state.favoritesOnly||restoreFavoritesOnly,sort:state.sort});
+  const scroll=grid.scrollTop;
+  currentView=sortedView();
+  grid.replaceChildren(...currentView.map(createCard));
+  resultCount.textContent=`${currentView.length} 款`;
+  emptyState.classList.toggle('visible',currentView.length===0);
+  grid.hidden=currentView.length===0; clearSearch.hidden=!q.value;
+  paintControls();
+  if(keepScroll) grid.scrollTop=scroll;
+  else{ grid.scrollTop=0; if(animate&&!grid.classList.contains('intro')) grid.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:ms(340),easing:EASE}); }
+  if(currentView.length&&!currentView.includes(selected)) select(currentView[0],{animate:false});
+  else paintDetail(false);
+}
+function resetFilters(){
+  state.filter='all'; state.year='all'; state.type='all'; state.favoritesOnly=false; state.sort='date-desc'; q.value='';
+  render();
+}
+// The page updates at once; the browser only cross-fades the two pictures (used for the view switch).
+function smooth(change){ if(document.startViewTransition&&!reducedMotion) document.startViewTransition(change); else change(); }
+function setWide(value){
+  wide=value; saveView({wide});
+  smooth(()=>{ paintControls(); cardOf(selected)?.scrollIntoView({block:'center'}); });
+}
+const cardOf=skin=>skin?grid.querySelector(`.card[data-skin-id="${skin.id}"]`):null;
+
+/* ----- 右侧详情 ----- */
+function paintDetail(animate=true){
+  const skin=selected; if(!skin) return;
+  const art=$('#detailArt'),fav=$('#detailFavorite'),label=`${skin.character}「${skin.name}」`;
+  fav.hidden=!favorites; if(favorites){ fav.innerHTML=icon('star')+(isFavorite(skin)?'已收藏':'收藏'); fav.setAttribute('aria-pressed',String(isFavorite(skin))); }
+  $('#detailPlayRow').hidden=!isPlayable(skin);
+  if(art.dataset.skinId===skin.id) return;
+  art.dataset.skinId=skin.id; art.setAttribute('aria-label',`查看${label}的原图`);
+  // The new picture fades in over the old one, so switching never flashes an empty panel.
+  const old=[...art.querySelectorAll('img')],image=new Image(); image.alt=''; image.src=thumbPath(skin);
+  art.prepend(image); art.append(...old,$('#zoomTip'));
+  for(const node of old){ const fade=node.animate([{opacity:1},{opacity:0}],{duration:ms(animate?420:0),easing:'ease',fill:'forwards'}); fade.onfinish=()=>node.remove(); }
+  if(animate) image.animate([{transform:'scale(1.06)'},{transform:'none'}],{duration:ms(900),easing:EASE});
+  if(useThumbs){ const full=new Image(); full.src=skin.artworkPath; full.decode().then(()=>{ if(selected===skin) image.src=full.src; }).catch(()=>{}); }
+  const info=$('#detailInfo'),meta=element('div','meta');
+  meta.append(element('span','type-pill '+typeClass(skin.type),skin.type),element('span','num',skin.releaseDate));
+  if(isNew(skin)){ const fresh=element('span','','新上线'); fresh.style.color='var(--cyan)'; meta.append(fresh); }
+  info.replaceChildren(element('h2','',skin.character),element('div','skin-name',skin.name),meta);
+  if(animate) info.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:ms(450),easing:EASE});
+}
+function select(skin,{animate=true}={}){
+  if(!skin) return;
+  selected=skin; saveView({selected:skin.id});
+  for(const card of grid.querySelectorAll('.card')) card.classList.toggle('selected',card.dataset.skinId===skin.id);
+  paintDetail(animate);
+}
+function playSkin(skin){ if(skin&&isPlayable(skin)) tryout.open(skin.id); }
+
+/* ----- 原图查看器 ----- */
+function applyGuideTransform(){
+  viewerFrame.style.transform=`translate(${panX}px,${panY}px) scale(${zoom})`;
+  guideStage.classList.toggle('zoomed',zoom>1.005);
+  zoomLabel.textContent=!imageReady?'加载中':zoom<=1.005?'适应':`${Math.round(zoom*base.w/natural.w*100)}%`;
+}
+// Fits the picture into the stage; zoom 1 means "fits the window".
+function layoutGuide(){
+  const width=Math.max(1,guideStage.clientWidth-16),height=Math.max(1,guideStage.clientHeight-16);
+  const scale=Math.min(width/natural.w,height/natural.h,1);
+  base={w:natural.w*scale,h:natural.h*scale};
+  Object.assign(viewerFrame.style,{width:base.w+'px',height:base.h+'px',left:(guideStage.clientWidth-base.w)/2+'px',top:(guideStage.clientHeight-base.h)/2+'px'});
+}
+const maxZoom=()=>Math.max(1,natural.w/base.w*3);
+function setZoom(next,{resetPan=false}={}){
+  zoom=Math.max(1,Math.min(maxZoom(),next));
+  if(resetPan||zoom===1){ panX=0; panY=0; }
+  applyGuideTransform();
+}
+function fitGuide(){ layoutGuide(); setZoom(1,{resetPan:true}); }
+function actualGuide(){ setZoom(natural.w/base.w,{resetPan:true}); }
+function updateImageState(status){
+  imageReady=status==='ready';
+  guideImage.classList.toggle('ready',imageReady);
+  // While the full picture loads, the card's small picture stands in; the text only shows on failure.
+  guideMessage.hidden=status!=='error'; guideRecovery.hidden=status!=='error';
+  viewerFrame.hidden=status==='error';
+  if(status==='error') guideMessageText.textContent='这张图片还没有下载到本机，或文件已损坏。可以重试，或同步后再看。';
+  if(imageReady&&guideImage.naturalWidth){ natural={w:guideImage.naturalWidth,h:guideImage.naturalHeight}; layoutGuide(); }
+  applyGuideTransform();
+}
+function paintViewerFavorite(){
+  const button=$('#viewerFavorite'); button.hidden=!favorites||!activeViewer;
+  if(favorites&&activeViewer) paintFavorite(button,activeViewer,`${activeViewer.character}「${activeViewer.name}」`);
+}
+function paintViewerPlay(){ const play=$('#viewerPlay'); if(!play) return; play.hidden=!activeViewer||!isPlayable(activeViewer); $('#viewerPlayGap').hidden=play.hidden; }
 function updateViewerChrome(){
   const index=currentView.indexOf(activeViewer);
-  viewerCaption.replaceChildren(`${activeViewer.character}「${activeViewer.name}」`,element('small','',`${activeViewer.type} · ${activeViewer.releaseDate}`));
+  viewerCaption.replaceChildren(activeViewer.character,element('small','',`${activeViewer.name} · ${activeViewer.type} · ${activeViewer.releaseDate}`));
   viewerCounter.textContent=index>=0?`${index+1} / ${currentView.length}`:'';
   viewerPrev.disabled=index<=0; viewerNext.disabled=index<0||index>=currentView.length-1;
   for(const neighbour of [currentView[index-1],currentView[index+1]]) if(neighbour) new Image().src=neighbour.artworkPath;
-  guideModal.dataset.skinId=activeViewer.id;
+  guideModal.dataset.skinId=activeViewer.id; paintViewerFavorite(); paintViewerPlay();
   guideModal.dispatchEvent(new CustomEvent('viewer-change',{detail:{skinId:activeViewer.id,mode:'artwork'}}));
 }
-function showArtwork({retry=false}={}){
+function showArtwork({retry=false,direction=0}={}){
   if(!activeViewer) return;
   const source=activeViewer.artworkPath;
   const label=`${activeViewer.character}「${activeViewer.name}」皮肤原图`;
   guideModal.setAttribute('aria-label',label); guideImage.alt=label;
   updateViewerChrome();
-  pointers.clear(); guideStage.classList.remove('dragging'); panX=0; panY=0; dragMoved=false;
+  pointers.clear(); guideStage.classList.remove('dragging'); zoom=1; panX=0; panY=0; dragMoved=false;
+  guidePreview.src=thumbPath(activeViewer);
   updateImageState('loading');
   if(retry) guideImage.removeAttribute('src');
   if(guideImage.getAttribute('src')!==source) guideImage.src=source;
   if(guideImage.complete){
-    if(guideImage.naturalWidth){ updateImageState('ready'); requestAnimationFrame(fitGuide); }
-    else updateImageState('error');
+    if(guideImage.naturalWidth) updateImageState('ready'); else updateImageState('error');
   }
+  if(direction) viewerFrame.animate([{opacity:0,transform:`translateX(${direction*70}px) scale(.97)`},{opacity:1,transform:'none'}],{duration:ms(480),easing:EASE});
 }
-function openViewer(trigger){
-  activeViewer=skinById.get(trigger.dataset.skinId);
-  if(!activeViewer) return;
-  if(guideModal.hidden) guideReturnFocus=trigger||document.activeElement;
+function flip(rect){ const now=viewerFrame.getBoundingClientRect(); return `translate(${rect.left-now.left}px,${rect.top-now.top}px) scale(${rect.width/now.width},${rect.height/now.height})`; }
+function openViewer(skin,from){
+  if(!skin) return;
+  if(closing){ closing.cancel(); closing=null; }
+  const wasHidden=guideModal.hidden;
+  if(wasHidden) guideReturnFocus=document.activeElement;
+  activeViewer=skin;
   guideModal.hidden=false; document.body.classList.add('guide-open');
-  showArtwork(); guideClose.focus();
+  layoutGuide(); showArtwork();
+  requestAnimationFrame(()=>guideModal.classList.add('shown'));
+  // Grows out of the card's picture.
+  const rect=wasHidden&&from?.getBoundingClientRect();
+  if(rect&&rect.width) viewerFrame.animate([{transformOrigin:'0 0',transform:flip(rect)},{transformOrigin:'0 0',transform:'none'}],{duration:ms(560),easing:EASE});
+  guideClose.focus({preventScroll:true});
 }
 function stepViewer(delta){
   const index=currentView.indexOf(activeViewer),next=currentView[index+delta];
-  if(index<0||!next) return;
-  activeViewer=next; guideReturnFocus=grid.querySelector(`[data-open-artwork][data-skin-id="${next.id}"]`)||guideReturnFocus;
-  showArtwork();
+  if(index<0) return;
+  if(!next){ viewerFrame.animate([{transform:'none'},{transform:`translateX(${-delta*18}px)`},{transform:'none'}],{duration:ms(300),easing:EASE}); return; }
+  activeViewer=next; select(next,{animate:false}); cardOf(next)?.scrollIntoView({block:'nearest'});
+  showArtwork({direction:delta});
 }
 function closeGuide(){
-  guideModal.hidden=true; document.body.classList.remove('guide-open'); pointers.clear(); guideStage.classList.remove('dragging');
-  if(guideReturnFocus&&guideReturnFocus.isConnected){ guideReturnFocus.focus({preventScroll:true}); guideReturnFocus.closest('.card')?.scrollIntoView({block:'nearest'}); }
+  if(guideModal.hidden||closing) return;
+  const finish=()=>{
+    closing=null; guideModal.hidden=true; guideModal.classList.remove('shown'); document.body.classList.remove('guide-open');
+    pointers.clear(); guideStage.classList.remove('dragging');
+    const target=cardOf(activeViewer)?.querySelector('.media-trigger')||guideReturnFocus;
+    if(target&&target.isConnected) target.focus({preventScroll:true});
+  };
+  zoom=1; panX=0; panY=0; applyGuideTransform();
+  guideModal.classList.remove('shown');
+  const rect=cardOf(activeViewer)?.querySelector('.thumb')?.getBoundingClientRect();
+  const visible=rect&&rect.width&&rect.bottom>0&&rect.top<innerHeight&&!viewerFrame.hidden;
+  closing=viewerFrame.animate(visible
+    ?[{transformOrigin:'0 0',transform:'none'},{transformOrigin:'0 0',transform:flip(rect)}]
+    :[{opacity:1,transform:'none'},{opacity:0,transform:'scale(.94)'}],{duration:ms(420),easing:EASE});
+  closing.onfinish=finish;
 }
+
+/* ----- 事件 ----- */
 grid.addEventListener('click',event=>{
+  const favorite=event.target.closest('.card-favorite'); if(favorite) return toggleFavorite(skinById.get(favorite.dataset.favorite));
+  const play=event.target.closest('.card-play'); if(play) return playSkin(skinById.get(play.dataset.tryout));
+  const artwork=event.target.closest('[data-open-artwork]'); if(!artwork) return;
+  const skin=skinById.get(artwork.dataset.skinId);
+  select(skin);
+  // Standard view: a mouse click selects and a double click opens. Enter (or the wide view) opens at once.
+  if(wide||event.detail===0) openViewer(skin,artwork.querySelector('.thumb'));
+});
+grid.addEventListener('dblclick',event=>{
   const artwork=event.target.closest('[data-open-artwork]');
-  if(artwork) openViewer(artwork);
+  if(artwork&&!wide) openViewer(skinById.get(artwork.dataset.skinId),artwork.querySelector('.thumb'));
 });
-document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{
-  state.filter=button.dataset.filter;
-  document.querySelectorAll('[data-filter]').forEach(node=>node.classList.toggle('active',node===button)); render();
-}));
-document.querySelector('#yearFilters').addEventListener('click',event=>{
-  const button=event.target.closest('[data-year]'); if(!button) return;
-  state.year=button.dataset.year;
-  document.querySelectorAll('[data-year]').forEach(node=>node.classList.toggle('active',node===button)); render();
+grid.addEventListener('focusin',event=>{
+  const artwork=event.target.closest('[data-open-artwork]'),skin=artwork&&skinById.get(artwork.dataset.skinId);
+  if(skin&&skin!==selected) select(skin);
 });
+// Arrow keys move between cards; F favorites and P plays the focused card.
+grid.addEventListener('keydown',event=>{
+  const card=event.target.closest('.card'); if(!card) return;
+  const cards=[...grid.querySelectorAll('.card')],index=cards.indexOf(card);
+  const columns=cards.filter(node=>node.offsetTop===card.offsetTop).length||1;
+  const move={ArrowLeft:-1,ArrowRight:1,ArrowUp:-columns,ArrowDown:columns}[event.key],skin=skinById.get(card.dataset.skinId);
+  if(move){
+    event.preventDefault(); const next=cards[index+move]?.querySelector('.media-trigger');
+    if(next){ next.focus({preventScroll:true}); next.scrollIntoView({block:'nearest',behavior:reducedMotion?'auto':'smooth'}); }
+  }else if(event.key.toLowerCase()==='f') toggleFavorite(skin);
+  else if(event.key.toLowerCase()==='p') playSkin(skin);
+});
+grid.addEventListener('scroll',()=>saveView({scroll:grid.scrollTop}),{passive:true});
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{ state.filter=button.dataset.filter; state.favoritesOnly=false; render(); }));
+$('#favoritesOnly').addEventListener('click',()=>{ state.favoritesOnly=!state.favoritesOnly; if(state.favoritesOnly) state.filter='all'; render(); });
+$('#yearFilters').addEventListener('click',event=>{ const button=event.target.closest('[data-year]'); if(!button) return; state.year=button.dataset.year; render(); });
 // Type: one at a time; clicking the selected type again shows every type.
-document.querySelectorAll('[data-type]').forEach(button=>button.addEventListener('click',()=>{
-  state.type=state.type===button.dataset.type?'all':button.dataset.type;
-  document.querySelectorAll('[data-type]').forEach(node=>{ const on=node.dataset.type===state.type; node.classList.toggle('active',on); node.setAttribute('aria-pressed',String(on)); });
-  render();
-}));
-document.querySelector('#favoritesOnly').addEventListener('click',event=>{
-  state.favoritesOnly=!state.favoritesOnly;
-  event.currentTarget.classList.toggle('active',state.favoritesOnly); event.currentTarget.setAttribute('aria-pressed',String(state.favoritesOnly));
+document.querySelectorAll('[data-type]').forEach(button=>button.addEventListener('click',()=>{ state.type=state.type===button.dataset.type?'all':button.dataset.type; render(); }));
+$('#sortChips').addEventListener('click',event=>{ const button=event.target.closest('[data-sort]'); if(!button) return; state.sort=button.dataset.sort; render(); });
+sortOrder.addEventListener('change',()=>{ state.sort=sortOrder.value; render(); });
+$('#clearFilters').addEventListener('click',()=>{ state.type='all'; state.year='all'; render(); });
+$('#activeChips').addEventListener('click',event=>{
+  const key=event.target.closest('[data-clear]')?.dataset.clear; if(!key) return;
+  if(key==='search') q.value=''; else state[key]='all';
   render();
 });
-q.addEventListener('input',render);
+const filterPanel=$('#filterPanel');
+function toggleFilters(open=!filterPanel.classList.contains('open')){ filterPanel.classList.toggle('open',open); $('#filterButton').setAttribute('aria-expanded',String(open)); }
+$('#filterButton').addEventListener('click',()=>toggleFilters());
+document.addEventListener('pointerdown',event=>{ if(!event.target.closest('#filterPanel,#filterButton')) toggleFilters(false); });
+$('#viewToggle').addEventListener('click',()=>setWide(!wide));
+q.addEventListener('input',()=>render());
 clearSearch.addEventListener('click',()=>{ q.value=''; q.focus(); render(); });
-sortOrder.addEventListener('change',()=>{ state.sort=sortOrder.value; render(); });
-document.querySelector('#resetFilters').addEventListener('click',resetFilters);
-document.querySelector('#reloadData').addEventListener('click',()=>window.location.reload());
-guideImage.addEventListener('load',()=>{ updateImageState('ready'); fitGuide(); });
+$('#resetFilters').addEventListener('click',resetFilters);
+$('#reloadData').addEventListener('click',()=>window.location.reload());
+$('#detailArt').addEventListener('click',()=>openViewer(selected,cardOf(selected)?.querySelector('.thumb')));
+$('#detailPlay').addEventListener('click',()=>playSkin(selected));
+$('#detailFavorite').addEventListener('click',()=>toggleFavorite(selected));
+const openVideo=skin=>{ if(skin) window.open(searchUrl(skin.character,skin.name),'_blank','noopener'); };
+$('#detailVideo').addEventListener('click',()=>openVideo(selected));
+// The big picture follows the pointer slightly.
+$('#detailArt').addEventListener('pointermove',event=>{ const rect=event.currentTarget.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5; for(const image of event.currentTarget.querySelectorAll('img')) image.style.transform=`translate(${-x*2.4}%,${-y*2.4}%)`; });
+$('#detailArt').addEventListener('pointerleave',event=>{ for(const image of event.currentTarget.querySelectorAll('img')) image.style.transform=''; });
+guideImage.addEventListener('load',()=>updateImageState('ready'));
 guideImage.addEventListener('error',()=>updateImageState('error'));
 guideClose.addEventListener('click',closeGuide);
-document.querySelector('#closeImageError').addEventListener('click',closeGuide);
-document.querySelector('#retryImage').addEventListener('click',()=>showArtwork({retry:true}));
-searchVideo.addEventListener('click',()=>{ if(activeViewer) window.open(searchUrl(activeViewer.character,activeViewer.name),'_blank','noopener'); });
+$('#closeImageError').addEventListener('click',closeGuide);
+$('#retryImage').addEventListener('click',()=>showArtwork({retry:true}));
+$('#searchVideo').addEventListener('click',()=>openVideo(activeViewer));
+$('#viewerFavorite').addEventListener('click',()=>toggleFavorite(activeViewer));
 viewerPrev.addEventListener('click',()=>stepViewer(-1));
 viewerNext.addEventListener('click',()=>stepViewer(1));
-guideStage.addEventListener('click',event=>{ if(event.target===guideStage&&!dragMoved) closeGuide(); dragMoved=false; });
-guideStage.addEventListener('dblclick',event=>{ if(!imageReady||event.target.closest('button')) return; event.preventDefault(); Math.abs(zoom-fitZoom)<.01?actualGuide():fitGuide(); });
+guideModal.addEventListener('click',event=>{ if((event.target===guideStage||event.target.classList.contains('viewer-bg'))&&!dragMoved) closeGuide(); dragMoved=false; });
+guideStage.addEventListener('dblclick',event=>{ if(!imageReady||event.target.closest('button')) return; event.preventDefault(); zoom>1.005?fitGuide():actualGuide(); });
 guideStage.addEventListener('wheel',event=>{ if(!imageReady) return; event.preventDefault(); setZoom(zoom*(event.deltaY<0?1.14:.88)); },{passive:false});
-document.querySelector('#zoomOut').addEventListener('click',()=>setZoom(zoom*.82));
-document.querySelector('#zoomIn').addEventListener('click',()=>setZoom(zoom*1.22));
-document.querySelector('#zoomFit').addEventListener('click',fitGuide);
-document.querySelector('#zoomActual').addEventListener('click',actualGuide);
+$('#zoomOut').addEventListener('click',()=>setZoom(zoom*.78));
+$('#zoomIn').addEventListener('click',()=>setZoom(zoom*1.28));
+$('#zoomFit').addEventListener('click',fitGuide);
 guideStage.addEventListener('pointerdown',event=>{
   if(!imageReady||event.target.closest('button')) return;
   guideStage.setPointerCapture(event.pointerId);
   pointers.set(event.pointerId,{x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY});
-  guideStage.classList.add('dragging'); dragMoved=false;
+  if(zoom>1.005) guideStage.classList.add('dragging'); dragMoved=false;
   if(pointers.size===2){ const [a,b]=[...pointers.values()]; pinchStartDistance=Math.hypot(a.x-b.x,a.y-b.y); pinchStartZoom=zoom; }
 });
 guideStage.addEventListener('pointermove',event=>{
@@ -480,7 +714,7 @@ guideStage.addEventListener('pointermove',event=>{
   if(pointers.size===2){
     const [a,b]=[...pointers.values()]; const distance=Math.hypot(a.x-b.x,a.y-b.y);
     if(pinchStartDistance) setZoom(pinchStartZoom*distance/pinchStartDistance); dragMoved=true;
-  }else if(zoom>fitZoom+.005){
+  }else if(zoom>1.005){
     const dx=event.clientX-pointer.lastX,dy=event.clientY-pointer.lastY;
     if(Math.abs(dx)+Math.abs(dy)>1){ panX+=dx; panY+=dy; dragMoved=true; applyGuideTransform(); }
   }
@@ -493,16 +727,26 @@ function releasePointer(event){
 }
 guideStage.addEventListener('pointerup',releasePointer);
 guideStage.addEventListener('pointercancel',releasePointer);
-window.addEventListener('resize',()=>{ if(!guideModal.hidden) fitGuide(); });
+window.addEventListener('resize',()=>{ paintControls(); if(!guideModal.hidden) fitGuide(); });
 document.addEventListener('keydown',event=>{
-  if(guideModal.hidden) return;
+  const typing=event.target instanceof Element&&event.target.closest('input,select,textarea,dialog');
+  if(guideModal.hidden){
+    if(document.querySelector('dialog[open]')) return;
+    if((event.key==='/'&&!typing)||(event.ctrlKey&&event.key.toLowerCase()==='f')){ event.preventDefault(); q.focus(); q.select(); }
+    else if(event.key.toLowerCase()==='w'&&!typing&&!event.ctrlKey&&!event.altKey&&!event.metaKey) setWide(!wide);
+    else if(event.key==='Escape'){ if(filterPanel.classList.contains('open')) toggleFilters(false); else if(document.activeElement===q&&q.value){ q.value=''; render(); } }
+    return;
+  }
+  const key=event.key.toLowerCase();
   if(event.key==='Escape'){ event.preventDefault(); closeGuide(); }
   else if(event.key==='ArrowLeft'){ event.preventDefault(); stepViewer(-1); }
   else if(event.key==='ArrowRight'){ event.preventDefault(); stepViewer(1); }
-  else if(event.key==='+'||event.key==='=') setZoom(zoom*1.22);
-  else if(event.key==='-') setZoom(zoom*.82);
+  else if(event.key==='+'||event.key==='=') setZoom(zoom*1.28);
+  else if(event.key==='-') setZoom(zoom*.78);
   else if(event.key==='0') fitGuide();
   else if(event.key==='1') actualGuide();
+  else if(key==='f') toggleFavorite(activeViewer);
+  else if(key==='p'){ const skin=activeViewer; if(isPlayable(skin)){ closeGuide(); playSkin(skin); } }
   else if(event.key==='Tab'){
     const buttons=[...guideModal.querySelectorAll('button')].filter(button=>!button.disabled&&!button.closest('[hidden]'));
     const first=buttons[0],last=buttons[buttons.length-1];
@@ -510,22 +754,46 @@ document.addEventListener('keydown',event=>{
     else if(!event.shiftKey&&document.activeElement===last){ event.preventDefault(); first.focus(); }
   }
 });
-// Lets the desktop shell reload images that finished downloading after the page opened.
+// What the desktop shell (desktop/renderer.js) uses.
 window.l2dGallery={
+  icon,
+  // Reloads card images that finished downloading after the page opened.
   retryFailedImages(){ for(const card of grid.querySelectorAll('.card.image-failed')){ const img=card.querySelector('.thumb'); const src=img.getAttribute('src'); img.removeAttribute('src'); img.src=src; } },
-  // Desktop only: ids saved in .desktop-data, and save(id,on) resolving to the saved ids.
+  // ids saved in .desktop-data, and save(id,on) resolving to the saved ids.
   enableFavorites(ids,save){
     favorites=new Set(Array.isArray(ids)?ids:[]); saveFavorite=save;
-    document.querySelector('#favoriteFilter').hidden=false;
-    updateFavoriteCount(); render();
-  }
+    $('#favoritesOnly').hidden=false;
+    if(restoreFavoritesOnly){ state.favoritesOnly=true; state.filter='all'; } restoreFavoritesOnly=false;
+    render({keepScroll:true,animate:false}); paintDetail(false);
+  },
+  // Favorites changed somewhere else (the tryout): repaint the stars.
+  setFavorites(ids){ if(!favorites) return; favorites=new Set(Array.isArray(ids)?ids:[]); refreshFavorites(); },
+  // playable: Map of skin id -> sample; pending: Map of skin id -> {status, reason}; open(id) starts the tryout.
+  enableTryout(options){
+    tryout={playable:options.playable,pending:options.pending||new Map(),open:options.open};
+    if(!$('#viewerPlay')){
+      const play=element('button','primary'); play.type='button'; play.id='viewerPlay'; play.innerHTML=icon('play')+'进入试玩'; play.title='进入试玩（P）';
+      play.addEventListener('click',()=>{ const skin=activeViewer; closeGuide(); playSkin(skin); });
+      const gap=element('span','sep'); gap.id='viewerPlayGap'; $('#viewerActions').append(play,gap);
+    }
+    paintViewerPlay();
+    render({keepScroll:true,animate:false}); paintDetail(false);
+  },
+  // Used by the self-test: back to the default view, whatever the last session left.
+  resetView(){ try{ localStorage.removeItem(STORE_KEY); }catch{} wide=false; grid.classList.remove('intro'); resetFilters(); },
+  viewer:{ close:closeGuide, get skin(){ return guideModal.hidden?null:activeViewer; } },
+  get selected(){ return selected; }
 };
 try{
   const data=validateData(window.L2D_SKINS_DATA);
   skins=data.skins; skinById=new Map(skins.map(skin=>[skin.id,skin]));
-  updatePageMeta(data); render();
+  updatePageMeta(data);
+  selected=skinById.get(saved.selected)||null;
+  render({animate:false});
+  if(Number.isFinite(saved.scroll)) grid.scrollTop=saved.scroll;
+  setTimeout(()=>grid.classList.remove('intro'),1600);
+  document.fonts?.ready.then(paintControls);
 }catch(error){ showDataError(error); }
 </script>
 </body>
 </html>
-

@@ -8,12 +8,15 @@ const {
   shell,
   dialog,
   utilityProcess,
-  session
+  session,
+  nativeImage,
+  nativeTheme
 } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
-const { externalUrl, localResource } = require('./policy.cjs');
+const { externalUrl, localResource, thumbnailSource } = require('./policy.cjs');
+const { ThumbCache } = require('./thumbs.cjs');
 const { FavoritesStore } = require('./favorites.cjs');
 const releaseCheck = require('./release-check.cjs');
 const argument = name => {
@@ -340,6 +343,8 @@ else {
         release();
       }
       Menu.setApplicationMenu(null);
+      // The interface is dark; ask Windows for a dark title bar to match.
+      nativeTheme.themeSource = 'dark';
       if (sampleTest) {
         const log = path.join(libraryRoot, `verification/${reportScope}/round-${testRound}/network-diagnostic.jsonl`);
         fs.mkdirSync(path.dirname(log), { recursive: true });
@@ -353,9 +358,26 @@ else {
       session.defaultSession.setPermissionCheckHandler(
         (_wc, permission, origin) => permission === 'clipboard-sanitized-write' && origin.startsWith('l2d://gallery')
       );
+      const thumbs = new ThumbCache(libraryRoot, {
+        resize: async (file, width) => {
+          const image = nativeImage.createFromPath(file);
+          return image.isEmpty() ? null : image.resize({ width, quality: 'best' }).toJPEG(86);
+        }
+      });
       protocol.handle('l2d', async request => {
         try {
-          const file = localResource(request.url, libraryRoot, appRoot);
+          // Card thumbnails are made from the local artwork on first use (see thumbs.cjs).
+          const thumbOf = thumbnailSource(request.url);
+          const file = thumbOf
+            ? await thumbs.fileFor(
+                localResource(
+                  'l2d://gallery/' + thumbOf.split('/').map(encodeURIComponent).join('/'),
+                  libraryRoot,
+                  appRoot
+                ),
+                thumbOf
+              )
+            : localResource(request.url, libraryRoot, appRoot);
           const response = await net.fetch(pathToFileURL(file).href);
           const headers = new Headers(response.headers);
           if (sampleTest && file.endsWith('.js')) {
@@ -379,11 +401,11 @@ else {
       });
       window = new BrowserWindow({
         title: '碧蓝航线图鉴',
-        width: 1380,
+        width: 1440,
         height: 940,
-        minWidth: 880,
-        minHeight: 620,
-        backgroundColor: '#07111f',
+        minWidth: 1120,
+        minHeight: 740,
+        backgroundColor: '#080d17',
         show: false,
         autoHideMenuBar: true,
         icon: path.join(__dirname, 'icon.png'),
@@ -397,6 +419,8 @@ else {
         }
       });
       const errors = [];
+      // The page title carries the catalog date; the window keeps the program's name.
+      window.on('page-title-updated', event => event.preventDefault());
       window.webContents.on('console-message', (details, level, message) => {
         if (details.level === 'error' || level === 3) errors.push(details.message || message);
       });
