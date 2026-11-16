@@ -21,7 +21,10 @@ img{display:block}
 .primary:hover{filter:brightness(1.07)}.primary:active{transform:scale(.97)}
 
 /* 顶栏：返回、当前皮肤（点它切换）、形态、状态、工具 */
-.topbar{display:flex;align-items:center;gap:8px;height:54px;padding:0 12px;flex:none;transition:transform .6s var(--ease),opacity .3s}
+/* No system title bar: this bar drags the window; Windows draws its buttons over the right end. */
+.topbar{display:flex;align-items:center;gap:8px;height:54px;padding:0 150px 0 12px;flex:none;-webkit-app-region:drag;transition:transform .6s var(--ease),opacity .3s}
+.topbar button,.topbar select{-webkit-app-region:no-drag}
+body:has(dialog[open]) .topbar{-webkit-app-region:no-drag}
 .who{display:flex;align-items:center;gap:10px;min-width:0;flex:0 1 auto;height:44px;padding:0 12px 0 5px;border-radius:12px;text-align:left;transition:background .2s}
 .who:hover{background:#ffffff0d}.who:disabled{cursor:default}
 .who img{width:28px;height:36px;flex:none;border-radius:7px;object-fit:cover;object-position:top;background:var(--panel-2)}

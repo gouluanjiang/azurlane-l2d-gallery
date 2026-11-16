@@ -46,3 +46,13 @@ body.tryout-leaving .top,body.tryout-leaving .cols{opacity:0;transform:scale(.98
 #desktop-log{min-height:150px;max-height:38vh;margin:10px 0;padding:14px;overflow:auto;border:1px solid var(--hair);border-radius:12px;background:#081120;font-family:Consolas,"Microsoft YaHei UI",monospace;font-size:12.5px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:1300px){.desktop-status{max-width:190px}.desktop-resume{max-width:170px}}
 @media(prefers-reduced-motion:reduce){.desktop-release,.desktop-dot{animation:none!important}}
+
+/* No system title bar: the top bar drags the window; Windows draws its buttons over the right end
+   (main.cjs titleBarOverlay, 64 px high here). Controls, dialogs and the viewer stay clickable. */
+body.desktop .top{height:64px;padding-right:150px;-webkit-app-region:drag}
+body.desktop .top button,body.desktop .top a,body.desktop .top input,body.desktop .float{-webkit-app-region:no-drag}
+body.desktop.guide-open .top,body.desktop:has(dialog[open]) .top{-webkit-app-region:no-drag}
+body.desktop .viewer-head{height:64px;padding-right:160px;-webkit-app-region:drag}
+body.desktop .viewer-head button{-webkit-app-region:no-drag}
+body.desktop .guide-stage,body.desktop .viewer-nav{top:64px}
+@media(max-width:1300px){body.desktop .brand span,body.desktop #viewToggle span,body.desktop .desktop-resume span,body.desktop .desktop-release span{display:none}body.desktop #search,body.desktop #search:focus{width:120px}body.desktop .desktop-status{max-width:160px}}
