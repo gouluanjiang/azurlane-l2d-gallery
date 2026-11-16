@@ -1,42 +1,54 @@
 <!doctype html>
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>L2D 试玩台</title><link rel="stylesheet" href="player.css"></head>
-<body>
+<body class="entering">
   <header class="topbar">
-    <img class="app-icon" src="../icon.png" alt="">
-    <nav class="current-selection" aria-label="当前试玩皮肤"><img id="selected-art" alt=""><div class="selected-text"><strong id="selected-title">正在准备皮肤…</strong><span id="selected-meta"></span></div></nav>
-    <button class="primary" id="choose-skin">切换皮肤</button>
+    <button class="iconbtn" id="back-gallery" type="button" aria-label="返回图鉴（Esc）" title="返回图鉴（Esc）" data-icon="back"></button>
+    <button class="who" id="choose-skin" type="button" title="切换皮肤" aria-label="切换皮肤">
+      <img id="selected-art" alt="">
+      <span class="who-text"><strong id="selected-title">正在准备皮肤…</strong><small id="selected-meta"></small></span>
+      <span class="who-swap" data-icon="swap"></span>
+    </button>
     <span id="form-switch" class="form-switch" role="group" aria-label="模型形态" hidden></span>
-    <div class="load-state" role="status" aria-live="polite"><i id="state-dot"></i><strong id="state-message">正在准备试玩台…</strong><span id="elapsed"></span></div>
+    <div class="load-state" role="status" aria-live="polite"><i id="state-dot"></i><strong id="state-message">正在准备试玩台…</strong><span id="elapsed" class="num"></span></div>
     <div class="player-tools">
-      <span id="voice-state">语音待触发</span>
-      <button id="mute" aria-pressed="false">静音</button>
-      <button id="retry">重新载入</button>
-      <button id="toggle-actions" aria-pressed="false" title="收起或展开模型左侧的动作、参数、部件栏">收起动作栏</button>
-      <button id="search-guide">搜玩法视频 ↗</button>
-      <button id="open-browser" title="在线模型由 l2d.su 提供">浏览器打开 ↗</button>
-      <button id="back-gallery">返回图鉴</button>
+      <button class="iconbtn" id="prev-skin" type="button" aria-label="上一款" title="上一款" data-icon="left"></button>
+      <button class="iconbtn" id="next-skin" type="button" aria-label="下一款" title="下一款" data-icon="right"></button>
+      <span class="sep"></span>
+      <button class="iconbtn" id="favorite" type="button" aria-pressed="false" aria-label="收藏" title="收藏" data-icon="star" hidden></button>
+      <button class="iconbtn" id="mute" type="button" aria-pressed="false" aria-label="静音" title="静音"></button>
+      <button class="iconbtn" id="toggle-actions" type="button" aria-pressed="false" aria-label="收起动作栏" title="收起动作栏" data-icon="panel"></button>
+      <button class="iconbtn" id="retry" type="button" aria-label="重新载入" title="重新载入" data-icon="reload"></button>
+      <button class="iconbtn" id="search-guide" type="button" aria-label="搜玩法视频" title="搜玩法视频（在浏览器打开 Bilibili）" data-icon="video"></button>
+      <button class="iconbtn" id="open-browser" type="button" aria-label="在浏览器打开" title="在浏览器打开（在线模型由 l2d.su 提供）" data-icon="ext"></button>
     </div>
   </header>
   <main class="workspace" id="workspace">
     <section class="stage" id="stage" aria-label="在线模型试玩区">
+      <div class="stage-bg" id="stage-bg"></div>
       <img id="loading-art" alt="本地立绘预览">
       <div class="stage-placeholder" id="placeholder">
-        <div class="spinner" id="spinner" aria-hidden="true"></div>
+        <span class="warn" id="failure-icon" data-icon="warn" hidden></span>
         <h2 id="placeholder-title">正在准备互动模型</h2>
-        <p id="placeholder-message">首次打开需要加载模型资源，请稍候。</p>
-        <div id="failure-actions" hidden><button id="stage-retry" class="primary">重新尝试</button><button id="stage-browser">在浏览器打开 ↗</button></div>
+        <p id="placeholder-message">一般需要 5～15 秒，取决于网络。</p>
+        <div class="track" id="spinner" aria-hidden="true"><i id="progress-bar"></i></div>
+        <div id="failure-actions" hidden><button id="stage-retry" class="primary" type="button">重新尝试</button><button id="stage-browser" class="btn" type="button">在浏览器打开</button></div>
       </div>
     </section>
   </main>
   <dialog id="skin-picker" aria-labelledby="picker-title">
-    <header class="picker-heading"><div><h2 id="picker-title">切换皮肤</h2><p id="mapping-summary"></p></div><button id="close-picker">返回试玩 Esc</button></header>
-    <div class="picker-filters"><label>搜索角色或皮肤<input id="skin-search" type="search" placeholder="例如：狮、白沙幽梦…" autocomplete="off"></label><label>实装年份<select id="skin-year"><option value="all">全部年份</option></select></label></div>
-    <section id="recent-box" class="recent-box" hidden><h3>最近试玩</h3><div id="recent-list" class="recent-list"></div></section>
-    <p id="picker-count" role="status" aria-live="polite"></p>
-    <nav id="samples" class="picker-grid" aria-label="可试玩皮肤"></nav>
-    <p id="picker-empty" hidden>没有符合条件的皮肤。试试其他关键词或年份。</p>
-    <p class="picker-footnote">在线模型由 l2d.su 提供，需要联网。</p>
+    <header class="picker-heading">
+      <label class="search"><span data-icon="search"></span><input id="skin-search" type="search" placeholder="搜索角色或皮肤名" autocomplete="off" aria-label="搜索角色或皮肤"></label>
+      <select id="skin-year" aria-label="实装年份"><option value="all">全部年份</option></select>
+      <button class="chip" id="picker-favorites" type="button" aria-pressed="false" hidden><span data-icon="star"></span>只看收藏</button>
+      <button class="iconbtn" id="close-picker" type="button" aria-label="返回试玩（Esc）" title="返回试玩（Esc）" data-icon="close"></button>
+    </header>
+    <div class="picker-sub"><h2 id="picker-title">切换皮肤</h2><span id="mapping-summary"></span><span id="picker-count" role="status" aria-live="polite"></span></div>
+    <div class="picker-body">
+      <section id="recent-box" class="recent-box" hidden><h3>最近试玩</h3><div id="recent-list" class="recent-list"></div></section>
+      <nav id="samples" class="picker-grid" aria-label="可试玩皮肤"></nav>
+      <p id="picker-empty" hidden>没有符合条件的皮肤。试试其他关键词或年份。</p>
+    </div>
   </dialog>
   <script src="player.js"></script>
 </body></html>

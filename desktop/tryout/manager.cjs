@@ -1,17 +1,36 @@
-const { BrowserWindow, ipcMain, shell } = require('electron');
+const { WebContentsView, ipcMain, shell } = require('electron');
 const path = require('node:path');
 const { samplesFrom, modelUrl } = require('./samples.cjs');
 const { NotesStore } = require('./notes.cjs');
 const { ModelView } = require('./model-view.cjs');
 const pageUrl = 'l2d://gallery/desktop/tryout/index.html';
+// The tryout lives inside the gallery window: its page is a view laid over the gallery page,
+// and the online model is a second view on top of that. "返回图鉴" only hides both, so the
+// model stays loaded and coming back is instant.
 class TryoutManager {
-  constructor({ libraryRoot, parent, catalog, testing = false, testRound = '1', batch = false, gallery = false }) {
+  constructor({
+    libraryRoot,
+    parent,
+    catalog,
+    testing = false,
+    testRound = '1',
+    batch = false,
+    gallery = false,
+    favorites = null,
+    onState = null,
+    onFavorites = null
+  }) {
     this.libraryRoot = libraryRoot;
-    this.parent = parent;
+    this.window = parent;
+    this.shell = null;
+    this.active = false;
     this.testing = testing;
     this.testRound = testRound;
     this.batch = batch;
     this.gallery = gallery;
+    this.favorites = favorites;
+    this.onState = onState;
+    this.onFavorites = onFavorites;
     this.formIndex = 0;
     this.refreshCatalog(catalog);
     this.testScope = this.release?.scope || 'sample';
@@ -35,6 +54,7 @@ class TryoutManager {
       this.samples.map(s => s.id)
     );
     this.selected = this.samples[0];
+    this.window.on('resize', () => this.layout());
     this.register();
   }
   refreshCatalog(catalog) {
@@ -71,14 +91,31 @@ class TryoutManager {
       : this.selected;
   }
   authorize(event) {
+    const contents = this.shell?.webContents;
     if (
-      !this.window ||
-      this.window.isDestroyed() ||
-      event.sender !== this.window.webContents ||
-      event.senderFrame !== this.window.webContents.mainFrame ||
+      !contents ||
+      contents.isDestroyed() ||
+      event.sender !== contents ||
+      event.senderFrame !== contents.mainFrame ||
       event.senderFrame.url !== pageUrl
     )
       throw new Error('无效试玩操作来源');
+  }
+  send(channel, value) {
+    const contents = this.shell?.webContents;
+    if (contents && !contents.isDestroyed()) contents.send(channel, value);
+  }
+  // What the gallery page shows: whether the tryout is in front, and which skin is kept loaded.
+  state() {
+    return this.shell
+      ? { open: this.active, id: this.selected.id, character: this.selected.character, name: this.selected.name }
+      : { open: false, id: null };
+  }
+  publishState() {
+    this.onState?.(this.state());
+  }
+  favoritesChanged(ids) {
+    this.send('tryout:favorites', ids);
   }
   register() {
     const handle = (name, fn) =>
@@ -95,12 +132,14 @@ class TryoutManager {
       releaseLabel: this.release?.label,
       selectedId: this.selected.id,
       state: this.model.state,
-      notes: this.notes.get(this.selected.id)
+      notes: this.notes.get(this.selected.id),
+      favorites: this.favorites ? this.favorites.list() : null
     }));
     handle('select', async id => {
       this.selected = this.requireSample(id);
       this.formIndex = 0;
       const notes = this.notes.get(id);
+      this.publishState();
       await this.model.open(this.current());
       return { sample: this.selected, formIndex: 0, notes };
     });
@@ -129,39 +168,53 @@ class TryoutManager {
       this.requireSample(id);
       return this.notes.update(id, revision, operation, value);
     });
+    handle('favorite-set', (id, on) => {
+      if (!this.favorites) throw new Error('此版本没有收藏');
+      const ids = this.favorites.set(id, on);
+      this.onFavorites?.(ids);
+      return ids;
+    });
     handle('browser', () => shell.openExternal(this.current().url));
     handle('search', () =>
       shell.openExternal(
         `https://search.bilibili.com/all?keyword=${encodeURIComponent(`碧蓝航线 ${this.selected.character} ${this.selected.name} L2D 互动 玩法`)}`
       )
     );
-    handle('close', async () => {
-      this.allowClose = true;
-      await this.model.stop();
-      this.window?.close();
-    });
+    // "返回图鉴": hide, keep the model loaded.
+    handle('close', () => this.hide());
+  }
+  layout() {
+    if (!this.shell || this.window.isDestroyed()) return;
+    const [width, height] = this.window.getContentSize();
+    this.shell.setBounds({ x: 0, y: 0, width, height });
+  }
+  show() {
+    if (!this.shell) return;
+    this.active = true;
+    this.layout();
+    this.shell.setVisible(true);
+    this.model.setSuspended(false);
+    this.shell.webContents.focus();
+    this.send('tryout:shown', true);
+    this.publishState();
+  }
+  hide() {
+    if (!this.shell || !this.active) return;
+    this.active = false;
+    this.model.setSuspended(true);
+    this.shell.setVisible(false);
+    if (!this.window.isDestroyed()) this.window.webContents.focus();
+    this.publishState();
   }
   async open(id = this.selected.id) {
     this.requireSample(id);
-    if (this.window && !this.window.isDestroyed()) {
-      this.window.show();
-      this.window.focus();
-      this.window.webContents.send('tryout:select-request', id);
+    if (this.shell) {
+      this.show();
+      this.send('tryout:select-request', id);
       return;
     }
     this.selected = this.requireSample(id);
-    this.allowClose = false;
-    const win = new BrowserWindow({
-      parent: this.parent,
-      title: this.batch ? `L2D 试玩台 · ${this.release.label}` : 'L2D 试玩台 · 两款样例',
-      width: 1540,
-      height: 980,
-      minWidth: 1120,
-      minHeight: 740,
-      backgroundColor: '#101b2b',
-      show: false,
-      autoHideMenuBar: true,
-      icon: path.join(__dirname, '../icon.png'),
+    const view = new WebContentsView({
       webPreferences: {
         preload: path.join(__dirname, 'preload.cjs'),
         nodeIntegration: false,
@@ -172,8 +225,10 @@ class TryoutManager {
         backgroundThrottling: false
       }
     });
-    this.window = win;
-    this.model = new ModelView(win, {
+    const contents = view.webContents;
+    this.shell = view;
+    view.setBackgroundColor('#080d17');
+    this.model = new ModelView(this.window, {
       diagnosticDir: path.join(
         this.libraryRoot,
         `verification/${this.reportScope}/` + (this.testing ? `round-${this.testRound}` : 'user-load')
@@ -184,43 +239,38 @@ class TryoutManager {
           ? `persist:l2d-${this.testScope}-online`
           : 'persist:l2d-sample-online-v1'
     });
-    this.model.on('state', state => {
-      if (!win.isDestroyed() && !win.webContents.isDestroyed()) win.webContents.send('tryout:state', state);
-    });
-    win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
-    win.webContents.on('will-navigate', (event, url) => {
+    this.model.on('state', state => this.send('tryout:state', state));
+    contents.setWindowOpenHandler(() => ({ action: 'deny' }));
+    contents.on('will-navigate', (event, url) => {
       if (url !== pageUrl) event.preventDefault();
     });
-    win.webContents.on('will-attach-webview', event => event.preventDefault());
-    win.on('close', event => {
-      if (!this.allowClose && !win.webContents.isDestroyed()) {
-        event.preventDefault();
-        win.webContents.send('tryout:prepare-close');
-      }
-    });
-    win.on('closed', () => {
-      this.window = null;
-      this.closeResolve?.();
-      this.closeResolve = null;
-    });
-    win.webContents.on('render-process-gone', () => {
-      this.allowClose = true;
-      this.model.stop().finally(() => {
-        if (!win.isDestroyed()) win.destroy();
-      });
-    });
-    // The local page may request its model before loadURL resolves. Show the
-    // parent first, so a newly attached model is visible from its first frame.
-    win.show();
-    win.focus();
-    await win.loadURL(pageUrl);
+    contents.on('will-attach-webview', event => event.preventDefault());
+    contents.on('render-process-gone', () => this.dispose());
+    // The local page may request its model before loadURL resolves. Attach and show the
+    // page first, so a newly attached model view sits above it and is visible from its first frame.
+    this.window.contentView.addChildView(view);
+    this.active = true;
+    this.layout();
+    contents.focus();
+    this.publishState();
+    await contents.loadURL(pageUrl);
   }
+  // Removes the tryout completely (window closing, or its page crashed).
+  async dispose() {
+    const view = this.shell;
+    if (!view) return;
+    this.shell = null;
+    this.active = false;
+    await this.model?.stop().catch(() => {});
+    if (!this.window.isDestroyed()) {
+      this.window.contentView.removeChildView(view);
+      this.publishState();
+    }
+    if (!view.webContents.isDestroyed()) view.webContents.close({ waitForBeforeUnload: false });
+  }
+  // Kept for callers that used to close the separate tryout window.
   async close() {
-    if (!this.window || this.window.isDestroyed()) return;
-    await new Promise(resolve => {
-      this.closeResolve = resolve;
-      this.window.close();
-    });
+    this.hide();
   }
 }
 module.exports = { TryoutManager, pageUrl };

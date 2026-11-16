@@ -1,6 +1,6 @@
 # PROJECT HANDOFF — 碧蓝航线 L2D 玩法合集
 
-> **当前状态：2026-11-07 起进入维护模式，最新版本 1.7.2。出问题先看第 18 节“维护模式”。** 下面几条“最新续接”是历史记录。
+> **当前状态：2026-11-07 起进入维护模式，最新版本 1.7.2。出问题先看第 18 节“维护模式”。** 2026-11-16 重做了界面与交互，试玩台并入图鉴窗口，见第 19 节。下面几条“最新续接”是历史记录。
 
 > **最新续接：2026-11-06，补录 2017 年起的 131 款早期 L2D 换装（共 238 款，全部可试玩），正式图鉴新增自动同步与试玩模型自动核对，等待用户验收。** 详见第 15 节；1.7.0 并入图鉴见第 14 节。第四批 1.6.1 见第 13.1 节；前三批入口已冻结且无法再加载在线模型。项目已迁至 `D:\碧蓝航线图鉴`。
 
@@ -328,16 +328,16 @@
 
 **出问题时的信号**
 - GitHub Actions 失败邮件：自动收录失败，已有目录不受影响。
-- 图鉴顶部状态“自动检查未完成”：点状态文字看原因。
+- 图鉴右上角出现红点状态提示“自动检查未完成”：点它看更新记录。
 - 试玩台“模型暂时未能打开”：多半是 l2d.su 不可用或改版。
 - 新皮肤一直“试玩待核对”：网站上的名称和 WIKI 对不上。
 
 **排查手册**
 1. **试玩台打不开（l2d.su 改版）**：先在浏览器打开 `https://l2d.su/azurlane/skins/<编号>/` 确认网站本身正常。
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
-   - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器，以及 `readiness.cjs` 的 `inspectScript`。
+   - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 25。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 32（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -361,3 +361,47 @@
 **2026-11 根目录清理**：删除旧命令行入口（`一键更新.cmd`、`本机检查更新.cmd`、`回退上次更新.cmd`、`打开图鉴.cmd`、`配置更新.ps1`、`scripts/sync.ps1`、`scripts/open.ps1`）和 GitHub CLI 同步路径；`download-guide-images.ps1` 移到 `scripts/legacy/`，`云端增量实测-2026-09-08.md` 移到 `docs/history/`；图鉴页面 `index-信浓泳装起.html`（旧收录范围的名字）改名为 `index.html`。命令行处理方法见第 4 节第 2 条。
 
 **2026-11-07 本机清理**：删除试玩测试配置文件、构建缓存、本地发布包和验证截图（`verification` 中的 JSON 报告与 `head-points.json` 等标定文件保留）。
+
+## 19. 界面与交互重做（2026-11-16，分支 `feature/ui-redesign`）
+
+用户对界面不满意（视觉不精致、几乎没有动效、操作别扭）。按“诊断 → 三个方向的原型 → 实现”进行；用户选定方向 A（游戏图鉴风：深蓝配金色、右侧常驻大图；最初的切角造型在精修时改掉了，见下），并要求并入方向 B 的悬浮搜索条、悬停效果和“原图铺满窗口”，去掉主界面上不必要的说明小字，试玩台并入图鉴窗口。版本号未改。
+
+**精修（同日，用户反馈“有些廉价感”“NEW 图标不协调”“鼠标停留的提示太简陋”）**
+- 形状统一为圆角（和悬浮搜索条一致），去掉全部切角 `clip-path`；强调色只留金色，青色不再用于界面（选中、标签、开关、进度条都改了）。
+- 卡片：圆角 + 细描边，悬停时浮起并带阴影，选中是金色细环；卡片上的文字改为常规字重（微软雅黑没有中间字重，600 会被描成笨重的粗体）。“NEW”改为深色玻璃底的金色小标签。
+- 右侧详情改为浮起的圆角面板，底下垫一层当前皮肤小图的模糊光晕（`#detailAmbient`）；“进入试玩”按钮加了高光和投影；查看器底部工具条改为玻璃胶囊。
+- 提示条：系统自带的 `title` 提示换成自绘的（`.tip`）。页面里任何元素的 `title` 都会被接管并移到 `data-tip`，所以代码照常写 `title` 即可；形如“收藏（F）”的文字会把括号里的按键画成按键标记。试玩台工具栏的提示画在工具栏内、按钮旁边，因为模型视图会盖住工具栏下方的区域。
+
+**图鉴（`index.html`）**
+- 顶部一条悬浮搜索条：搜索、“全部 / 新上线 / 收藏”滑块、“筛选”弹层（类型、年份、排序）、数量。生效的类型 / 年份 / 搜索词显示为网格上方可取消的标签。
+- 两种视图：标准（卡片网格 + 右侧详情：大图、名称、“进入试玩”、收藏、玩法视频）和铺满（右栏收起，原图占满窗口，文字与按钮悬停才出现）。`W` 或右上角按钮切换。
+- 卡片：鼠标单击选中、双击看原图；键盘 Enter 或铺满视图里单击直接看原图（程序触发的 `click()` 的 `detail` 为 0，同样直接打开，自检依赖这一点）。悬停时其余卡片变暗（只改一层遮罩的不透明度，不给图片加滤镜）。
+- 查看器：从卡片位置放大出现、关闭时缩回；先显示小图，原图解码完再换上（`#guideImage` 始终是原图，`#guidePreview` 是垫在下面的小图）；左右翻页有滑动；可收藏、试玩。
+- 键盘：`/` 搜索，方向键在卡片间移动，Enter 看原图，P 试玩，F 收藏，W 切换视图，Esc 返回。筛选、排序、视图、选中项和滚动位置存在 localStorage 的 `l2d-gallery-view`（搜索词不保存）。
+- 图标改为一套内联 SVG（`ICONS`），不再用键盘符号。没有引入任何外部字体、图标库或网络资源；字体用系统自带的微软雅黑 UI 和 Bahnschrift。
+- 页面仍可直接在浏览器打开（`npm run preview`）：没有收藏、试玩和设置，卡片直接用原图。
+
+**桌面端附加（`desktop/renderer.js`、`desktop.css`）**
+- 页面自己画收藏和试玩按钮；renderer 通过 `window.l2dGallery.enableFavorites / enableTryout / setFavorites` 把数据交给页面，不再用 MutationObserver 往卡片里塞按钮。
+- 右上角：新版本提示（`#desktop-release`）、“继续试玩”（`#desktop-resume`）、状态提示（`#desktop-status`，只在检查 / 下载 / 失败 / 刚更新完时出现，含下载进度）、设置按钮。
+- “设置与更新”对话框合并了原来的设置和更新入口；“更多”里有“从官方公告直接检查”“查看更新记录”和快捷键。对话框有进出动效。修掉了原设置对话框里勾选框被拉宽的排版错误。
+- 主窗口：`nativeTheme.themeSource = 'dark'`（深色标题栏），标题固定为程序名，最小尺寸 1120×740。
+
+**本机缩略图（`desktop/thumbs.cjs`）**
+- 网格原来直接用 1000×1500 的原图（238 张 162 MB，运行时约 540 MB 内存）。现在页面请求 `l2d://gallery/thumbs/assets/skins/<文件>`，主进程用 `nativeImage` 首次生成 480 px 宽的 JPEG，缓存在 `.desktop-data/thumbs`（文件名带原图大小和修改时间，原图变了自动重做；生成失败时退回原图）。
+- `policy.cjs` 新增 `thumbnailSource`，只认 `thumbs/assets/skins/` 下的图片；原图路径仍经 `localResource` 校验。没有新增需要加白名单的 CSS/JS 文件。
+
+**试玩台并入图鉴窗口**
+- `manager.cjs`：试玩页面不再是独立窗口，而是加在主窗口 `contentView` 上的一个 `WebContentsView`（`tryout.shell`），模型视图叠在它上面。`tryout.window` 现在就是主窗口。
+- “返回图鉴”= `hide()`：隐藏两层视图，模型进入 `suspended`（不可见、静音、加载中的停滞计时暂停），不销毁；`open()` 再次显示。图鉴页通过 `l2d:tryout` 事件和 `l2d:tryout-state` 得知状态，显示“继续试玩”。
+- 收藏在两个页面间同步：`tryout:favorite-set`、`tryout:favorites`、`l2d:favorites`。预加载脚本新增 `tryoutState / onTryout / onFavorites`（图鉴）和 `setFavorite / onFavorites / onShown`（试玩台）。
+- 试玩页面（`tryout/index.html`、`player.css`、`player.js`）：一行图标工具栏（返回、当前皮肤兼切换、形态、状态、上一款 / 下一款、收藏、静音、收起动作栏、重新载入、搜玩法视频、浏览器打开）；选择器改用大图卡片，可只看收藏；加载进度条读取网站报告的百分比；出错时标题区分“l2d.su 网站暂时无法访问”“电脑似乎没有联网”“这款模型暂时没能打开”。
+- `model-view.cjs`：模型就绪后点一次网站自带的主题切换按钮（`.browser-page-theme-toggle`，标签含“深色”时才点；网站会把选择记在自己的 localStorage 里），并注入样式把面板底色调成程序的深蓝、把动作栏右侧的空隙收掉（`.browser-panel-frame` 宽 254 px，`.model-workspace` 与 `.browser-page-toolbar` 左移到 270 px）。网站改版后这些选择器可能要跟着改，见第 18 节排查手册第 1 条。
+
+**自检**
+- `self-test.cjs`：开头调用 `window.l2dGallery.resetView()` 回到默认视图（视图会被记住）。
+- `batch-self-test.cjs`：改用 `tryout.shell.webContents`；“关闭重开”一步改为验证返回图鉴后模型保留（同一个 webContents、不可见、静音），再从图鉴的“继续试玩”回来。
+- 验证：90 项单元测试（新增 `tests/thumbs.test.mjs`）、`validate`、`format:check`、`check-version`、图鉴自检通过；试玩台第 29 轮（瑟堡，regression）与第 30 轮（金鹿号双形态，portraits）通过。精修后重跑的第 31 轮（regression）与第 32 轮（portraits）也通过。**轮次编号已用到 32。**
+- 模型区尺寸再次变化（默认窗口下约 1404×828），摸头测试（interaction 模式）的点位仍按旧尺寸标定，未重新标定。
+
+**没有改动的部分：** `scripts/`、`data/`、同步引擎、云端收录、试玩映射、版本号。诊断截图和三个方向的原型在仓库之外（`D:\code\l2d-diagnosis`）。

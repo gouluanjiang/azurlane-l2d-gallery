@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('l2dTryout', {
   browser: () => ipcRenderer.invoke('tryout:browser'),
   search: () => ipcRenderer.invoke('tryout:search'),
   close: () => ipcRenderer.invoke('tryout:close'),
+  setFavorite: (id, on) => ipcRenderer.invoke('tryout:favorite-set', id, on),
+  onFavorites: callback => listen('tryout:favorites', callback),
+  onShown: callback => listen('tryout:shown', callback),
   onState: callback => listen('tryout:state', callback),
   onSelect: callback => listen('tryout:select-request', callback),
   onClose: callback => listen('tryout:prepare-close', callback)

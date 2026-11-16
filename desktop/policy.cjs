@@ -39,4 +39,14 @@ function localResource(value, libraryRoot, appRoot) {
   if (!real.startsWith(fs.realpathSync(libraryRoot) + path.sep)) throw new Error('路径越界');
   return file;
 }
-module.exports = { externalUrl, localResource, RELEASE_FEED, fetchUrl, releasePage };
+// A card thumbnail: l2d://gallery/thumbs/assets/skins/<file>. Returns the artwork path it stands for
+// (served through localResource like any other image), or null for every other address.
+function thumbnailSource(value) {
+  let url;
+  try { url = new URL(value); } catch { return null; }
+  if (url.protocol !== 'l2d:' || url.hostname !== 'gallery' || url.username || url.password || url.port) return null;
+  let relative;
+  try { relative = decodeURIComponent(url.pathname).replace(/^\//, ''); } catch { return null; }
+  return require('./thumbs.cjs').thumbSource(relative);
+}
+module.exports = { thumbnailSource, externalUrl, localResource, RELEASE_FEED, fetchUrl, releasePage };

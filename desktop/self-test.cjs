@@ -10,6 +10,9 @@ async function until(check, label, timeout=15000) {
 exports.run = async ({window,libraryRoot,errors,currentState,liveSync}) => {
   const evaluate = code => window.webContents.executeJavaScript(code,true);
   await until(()=>evaluate("document.documentElement.dataset.desktopReady === 'true'"),'图形界面初始化');
+  // The view (filters, layout) is remembered between runs; start every test from the default view.
+  await evaluate('window.l2dGallery.resetView()');
+  await until(()=>evaluate("document.querySelectorAll('.card-play').length>0"),'试玩入口');
   const initial = await evaluate(`({cards:document.querySelectorAll('article.card').length,originals:document.querySelectorAll('[data-open-artwork]').length,guideUi:document.querySelectorAll('.badge-guide,[data-filter="ready"],#viewGuideFromArtwork').length,newest:document.querySelector('article.card')?.dataset.skinId,bridge:typeof window.l2dDesktop.start,nodeExposed:typeof window.require,buttons:[...document.querySelectorAll('.desktop-actions button')].map(b=>b.textContent),title:document.title})`);
   assert.equal(initial.cards,currentState().total);
   assert.equal(initial.originals,initial.cards);
