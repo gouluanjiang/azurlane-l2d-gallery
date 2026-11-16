@@ -17,8 +17,19 @@
 > [!NOTE]
 > 仓库只保存代码和皮肤目录，**不包含任何游戏图片**。原图由程序从公开来源逐张下载到你的电脑并校验。试玩台的在线模型由 [l2d.su](https://l2d.su/) 提供，需要联网。
 
+## 截图
+
+<p align="center"><img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-gallery.jpg" alt="图鉴首页：左边是全部皮肤，右边是选中皮肤的大图和进入试玩" width="900"></p>
+
+| 铺满视图 | 全屏看原图 | 试玩台 |
+| --- | --- | --- |
+| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-wide.jpg" alt="铺满视图：原图占满窗口" width="290"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-viewer.jpg" alt="原图查看器" width="290"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-tryout.jpg" alt="试玩台：在线 Live2D 模型和动作列表" width="290"> |
+
+> 截图挂在 [1.8.0 发行页](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/tag/v1.8.0)，不在仓库里。
+
 ## 目录
 
+- [截图](#截图)
 - [现在收录了什么](#现在收录了什么)
 - [核心功能：翻看原图，一键试玩](#核心功能翻看原图一键试玩)
 - [自动更新](#自动更新)
@@ -209,7 +220,7 @@ npm run release:pack    # 可选：生成上面那种便携版压缩包
 
 ## 未来计划
 
-项目处于维护状态：新皮肤由云端自动收录，暂无新的功能计划。
+项目处于稳定维护状态（2026 年 11 月发布 1.8.0 后）：新皮肤由云端每周自动收录、程序启动时自动同步，不再计划新功能。遇到问题或皮肤缺漏请[提交反馈](https://github.com/gouluanjiang/azurlane-l2d-gallery/issues/new/choose)，会在维护范围内修复（例如 l2d.su 改版、收录失败）。
 
 ## 参与项目
 
