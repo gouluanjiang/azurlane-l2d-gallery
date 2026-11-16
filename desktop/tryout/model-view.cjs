@@ -25,9 +25,9 @@ const embeddedStyle = `
   /* 2026-11 redesign: the site runs in its own dark mode (switched on once the model is ready);
      these rules tint its panels to the program's navy and close the gap beside the action column. */
   html, body { background: #05080e !important; }
-  .browser-panel-frame { width: 254px !important; background: #0f1726 !important; border-color: #22314a !important; border-radius: 0 !important; box-shadow: none !important; }
-  .browser-page-toolbar { left: 270px !important; background: #0f1726 !important; border-color: #22314a !important; border-radius: 0 !important; box-shadow: none !important; }
-  .app-shell .model-workspace { left: 270px !important; border-radius: 0 !important; }
+  .browser-panel-frame { width: 254px !important; background: #0f1726 !important; border-color: #ffffff14 !important; border-radius: 14px !important; box-shadow: none !important; }
+  .browser-page-toolbar { left: 270px !important; background: #0f1726 !important; border-color: #ffffff14 !important; border-radius: 14px !important; box-shadow: none !important; }
+  .app-shell .model-workspace { left: 270px !important; border-radius: 14px !important; }
   .model-panel { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
 `;
 // Hides the site's left column (actions / parameters / parts) and gives its width to the model.

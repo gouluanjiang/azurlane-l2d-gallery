@@ -18,6 +18,40 @@
   const icon=name=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
   for(const node of document.querySelectorAll('[data-icon]'))node.insertAdjacentHTML('afterbegin',icon(node.dataset.icon));
 
+
+  // 鼠标停留时的名称提示：用和界面一致的样式，代替系统自带的提示条。
+  // 任何元素的 title 都会被接管（title 被移到 data-tip），所以别处照常写 title 即可。
+  (()=>{
+    const tip=document.createElement('div'); tip.className='tip'; tip.setAttribute('role','tooltip'); document.body.append(tip);
+    let target=null,timer=0;
+    const adopt=node=>{ if(node.nodeType===1&&node.hasAttribute('title')){ const text=node.getAttribute('title'); node.removeAttribute('title'); if(text) node.dataset.tip=text; else delete node.dataset.tip; if(node===target) paint(); } };
+    function paint(){
+      const text=target?.dataset.tip; if(!text) return hide();
+      // “收藏（F）” -> 文字 + 按键标记
+      const key=/^(.*?)（([^（）]{1,12})）$/.exec(text);
+      tip.replaceChildren(key?key[1]:text); if(key){ const kbd=document.createElement('kbd'); kbd.textContent=key[2]; tip.append(kbd); }
+      const box=target.getBoundingClientRect(),width=tip.offsetWidth,height=tip.offsetHeight;
+      // 第一次出现时直接到位，已经显示时才滑到下一个按钮。
+      tip.style.transition=tip.classList.contains('show')?'':'opacity .16s ease';
+      const place=((target,box,width,height)=>{
+      const bar=target.closest('.topbar');
+      if(bar) return {x:box.left+box.width/2<innerWidth/2?box.right+10:box.left-width-10,y:box.top+box.height/2-height/2};
+      return {x:box.left+box.width/2-width/2,y:box.top-height-9>=6?box.top-height-9:box.bottom+9};
+    })(target,box,width,height);
+      tip.style.transform=`translate(${Math.round(Math.max(8,Math.min(innerWidth-width-8,place.x)))}px,${Math.round(place.y)}px)`;
+      tip.classList.add('show');
+    }
+    function hide(){ clearTimeout(timer); target=null; tip.classList.remove('show'); }
+    function show(node,delay){ if(node===target) return; hide(); if(!node) return; target=node; timer=setTimeout(paint,delay); }
+    document.addEventListener('pointerover',event=>{ const node=event.target instanceof Element?event.target.closest('[title],[data-tip]'):null; if(node) adopt(node); show(node,tip.classList.contains('show')?60:380); });
+    document.addEventListener('focusin',event=>{ const node=event.target instanceof Element?event.target.closest('[title],[data-tip]'):null; if(node){ adopt(node); if(node.matches(':focus-visible')) show(node,380); } });
+    document.addEventListener('focusout',hide); document.addEventListener('pointerdown',hide,true); document.addEventListener('keydown',hide,true);
+    document.addEventListener('scroll',hide,true); window.addEventListener('blur',hide);
+    document.documentElement.addEventListener('pointerleave',hide);
+    new MutationObserver(records=>{ for(const record of records) adopt(record.target); }).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['title']});
+    for(const node of document.querySelectorAll('[title]')) adopt(node);
+  })();
+
   let samples=[], availability=[], favorites=null, current, switching=false, closing=false, currentPhase='idle', favoritesOnly=false;
   const RECENT_KEY='l2d-tryout-recent', RECENT_MAX=8;
   const recentIds=()=>{try{const value=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');return Array.isArray(value)?value.filter(id=>typeof id==='string'):[];}catch{return [];}};

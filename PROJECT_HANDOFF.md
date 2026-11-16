@@ -337,7 +337,7 @@
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
    - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 30（见第 19 节）。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 32（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -364,7 +364,13 @@
 
 ## 19. 界面与交互重做（2026-11-16，分支 `feature/ui-redesign`）
 
-用户对界面不满意（视觉不精致、几乎没有动效、操作别扭）。按“诊断 → 三个方向的原型 → 实现”进行；用户选定方向 A（游戏图鉴风：深蓝配金色、切角造型、右侧常驻大图），并要求并入方向 B 的悬浮搜索条、悬停效果和“原图铺满窗口”，去掉主界面上不必要的说明小字，试玩台并入图鉴窗口。版本号未改。
+用户对界面不满意（视觉不精致、几乎没有动效、操作别扭）。按“诊断 → 三个方向的原型 → 实现”进行；用户选定方向 A（游戏图鉴风：深蓝配金色、右侧常驻大图；最初的切角造型在精修时改掉了，见下），并要求并入方向 B 的悬浮搜索条、悬停效果和“原图铺满窗口”，去掉主界面上不必要的说明小字，试玩台并入图鉴窗口。版本号未改。
+
+**精修（同日，用户反馈“有些廉价感”“NEW 图标不协调”“鼠标停留的提示太简陋”）**
+- 形状统一为圆角（和悬浮搜索条一致），去掉全部切角 `clip-path`；强调色只留金色，青色不再用于界面（选中、标签、开关、进度条都改了）。
+- 卡片：圆角 + 细描边，悬停时浮起并带阴影，选中是金色细环；卡片上的文字改为常规字重（微软雅黑没有中间字重，600 会被描成笨重的粗体）。“NEW”改为深色玻璃底的金色小标签。
+- 右侧详情改为浮起的圆角面板，底下垫一层当前皮肤小图的模糊光晕（`#detailAmbient`）；“进入试玩”按钮加了高光和投影；查看器底部工具条改为玻璃胶囊。
+- 提示条：系统自带的 `title` 提示换成自绘的（`.tip`）。页面里任何元素的 `title` 都会被接管并移到 `data-tip`，所以代码照常写 `title` 即可；形如“收藏（F）”的文字会把括号里的按键画成按键标记。试玩台工具栏的提示画在工具栏内、按钮旁边，因为模型视图会盖住工具栏下方的区域。
 
 **图鉴（`index.html`）**
 - 顶部一条悬浮搜索条：搜索、“全部 / 新上线 / 收藏”滑块、“筛选”弹层（类型、年份、排序）、数量。生效的类型 / 年份 / 搜索词显示为网格上方可取消的标签。
@@ -395,7 +401,7 @@
 **自检**
 - `self-test.cjs`：开头调用 `window.l2dGallery.resetView()` 回到默认视图（视图会被记住）。
 - `batch-self-test.cjs`：改用 `tryout.shell.webContents`；“关闭重开”一步改为验证返回图鉴后模型保留（同一个 webContents、不可见、静音），再从图鉴的“继续试玩”回来。
-- 验证：90 项单元测试（新增 `tests/thumbs.test.mjs`）、`validate`、`format:check`、`check-version`、图鉴自检通过；试玩台第 29 轮（瑟堡，regression）与第 30 轮（金鹿号双形态，portraits）通过。**轮次编号已用到 30。**
+- 验证：90 项单元测试（新增 `tests/thumbs.test.mjs`）、`validate`、`format:check`、`check-version`、图鉴自检通过；试玩台第 29 轮（瑟堡，regression）与第 30 轮（金鹿号双形态，portraits）通过。精修后重跑的第 31 轮（regression）与第 32 轮（portraits）也通过。**轮次编号已用到 32。**
 - 模型区尺寸再次变化（默认窗口下约 1404×828），摸头测试（interaction 模式）的点位仍按旧尺寸标定，未重新标定。
 
 **没有改动的部分：** `scripts/`、`data/`、同步引擎、云端收录、试玩映射、版本号。诊断截图和三个方向的原型在仓库之外（`D:\code\l2d-diagnosis`）。
