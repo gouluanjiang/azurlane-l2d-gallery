@@ -19,15 +19,15 @@
 
 ## 截图
 
-<p align="center"><img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-gallery.jpg" alt="图鉴首页：左边是全部皮肤，右边是选中皮肤的大图和进入试玩" width="900"></p>
+<p align="center"><img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.1/screenshot-gallery.jpg" alt="图鉴首页：左边是全部皮肤，右边是选中皮肤的大图和进入试玩" width="900"></p>
 
 | 铺满视图 | 全屏看原图 |
 | --- | --- |
-| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-wide.jpg" alt="铺满视图：原图占满窗口" width="440"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-viewer.jpg" alt="原图查看器" width="440"> |
+| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.1/screenshot-wide.jpg" alt="铺满视图：原图占满窗口" width="440"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.1/screenshot-viewer.jpg" alt="原图查看器" width="440"> |
 | **试玩台** | **试玩台（收起动作栏）** |
-| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-tryout.jpg" alt="试玩台：在线 Live2D 模型和动作列表" width="440"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.0/screenshot-tryout-collapsed.jpg" alt="试玩台收起动作栏后，模型占满宽度" width="440"> |
+| <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.1/screenshot-tryout.jpg" alt="试玩台：在线 Live2D 模型和动作列表" width="440"> | <img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.1/screenshot-tryout-collapsed.jpg" alt="试玩台收起动作栏后，模型占满宽度" width="440"> |
 
-> 截图挂在 [1.8.0 发行页](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/tag/v1.8.0)，不在仓库里。
+> 截图挂在 [1.8.1 发行页](https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/tag/v1.8.1)，不在仓库里。
 
 ## 目录
 
