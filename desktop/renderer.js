@@ -80,12 +80,14 @@
   let resumeId = null;
   resume.addEventListener('click', () => resumeId && openTryout(resumeId));
   // { open, id, character }: the tryout is showing (open) or kept loaded in the background.
-  api.onTryout?.(value => {
+  const showTryout = value => {
     if (!value?.open) document.body.classList.remove('tryout-leaving');
     resumeId = value?.id || null;
     resume.hidden = !resumeId || value.open;
     if (resumeId) { resume.innerHTML = icon('play') + '<span></span>'; resume.lastElementChild.textContent = `继续试玩 · ${value.character || ''}`; resume.title = '回到刚才的试玩，不用重新加载'; }
-  });
+  };
+  api.onTryout?.(showTryout);
+  api.tryoutState?.().then(showTryout).catch(() => {});
   Promise.all([api.samples(), api.availability().catch(() => [])]).then(([samples, rows]) => {
     if (!samples.length) return;
     page.enableTryout({

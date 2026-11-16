@@ -10,6 +10,17 @@ contextBridge.exposeInMainWorld('l2dDesktop', {
   samples: () => ipcRenderer.invoke('l2d:samples'),
   availability: () => ipcRenderer.invoke('l2d:availability'),
   openSample: id => ipcRenderer.invoke('l2d:sample', id),
+  tryoutState: () => ipcRenderer.invoke('l2d:tryout-state'),
+  onTryout: callback => {
+    const listener = (_event, value) => callback(value);
+    ipcRenderer.on('l2d:tryout', listener);
+    return () => ipcRenderer.removeListener('l2d:tryout', listener);
+  },
+  onFavorites: callback => {
+    const listener = (_event, value) => callback(value);
+    ipcRenderer.on('l2d:favorites', listener);
+    return () => ipcRenderer.removeListener('l2d:favorites', listener);
+  },
   onRelease: callback => {
     const listener = (_event, value) => callback(value);
     ipcRenderer.on('l2d:release', listener);

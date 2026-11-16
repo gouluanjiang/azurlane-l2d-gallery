@@ -48,7 +48,8 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
     file: row.file,
     sha256: hash(path.join(libraryRoot, row.file))
   }));
-  const local = script => tryout.window.webContents.executeJavaScript(script);
+  // The tryout page is a view inside the gallery window (tryout.shell); tryout.window is that window.
+  const local = script => tryout.shell.webContents.executeJavaScript(script);
   const remote = script => tryout.model.contents.executeJavaScript(script);
   const gallery = script => window.webContents.executeJavaScript(script);
   const click = id => local(`document.getElementById(${JSON.stringify(id)}).click()`);
@@ -78,7 +79,7 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
     await paint();
     const wc = tryout.model.contents;
     fs.writeFileSync(path.join(out, `${name}-model.png`), (await wc.capturePage()).toPNG());
-    fs.writeFileSync(path.join(out, `${name}-shell.png`), (await tryout.window.webContents.capturePage()).toPNG());
+    fs.writeFileSync(path.join(out, `${name}-shell.png`), (await tryout.shell.webContents.capturePage()).toPNG());
     return { model: name + '-model.png', shell: name + '-shell.png', bounds: tryout.model.bounds };
   }
   async function choose(id) {
@@ -319,7 +320,7 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
     );
     step('gallery-regression', original);
     await gallery(`document.querySelector('[data-tryout="${tryout.samples[0].id}"]').click()`);
-    await until(() => tryout.window && !tryout.window.isDestroyed(), 'player window', 10000);
+    await until(() => tryout.shell && tryout.active, 'player view', 10000);
     await until(() => local('document.documentElement.dataset.tryoutReady==="true"'), 'player shell', 12000);
     step('player-window', {
       visible: tryout.window.isVisible(),
@@ -397,7 +398,7 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
       "document.getElementById('skin-year').value='all';document.getElementById('skin-year').dispatchEvent(new Event('change'));"
     );
     await paint();
-    fs.writeFileSync(path.join(out, 'picker.png'), (await tryout.window.webContents.capturePage()).toPNG());
+    fs.writeFileSync(path.join(out, 'picker.png'), (await tryout.shell.webContents.capturePage()).toPNG());
     await click('close-picker');
     await until(() => !tryout.model.occluded, 'picker restored model', 3000);
     step('search-filter-and-review-guard', counts);
@@ -587,10 +588,22 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
       await ready(tryout.samples[0].id);
       step('failure-retry-and-release', { method: 'Request failure in isolated test session' });
       await click('back-gallery');
-      await until(() => !tryout.window, 'player closed', 8000);
-      await tryout.open(tryout.samples[0].id);
-      await until(() => local('document.documentElement.dataset.tryoutReady==="true"'), 'reopen', 12000);
+      // Back to the gallery hides the tryout but keeps the model loaded, silent and unseen.
+      await until(() => !tryout.active, 'player hidden', 8000);
+      assert.equal(tryout.model.state.phase, 'ready');
+      assert.equal(tryout.model.view.getVisible(), false);
+      assert.equal(tryout.model.contents.isAudioMuted(), true);
+      const keptContents = tryout.model.contents.id;
+      await until(() => gallery('!document.getElementById("desktop-resume").hidden'), 'resume entry in gallery', 5000);
+      await gallery('document.getElementById("desktop-resume").click()');
+      await until(() => tryout.active, 'reopen', 12000);
       await ready(tryout.samples[0].id);
+      await until(
+        () => tryout.model.view.getVisible() && !tryout.model.contents.isAudioMuted(),
+        'model shown again',
+        5000
+      );
+      assert.equal(tryout.model.contents.id, keptContents, 'model was reloaded instead of kept');
       // Recently played skins are offered first in the picker after reopening.
       await click('choose-skin');
       await until(() => local('document.getElementById("skin-picker").open'), 'picker after reopen', 5000);

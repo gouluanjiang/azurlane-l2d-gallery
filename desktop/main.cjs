@@ -451,12 +451,7 @@ else {
             message: '更新仍在进行，完成后即可关闭软件。',
             buttons: ['继续等待']
           });
-        } else if (tryout?.window && !quitting) {
-          event.preventDefault();
-          tryout.close().then(() => {
-            if (!window.isDestroyed()) window.close();
-          });
-        }
+        } else tryout?.model?.stop().catch(() => {});
       });
       ipcMain.handle('l2d:state', event => {
         authorized(event);
@@ -491,7 +486,9 @@ else {
       });
       ipcMain.handle('l2d:favorite-set', (event, id, on) => {
         authorized(event);
-        return favorites.set(id, on);
+        const ids = favorites.set(id, on);
+        tryout?.favoritesChanged(ids);
+        return ids;
       });
       if (sampleBuild) {
         const { TryoutManager } = require('./tryout/manager.cjs');
@@ -502,7 +499,14 @@ else {
           testing: sampleTest,
           testRound,
           batch: batchBuild,
-          gallery: galleryTryout > 0
+          gallery: galleryTryout > 0,
+          favorites,
+          onState: value => {
+            if (!window.isDestroyed()) window.webContents.send('l2d:tryout', value);
+          },
+          onFavorites: ids => {
+            if (!window.isDestroyed()) window.webContents.send('l2d:favorites', ids);
+          }
         });
       }
       ipcMain.handle('l2d:samples', event => {
@@ -514,6 +518,10 @@ else {
         authorized(event);
         tryout?.refreshCatalog(readJson('data/catalog.json'));
         return tryout?.availability || [];
+      });
+      ipcMain.handle('l2d:tryout-state', event => {
+        authorized(event);
+        return tryout?.state() || { open: false, id: null };
       });
       ipcMain.handle('l2d:sample', (event, id) => {
         authorized(event);
@@ -537,8 +545,6 @@ else {
         await run({ window, tryout, libraryRoot, testRound, errors });
         quitting = true;
         await tryout.model?.stop();
-        tryout.allowClose = true;
-        tryout.window?.destroy();
         app.quit();
       }
       if (selfTest) {

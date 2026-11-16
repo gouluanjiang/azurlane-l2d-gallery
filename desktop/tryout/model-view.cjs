@@ -22,6 +22,13 @@ const embeddedStyle = `
      sidebar, so a click on the "动作" tab landed on the switcher and left the skin. */
   .browser-shared-header { display: none !important; }
   .favorite-action-button, .model-floating-actions button[aria-label="分享当前皮肤"] { display: none !important; }
+  /* 2026-11 redesign: the site runs in its own dark mode (switched on once the model is ready);
+     these rules tint its panels to the program's navy and close the gap beside the action column. */
+  html, body { background: #05080e !important; }
+  .browser-panel-frame { width: 254px !important; background: #0f1726 !important; border-color: #22314a !important; border-radius: 0 !important; box-shadow: none !important; }
+  .browser-page-toolbar { left: 270px !important; background: #0f1726 !important; border-color: #22314a !important; border-radius: 0 !important; box-shadow: none !important; }
+  .app-shell .model-workspace { left: 270px !important; border-radius: 0 !important; }
+  .model-panel { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
 `;
 // Hides the site's left column (actions / parameters / parts) and gives its width to the model.
 const panelHiddenStyle = `
@@ -53,6 +60,8 @@ class ModelView extends EventEmitter {
     this.generation = 0;
     this.muted = false;
     this.occluded = false;
+    // The tryout is hidden behind the gallery ("返回图鉴"): the model stays loaded, unseen and silent.
+    this.suspended = false;
     this.panelHidden = false;
     this.panelCssKey = null;
     this.bounds = { x: 20, y: 150, width: 800, height: 650 };
@@ -130,12 +139,17 @@ class ModelView extends EventEmitter {
     this.occluded = Boolean(value);
     this.updateVisibility();
   }
+  setSuspended(value) {
+    this.suspended = Boolean(value);
+    if (this.contents && !this.contents.isDestroyed()) this.contents.setAudioMuted(this.muted || this.suspended);
+    this.updateVisibility();
+  }
   updateVisibility() {
-    this.view?.setVisible(!this.occluded && !['idle', 'error'].includes(this.state.phase));
+    this.view?.setVisible(!this.occluded && !this.suspended && !['idle', 'error'].includes(this.state.phase));
   }
   setMuted(value) {
     this.muted = Boolean(value);
-    if (this.contents && !this.contents.isDestroyed()) this.contents.setAudioMuted(this.muted);
+    if (this.contents && !this.contents.isDestroyed()) this.contents.setAudioMuted(this.muted || this.suspended);
     this.publish({ muted: this.muted });
   }
   async release() {
@@ -208,8 +222,8 @@ class ModelView extends EventEmitter {
     // it hidden until ready creates a wait cycle: hidden -> never ready -> hidden.
     this.window.contentView.addChildView(view);
     view.setBounds(this.bounds);
-    view.setVisible(!this.occluded);
-    wc.setAudioMuted(this.muted);
+    view.setVisible(!this.occluded && !this.suspended);
+    wc.setAudioMuted(this.muted || this.suspended);
     wc.setWindowOpenHandler(() => ({ action: 'deny' }));
     const current = () => generation === this.generation && wc === this.contents && !wc.isDestroyed();
     wc.on('will-attach-webview', event => event.preventDefault());
@@ -285,7 +299,7 @@ class ModelView extends EventEmitter {
         if (modelIsReady(ui, sample)) {
           if (!this.attempt.controlsPrepared) {
             await wc.executeJavaScript(
-              `(()=>{document.querySelector('button[aria-label="关闭设置"]')?.click();const toggle=document.querySelector('.model-settings-inline');if(toggle&&toggle.getAttribute('aria-expanded')!=='true')toggle.click();})()`
+              `(()=>{document.querySelector('button[aria-label="关闭设置"]')?.click();const theme=document.querySelector('.browser-page-theme-toggle');if(theme&&/深色/.test(theme.getAttribute('aria-label')||''))theme.click();const toggle=document.querySelector('.model-settings-inline');if(toggle&&toggle.getAttribute('aria-expanded')!=='true')toggle.click();})()`
             );
             if (!current()) return;
             this.attempt.controlsPrepared = true;
@@ -311,13 +325,17 @@ class ModelView extends EventEmitter {
         } else if (this.state.phase === 'ready') {
           // Keep manual static-art inspection usable; only an explicit site error,
           // crash or wrong-skin navigation terminates a running player.
-        } else if (this.window.isMinimized() || !this.window.isVisible()) {
+        } else if (this.window.isMinimized() || !this.window.isVisible() || this.suspended) {
           // A minimized or hidden window stops the page from laying out the model. Pause the
           // stall check and the deadline until the window is back instead of failing.
           this.attempt.progressAt = this.elapsed();
           this.attempt.pausedWhileHidden = (this.attempt.pausedWhileHidden || 0) + 1;
           armDeadline();
-          this.publish({ phase: 'loading', message: '窗口已最小化，恢复后继续载入模型…', elapsedMs: this.elapsed() });
+          this.publish({
+            phase: 'loading',
+            message: this.suspended ? '回到试玩台后继续载入模型…' : '窗口已最小化，恢复后继续载入模型…',
+            elapsedMs: this.elapsed()
+          });
         } else {
           // The site sometimes stops mid-download (progress frozen) or leaves a blank page.
           // Reload (at most twice) when nothing visible has changed for stallMs, instead of waiting out the deadline.
