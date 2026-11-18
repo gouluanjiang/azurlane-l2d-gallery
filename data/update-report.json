@@ -1,7 +1,7 @@
 {
   "status": "success",
-  "checkedAt": "2026-11-14T08:57:14.165Z",
-  "since": "2026-09-30",
+  "checkedAt": "2026-11-18T10:07:40.627Z",
+  "since": "2026-10-04",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -27,9 +27,9 @@
       "name": "模块:ClothList/json",
       "url": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
-      "revisionId": 419540,
-      "revisionTimestamp": "2026-10-27T14:57:05Z",
-      "bodySha256": "d959baa55f7d99fdea7751e89f7901dfc5c1df97ace2df44873e7e7021af5377"
+      "revisionId": 422017,
+      "revisionTimestamp": "2026-11-14T09:56:37Z",
+      "bodySha256": "54f7a4c47081cd055da758fa7624f0e9340966a3b0c75ec12723ba3908ec9ede"
     }
   ],
   "announcements": [
