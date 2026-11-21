@@ -43,6 +43,29 @@ const toolbarHiddenStyle = `
   .browser-page-toolbar { display: none !important; }
   .app-shell .model-workspace { top: 8px !important; }
 `;
+// Optional light sharpening of the model canvas (a 3x3 convolution). Chromium only resolves
+// filters defined in the page itself, so sharpenFilterScript adds the definition to the page.
+const SHARPEN_ID = 'l2d-gallery-sharpen';
+const sharpenStyle = `
+  .app-shell .model-workspace .model-canvas canvas { filter: url(#${SHARPEN_ID}) !important; }
+`;
+const sharpenFilterScript = `(() => {
+  if (document.getElementById('${SHARPEN_ID}')) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
+  const filter = document.createElementNS(ns, 'filter');
+  filter.id = '${SHARPEN_ID}';
+  filter.setAttribute('color-interpolation-filters', 'sRGB');
+  const kernel = document.createElementNS(ns, 'feConvolveMatrix');
+  kernel.setAttribute('order', '3');
+  kernel.setAttribute('preserveAlpha', 'true');
+  kernel.setAttribute('kernelMatrix', '0 -0.25 0 -0.25 2 -0.25 0 -0.25 0');
+  filter.append(kernel);
+  svg.append(filter);
+  document.body.append(svg);
+})()`;
 const shortUrl = value => {
   try {
     const u = new URL(value);
@@ -70,6 +93,7 @@ class ModelView extends EventEmitter {
     this.suspended = false;
     this.panelHidden = false;
     this.toolbarHidden = false;
+    this.sharpen = false;
     this.panelCssKey = null;
     this.bounds = { x: 20, y: 150, width: 800, height: 650 };
     this.retired = [];
@@ -137,6 +161,10 @@ class ModelView extends EventEmitter {
     this.toolbarHidden = Boolean(value);
     await this.applyPanel(this.contents);
   }
+  async setSharpen(value) {
+    this.sharpen = Boolean(value);
+    await this.applyPanel(this.contents);
+  }
   // One at a time: the panel and the toolbar share one inserted style, and two overlapping
   // swaps would leave a stale copy behind.
   applyPanel(wc) {
@@ -150,7 +178,11 @@ class ModelView extends EventEmitter {
       this.panelCssKey = null;
       await wc.removeInsertedCSS(key).catch(() => {});
     }
-    const css = (this.panelHidden ? panelHiddenStyle : '') + (this.toolbarHidden ? toolbarHiddenStyle : '');
+    if (this.sharpen) await wc.executeJavaScript(sharpenFilterScript).catch(() => {});
+    const css =
+      (this.panelHidden ? panelHiddenStyle : '') +
+      (this.toolbarHidden ? toolbarHiddenStyle : '') +
+      (this.sharpen ? sharpenStyle : '');
     if (css) this.panelCssKey = await wc.insertCSS(css).catch(() => null);
     wc.executeJavaScript('window.dispatchEvent(new Event("resize"))').catch(() => {});
   }
@@ -281,7 +313,7 @@ class ModelView extends EventEmitter {
       wc.setBackgroundThrottling(false);
       wc.insertCSS(embeddedStyle).catch(() => {});
       this.panelCssKey = null;
-      if (this.panelHidden || this.toolbarHidden) this.applyPanel(wc);
+      if (this.panelHidden || this.toolbarHidden || this.sharpen) this.applyPanel(wc);
       this.publish({ phase: 'loading', message: '正在准备模型资源…', elapsedMs: this.elapsed() });
     });
     const armDeadline = () => {
