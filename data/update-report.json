@@ -1,7 +1,7 @@
 {
-  "status": "success",
-  "checkedAt": "2026-11-18T10:07:40.627Z",
-  "since": "2026-10-04",
+  "status": "review_required",
+  "checkedAt": "2026-11-21T09:47:14.945Z",
+  "since": "2026-10-07",
   "sources": [
     {
       "name": "碧蓝航线官网公告列表",
@@ -27,9 +27,9 @@
       "name": "模块:ClothList/json",
       "url": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
       "apiUrl": "https://wiki.biligame.com/blhx/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&redirects=1&titles=%E6%A8%A1%E5%9D%97%3AClothList%2Fjson",
-      "revisionId": 422017,
-      "revisionTimestamp": "2026-11-14T09:56:37Z",
-      "bodySha256": "54f7a4c47081cd055da758fa7624f0e9340966a3b0c75ec12723ba3908ec9ede"
+      "revisionId": 423349,
+      "revisionTimestamp": "2026-11-21T07:02:40Z",
+      "bodySha256": "dcbd37f93e183d7707d8294a0062d152e0d8d5e802124a322880649f1d6e4e1e"
     }
   ],
   "announcements": [
@@ -196,10 +196,94 @@
       "returningSkins": [],
       "acceptedIds": [],
       "reviewCount": 0
+    },
+    {
+      "id": 18607,
+      "title": "2026维护公告（2026年11月19日10:00）",
+      "date": "2026-11-19",
+      "url": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+      "apiUrl": "https://api.biligame.com/news/18607",
+      "bodySha256": "a44e483dc1708df0505655e4071bd6a4eb150a777a511135c26ccc2bf543dc90",
+      "bodyCharacters": 2624,
+      "newSkins": [
+        {
+          "announcedCharacter": "那不勒斯",
+          "name": "误入纯白迷途",
+          "type": "L2D",
+          "releaseDate": "2026-11-19",
+          "kind": "new",
+          "announcementDate": "2026-11-19",
+          "announcementId": 18607,
+          "announcementTitle": "2026维护公告（2026年11月19日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+          "evidence": "那不勒斯-「误入纯白迷途」【Live2D】"
+        }
+      ],
+      "returningSkins": [
+        {
+          "announcedCharacter": "鹫",
+          "name": "丝竹喧阗",
+          "type": "L2D",
+          "releaseDate": "2026-11-19",
+          "kind": "returning",
+          "announcementDate": "2026-11-19",
+          "announcementId": 18607,
+          "announcementTitle": "2026维护公告（2026年11月19日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+          "evidence": "鹫-「丝竹喧阗」【Live2D】"
+        },
+        {
+          "announcedCharacter": "㭴",
+          "name": "花绽之乐章",
+          "type": "L2D",
+          "releaseDate": "2026-11-19",
+          "kind": "returning",
+          "announcementDate": "2026-11-19",
+          "announcementId": 18607,
+          "announcementTitle": "2026维护公告（2026年11月19日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+          "evidence": "㭴-「花绽之乐章」【Live2D】"
+        },
+        {
+          "announcedCharacter": "猃",
+          "name": "嬉水碧海",
+          "type": "L2D",
+          "releaseDate": "2026-11-19",
+          "kind": "returning",
+          "announcementDate": "2026-11-19",
+          "announcementId": 18607,
+          "announcementTitle": "2026维护公告（2026年11月19日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+          "evidence": "猃-「嬉水碧海」【Live2D】"
+        },
+        {
+          "announcedCharacter": "檚",
+          "name": "八月恋夏",
+          "type": "L2D",
+          "releaseDate": "2026-11-19",
+          "kind": "returning",
+          "announcementDate": "2026-11-19",
+          "announcementId": 18607,
+          "announcementTitle": "2026维护公告（2026年11月19日10:00）",
+          "announcementUrl": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+          "evidence": "檚-「八月恋夏」【Live2D】"
+        }
+      ],
+      "acceptedIds": [],
+      "reviewCount": 1
     }
   ],
-  "warnings": [],
+  "warnings": [
+    {
+      "id": "azl-32caea7c03ac867f",
+      "reason": "WIKI_TYPE_DIFFERS_FROM_OFFICIAL",
+      "officialType": "L2D",
+      "wikiType": "L2D+",
+      "officialSource": "https://game.bilibili.com/blhx/news/#news_detail_id=18607",
+      "wikiSource": "https://wiki.biligame.com/blhx/%E6%A8%A1%E5%9D%97%3AClothList%2Fjson"
+    }
+  ],
   "newCount": 0,
-  "reviewCount": 0,
-  "latestAnnouncement": "2026-11-12"
+  "reviewCount": 1,
+  "latestAnnouncement": "2026-11-19"
 }

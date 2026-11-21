@@ -1,8 +1,8 @@
 window.L2D_SKINS_DATA = {
   "schemaVersion": 2,
-  "version": "20261118T100740627Z-ae87aba500dc",
+  "version": "20261121T094714945Z-ae87aba500dc",
   "updatedTo": "2026-10-22",
-  "checkedAt": "2026-11-18T10:07:40.627Z",
+  "checkedAt": "2026-11-21T09:47:14.945Z",
   "skins": [
     {
       "id": "azl-3952c66d501a9c8b",
@@ -4366,5 +4366,5 @@ window.L2D_SKINS_DATA = {
       "artworkBytes": 1194516
     }
   ],
-  "reviewCount": 0
+  "reviewCount": 1
 };
