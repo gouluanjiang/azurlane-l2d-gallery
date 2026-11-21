@@ -9,6 +9,7 @@
     mute:'<path d="M4 9.5h3l4-3.5v12l-4-3.5H4z"/><path d="M16 9.5l4.5 5M20.5 9.5l-4.5 5"/>',
     sound:'<path d="M4 9.5h3l4-3.5v12l-4-3.5H4z"/><path d="M15 9a4.2 4.2 0 010 6M17.6 6.4a8 8 0 010 11.2"/>',
     panel:'<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M9.5 4.5v15"/>',
+    sharpen:'<path d="M10.5 3.5l1.8 4.9 4.9 1.8-4.9 1.8-1.8 4.9-1.8-4.9-4.9-1.8 4.9-1.8z"/><path d="M18 14.5v5M15.5 17h5"/>',
     reload:'<path d="M19.5 12a7.5 7.5 0 11-2.2-5.3"/><path d="M19.6 4.3v4.2h-4.2"/>',
     video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor" stroke="none"/>',
     ext:'<path d="M13.5 5H19v5.5M19 5l-8 8"/><path d="M17 14.5V18a1 1 0 01-1 1H6a1 1 0 01-1-1V8a1 1 0 011-1h3.5"/>',
@@ -65,6 +66,10 @@
   let actionsCollapsed=localStorage.getItem('l2d-actions-collapsed')==='1';
   const renderActionsToggle=()=>{const label=actionsCollapsed?'展开动作栏':'收起动作栏';$('toggle-actions').title=label;$('toggle-actions').setAttribute('aria-label',label);$('toggle-actions').setAttribute('aria-pressed',String(actionsCollapsed));};
   $('toggle-actions').addEventListener('click',()=>{actionsCollapsed=!actionsCollapsed;localStorage.setItem('l2d-actions-collapsed',actionsCollapsed?'1':'0');renderActionsToggle();api.panel(actionsCollapsed).catch(showError);});
+  // Optional light sharpening of the model, off by default; remembered like the action column.
+  let sharpen=localStorage.getItem('l2d-sharpen')==='1';
+  const renderSharpen=()=>{const label=sharpen?'关闭画面锐化':'开启画面锐化';$('sharpen').title=label;$('sharpen').setAttribute('aria-label',label);$('sharpen').setAttribute('aria-pressed',String(sharpen));};
+  $('sharpen').addEventListener('click',()=>{sharpen=!sharpen;localStorage.setItem('l2d-sharpen',sharpen?'1':'0');renderSharpen();api.sharpen(sharpen).catch(showError);});
 
   // The model is a separate view over the page, so it is hidden while the picker is open.
   const picker=$('skin-picker');
@@ -206,7 +211,7 @@
     for(const year of years){const option=document.createElement('option');option.value=year;option.textContent=year;$('skin-year').append(option);}
     const waiting=availability.length-samples.length;
     $('mapping-summary').textContent=`共 ${samples.length} 款可试玩${waiting?`，${waiting} 款暂不能试玩`:''}`;
-    renderPicker();renderActionsToggle();await api.panel(actionsCollapsed);
+    renderPicker();renderActionsToggle();renderSharpen();await api.panel(actionsCollapsed);await api.sharpen(sharpen);
     enter();
     await selectSample(data.selectedId,true);document.documentElement.dataset.tryoutReady='true';
   }).catch(showError);

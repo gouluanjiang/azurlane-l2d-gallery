@@ -166,6 +166,10 @@ class TryoutManager {
       if (typeof value !== 'boolean') throw new Error('动作栏参数无效');
       return this.model.setPanelHidden(value);
     });
+    handle('sharpen', value => {
+      if (typeof value !== 'boolean') throw new Error('锐化参数无效');
+      return this.model.setSharpen(value);
+    });
     handle('notes', (id, revision, operation, value) => {
       this.requireSample(id);
       return this.notes.update(id, revision, operation, value);

@@ -337,7 +337,7 @@
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
    - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 38（见第 19 节）。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 40（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -415,3 +415,5 @@
 **窗口最大化时藏起 l2d.su 的顶部工具栏（2026-11-21，分支 `feature/hide-site-toolbar-maximized`，用户要求）：** 试玩台窗口最大化或全屏时，模型页面顶上那一行网站工具栏（背景、全屏、主题、语言、设置）会被隐藏，模型区往上补满；窗口还原后恢复。实现：`model-view.cjs` 新增 `toolbarHiddenStyle`（`.browser-page-toolbar` 隐藏、`.model-workspace` 的 `top` 改为 8 px），和"收起动作栏"共用同一段注入样式，两者都由 `applyPanel` 按顺序替换（排队执行，避免同时切换时残留旧样式）；`manager.cjs` 在窗口大小变化、最大化 / 还原、进入 / 退出全屏时按 `isMaximized() || isFullScreen()` 调 `setToolbarHidden`，换皮肤后页面重新载入时也会重新注入。要换背景等网站设置，先把窗口还原。实测：最大化后工具栏隐藏、模型区从 (8,64) 变为 (8,8) 并铺满；最大化时展开 / 收起动作栏、切换皮肤都保持隐藏；还原后恢复原样。试玩台第 37 轮（regression）、第 38 轮（portraits）通过，**轮次编号已用到 38**。
 
 **1.8.2 发布（2026-11-21）：** 包含上面两项（PR #24、#25），没有其他改动。README 的截图仍引用 1.8.1 发行页的附件，界面没有可见变化，不需要重拍。
+
+**试玩台可选"画面锐化"（2026-11-21，分支 `feature/tryout-sharpen`，用户要求做成开关）：** 用户觉得模型有点糊。实测（RTX 4060 笔记本、125% 缩放、窗口最大化）：l2d.su 的"全局渲染倍数"默认 1.5，画布本来就是屏幕像素的 1.875 倍，分辨率不缺；调到 2 只略清楚，帧率 76→70。在模型画布上加一层轻度 3×3 锐化（`feConvolveMatrix`，核 `0 -0.25 0 / -0.25 2 -0.25 / 0 -0.25 0`）清晰度提升最明显，帧率不变；中度（0.5）发丝边缘出白边，所以只给一档。用户问过是否内置 Magpie：不需要，试玩台本来按原生分辨率显示，Magpie 能带来的只是同类锐化滤镜，且作用于整个窗口、GPL-3.0 授权。实现：顶栏新增 ✦ 按钮（`#sharpen`，`player.js` 用 localStorage `l2d-sharpen` 记住，默认关）→ IPC `tryout:sharpen` → `model-view.cjs` 的 `setSharpen`：Chromium 的 CSS `filter: url()` 只认页面里的滤镜定义，所以开启时用 `executeJavaScript` 往页面加一个隐藏 `<svg>` 滤镜（`#l2d-gallery-sharpen`，用 DOM 方法创建），再通过和动作栏、工具栏共用的注入样式给 `.model-workspace .model-canvas canvas` 加 `filter`；换皮肤后在 `dom-ready` 重新应用。`batch-self-test.cjs` 在动作栏步骤后新增 `sharpen-toggle`：默认无滤镜、开启后有滤镜、关闭后恢复。试玩台第 39 轮（regression，16 步）、第 40 轮（portraits）通过，**轮次编号已用到 40**。README 试玩台一节补了"画面锐化"和最大化隐藏工具条的说明。

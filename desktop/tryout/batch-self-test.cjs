@@ -558,6 +558,25 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
         4000
       );
       step('action-column-collapse', { fullWidth, columnShown, columnHidden, bothCollapsed, toolbarLeft });
+      // Optional sharpening: a filter on the model canvas, off by default, removed again.
+      const canvasFilter = () =>
+        remote(
+          "(()=>{const c=document.querySelector('.app-shell .model-workspace .model-canvas canvas');return {filter:c?getComputedStyle(c).filter:'missing',defined:!!document.getElementById('l2d-gallery-sharpen')};})()"
+        );
+      const sharpenOff = await canvasFilter();
+      assert(sharpenOff.filter === 'none', 'sharpening on by default: ' + JSON.stringify(sharpenOff));
+      await click('sharpen');
+      const sharpenOn = await until(
+        async () => {
+          const v = await canvasFilter();
+          return v.defined && v.filter.includes('l2d-gallery-sharpen') ? v : false;
+        },
+        'sharpening on',
+        4000
+      );
+      await click('sharpen');
+      await until(async () => (await canvasFilter()).filter === 'none', 'sharpening off', 4000);
+      step('sharpen-toggle', { sharpenOff, sharpenOn });
       await click('mute');
       await until(() => tryout.model.contents.isAudioMuted(), 'mute', 3000);
       await click('mute');
