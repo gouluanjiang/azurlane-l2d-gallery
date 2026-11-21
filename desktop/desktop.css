@@ -52,6 +52,9 @@ body.tryout-leaving .top,body.tryout-leaving .cols{opacity:0;transform:scale(.98
 body.desktop .top{height:64px;padding-right:150px;-webkit-app-region:drag}
 body.desktop .top button,body.desktop .top a,body.desktop .top input,body.desktop .float{-webkit-app-region:no-drag}
 body.desktop.guide-open .top,body.desktop:has(dialog[open]) .top{-webkit-app-region:no-drag}
+/* The tryout view covers this page, but Windows still hit-tests this page's drag areas, and a hidden page
+   stops reporting changes to them. Drop them before the tryout shows, or its buttons cannot be clicked. */
+body.desktop.tryout-leaving .top,body.desktop.tryout-leaving .top *,body.desktop.tryout-leaving .viewer-head{-webkit-app-region:no-drag}
 body.desktop .viewer-head{height:64px;padding-right:160px;-webkit-app-region:drag}
 body.desktop .viewer-head button{-webkit-app-region:no-drag}
 body.desktop .guide-stage,body.desktop .viewer-nav{top:64px}

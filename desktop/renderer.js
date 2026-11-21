@@ -74,7 +74,11 @@
   function openTryout(id) {
     if (opening) return;
     opening = true; document.body.classList.add('tryout-leaving');
-    setTimeout(() => api.openSample(id).catch(error => { document.body.classList.remove('tryout-leaving'); showError(error); }).finally(() => { opening = false; }), matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 200);
+    // Wait at least two frames even without the fade, so the page drops its drag areas (desktop.css)
+    // while it is still visible.
+    const go = () => api.openSample(id).catch(error => { document.body.classList.remove('tryout-leaving'); showError(error); }).finally(() => { opening = false; });
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(() => requestAnimationFrame(go));
+    else setTimeout(go, 200);
   }
   const resume = $('desktop-resume');
   let resumeId = null;
