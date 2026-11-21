@@ -37,6 +37,12 @@ const panelHiddenStyle = `
   .app-shell .model-workspace { left: 8px !important; }
   .browser-page-toolbar { left: 8px !important; }
 `;
+// Window maximized or full screen: hides the site's top row (background, full screen, theme,
+// language, settings) and gives its height to the model.
+const toolbarHiddenStyle = `
+  .browser-page-toolbar { display: none !important; }
+  .app-shell .model-workspace { top: 8px !important; }
+`;
 const shortUrl = value => {
   try {
     const u = new URL(value);
@@ -63,6 +69,7 @@ class ModelView extends EventEmitter {
     // The tryout is hidden behind the gallery ("返回图鉴"): the model stays loaded, unseen and silent.
     this.suspended = false;
     this.panelHidden = false;
+    this.toolbarHidden = false;
     this.panelCssKey = null;
     this.bounds = { x: 20, y: 150, width: 800, height: 650 };
     this.retired = [];
@@ -125,14 +132,26 @@ class ModelView extends EventEmitter {
     this.panelHidden = Boolean(value);
     await this.applyPanel(this.contents);
   }
-  async applyPanel(wc) {
+  async setToolbarHidden(value) {
+    if (this.toolbarHidden === Boolean(value)) return;
+    this.toolbarHidden = Boolean(value);
+    await this.applyPanel(this.contents);
+  }
+  // One at a time: the panel and the toolbar share one inserted style, and two overlapping
+  // swaps would leave a stale copy behind.
+  applyPanel(wc) {
+    this.panelQueue = (this.panelQueue || Promise.resolve()).then(() => this.swapPanelStyle(wc));
+    return this.panelQueue;
+  }
+  async swapPanelStyle(wc) {
     if (!wc || wc.isDestroyed()) return;
     if (this.panelCssKey) {
       const key = this.panelCssKey;
       this.panelCssKey = null;
       await wc.removeInsertedCSS(key).catch(() => {});
     }
-    if (this.panelHidden) this.panelCssKey = await wc.insertCSS(panelHiddenStyle).catch(() => null);
+    const css = (this.panelHidden ? panelHiddenStyle : '') + (this.toolbarHidden ? toolbarHiddenStyle : '');
+    if (css) this.panelCssKey = await wc.insertCSS(css).catch(() => null);
     wc.executeJavaScript('window.dispatchEvent(new Event("resize"))').catch(() => {});
   }
   setOccluded(value) {
@@ -262,7 +281,7 @@ class ModelView extends EventEmitter {
       wc.setBackgroundThrottling(false);
       wc.insertCSS(embeddedStyle).catch(() => {});
       this.panelCssKey = null;
-      if (this.panelHidden) this.applyPanel(wc);
+      if (this.panelHidden || this.toolbarHidden) this.applyPanel(wc);
       this.publish({ phase: 'loading', message: '正在准备模型资源…', elapsedMs: this.elapsed() });
     });
     const armDeadline = () => {
