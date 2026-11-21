@@ -337,7 +337,7 @@
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
    - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 34（见第 19 节）。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 36（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -409,3 +409,5 @@
 **去掉系统标题栏（同日，用户要求）：** 主窗口改为 `titleBarStyle: 'hidden'` + `titleBarOverlay`（透明底），Windows 只在右上角画最小化、最大化、关闭按钮。按钮高度跟随前面的顶栏：图鉴 64 px、试玩台 54 px（`main.cjs` 的 `TITLE_BAR`，试玩台显示 / 隐藏时用 `setTitleBarOverlay` 切换）。拖动窗口靠页面 CSS 的 `-webkit-app-region: drag`：图鉴的 `.top`、查看器的 `.viewer-head`（规则在 `desktop.css`，浏览器打开时不生效）、试玩台的 `.topbar`；按钮、输入框设为 `no-drag`，有对话框打开或查看器打开时整条顶栏改为 `no-drag`，避免对话框里的按钮落在拖动区域上点不动。两条顶栏右侧都留出 150 px 给窗口按钮；窗口宽度 ≤1300 时图鉴顶栏的“铺满”“继续试玩”“新版本”只显示图标。查看器的关闭按钮改为左上角的 ← 返回，避免和窗口的关闭按钮挨在一起被误点。实测：真实鼠标拖动图鉴和试玩台顶栏空白处窗口跟着移动，顶栏按钮正常点击，试玩台视图不会盖住窗口按钮，最小窗口下不重叠。试玩台第 33 轮（regression）、第 34 轮（portraits）通过，**轮次编号已用到 34**。随后发布 1.8.1 实装这一改动，并用无标题栏的新界面重拍了 README 的五张截图（图鉴首页、铺满视图、原图查看器、试玩台、试玩台收起动作栏），挂在 1.8.1 发行页上，README 改为引用 1.8.1 的附件；1.8.0 发行页上的旧截图不再被引用，留着没删。
 
 **没有改动的部分：** `scripts/`、`data/`、同步引擎、云端收录、试玩映射、版本号。诊断截图和三个方向的原型在仓库之外（`D:\code\l2d-diagnosis`）。
+
+**试玩台顶栏按钮点不动（2026-11-21，分支 `fix/tryout-topbar-clicks`）：** 去掉标题栏后，试玩台顶栏的返回、切换皮肤、上一款/下一款、收藏、静音、搜玩法视频都点不动，只有恰好落在图鉴顶栏按钮下方的几个能点。原因：试玩台是盖在图鉴页面上的另一个视图，但 Windows 判断"这里是不是拖动区域"时仍会算上被盖住的图鉴页面的 `.top` 拖动区；而页面被盖住后不再上报拖动区的变化，所以打开后再改也没用。修法：`renderer.js` 打开试玩台时已有的 `tryout-leaving` 类（淡出动画用，试玩台显示期间一直保留，返回图鉴才去掉）同时让 `.top` 和 `.viewer-head` 全部变为 `no-drag`（`desktop.css`），并保证至少等两帧再打开试玩台（减少动态效果时原来是立即打开），让页面在还可见时上报新的拖动区。实测：真实鼠标点试玩台顶栏 9 个可用按钮全部生效（"上一款"在第一款时本来就禁用），下一款/上一款切换、切换皮肤弹窗、返回图鉴正常；用"继续试玩"再次进入后同样正常；回到图鉴后顶栏按钮都能点，拖动顶栏空白处窗口跟着移动。试玩台第 35 轮（regression）、第 36 轮（portraits）通过，**轮次编号已用到 36**。
