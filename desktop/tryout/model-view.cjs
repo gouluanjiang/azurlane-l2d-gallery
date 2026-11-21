@@ -43,6 +43,22 @@ const toolbarHiddenStyle = `
   .browser-page-toolbar { display: none !important; }
   .app-shell .model-workspace { top: 8px !important; }
 `;
+// The site's own "网页全屏" shows an exit button while it lasts. This watcher reports each change
+// on the console, where the "console-message" handler picks it up.
+const WEB_FULLSCREEN_LOG = 'l2d-gallery:web-fullscreen:';
+const webFullscreenScript = `(() => {
+  if (window.__l2dGalleryWebFullscreen) return;
+  window.__l2dGalleryWebFullscreen = true;
+  let last = null, queued = false;
+  const check = () => {
+    queued = false;
+    const on = !!document.querySelector('.browser-page-fullscreen-exit');
+    if (on !== last) { last = on; console.info('${WEB_FULLSCREEN_LOG}' + on); }
+  };
+  new MutationObserver(() => { if (!queued) { queued = true; requestAnimationFrame(check); } })
+    .observe(document.documentElement, { childList: true, subtree: true });
+  check();
+})()`;
 const shortUrl = value => {
   try {
     const u = new URL(value);
@@ -70,6 +86,7 @@ class ModelView extends EventEmitter {
     this.suspended = false;
     this.panelHidden = false;
     this.toolbarHidden = false;
+    this.webFullscreen = false;
     this.panelCssKey = null;
     this.bounds = { x: 20, y: 150, width: 800, height: 650 };
     this.retired = [];
@@ -137,6 +154,17 @@ class ModelView extends EventEmitter {
     this.toolbarHidden = Boolean(value);
     await this.applyPanel(this.contents);
   }
+  setWebFullscreen(value) {
+    if (this.webFullscreen === Boolean(value)) return;
+    this.webFullscreen = Boolean(value);
+    this.emit('web-fullscreen', this.webFullscreen);
+  }
+  // Leaves the site's "网页全屏" (the tryout is being hidden).
+  exitWebFullscreen() {
+    const wc = this.contents;
+    if (this.webFullscreen && wc && !wc.isDestroyed())
+      wc.executeJavaScript("document.querySelector('.browser-page-fullscreen-exit')?.click()").catch(() => {});
+  }
   // One at a time: the panel and the toolbar share one inserted style, and two overlapping
   // swaps would leave a stale copy behind.
   applyPanel(wc) {
@@ -178,6 +206,7 @@ class ModelView extends EventEmitter {
       contents = this.contents;
     this.view = null;
     this.contents = null;
+    this.setWebFullscreen(false);
     if (!contents || contents.isDestroyed()) return;
     contents.setAudioMuted(true);
     contents.stop();
@@ -261,6 +290,8 @@ class ModelView extends EventEmitter {
         this.fail('页面切换到了其他皮肤，请重新载入当前样例。', `MODEL_CHANGED ${shortUrl(url)}`);
     });
     wc.on('console-message', details => {
+      if (current() && details.message?.startsWith(WEB_FULLSCREEN_LOG))
+        this.setWebFullscreen(details.message.endsWith('true'));
       if (current() && details.level === 'error') {
         this.attempt.consoleErrors.push(details.message.slice(0, 500));
         this.attempt.consoleErrors = this.attempt.consoleErrors.slice(-15);
@@ -282,6 +313,8 @@ class ModelView extends EventEmitter {
       wc.insertCSS(embeddedStyle).catch(() => {});
       this.panelCssKey = null;
       if (this.panelHidden || this.toolbarHidden) this.applyPanel(wc);
+      this.setWebFullscreen(false);
+      wc.executeJavaScript(webFullscreenScript).catch(() => {});
       this.publish({ phase: 'loading', message: '正在准备模型资源…', elapsedMs: this.elapsed() });
     });
     const armDeadline = () => {

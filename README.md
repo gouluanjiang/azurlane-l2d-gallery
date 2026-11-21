@@ -120,6 +120,10 @@
 
 <p align="center"><img src="https://github.com/gouluanjiang/azurlane-l2d-gallery/releases/download/v1.8.1/screenshot-tryout-collapsed.jpg" alt="试玩台收起动作栏后，模型占满宽度" width="820"></p>
 
+窗口最大化时，模型上方 l2d.su 的那一行工具条（背景、全屏、主题等）会自动隐藏，让模型铺满窗口；还原窗口后它会回来。
+
+点工具条里的“进入网页全屏”，程序会切成真正的全屏：试玩台顶栏和窗口按钮都收起来，模型铺满整个屏幕。点右上角的退出按钮或按 `Esc` 恢复原样。
+
 > [!NOTE]
 > 动作栏和模型上方的工具条是 l2d.su 网页自己的内容，程序把它切到了网站自带的深色模式。
 

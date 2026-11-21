@@ -558,6 +558,34 @@ async function run({ window, tryout, libraryRoot, testRound, errors }) {
         4000
       );
       step('action-column-collapse', { fullWidth, columnShown, columnHidden, bothCollapsed, toolbarLeft });
+      // The site's "网页全屏": the window goes full screen and the tryout's top bar hides; leaving restores both.
+      const siteFullscreen = label =>
+        remote(
+          `(()=>{const b=[...document.querySelectorAll('button')].find(b=>(b.getAttribute('aria-label')||'')==='${label}');if(b)b.click();return !!b;})()`
+        );
+      const immersive = async () => ({
+        bar: await local("getComputedStyle(document.querySelector('.topbar')).display"),
+        fullScreen: tryout.window.isFullScreen()
+      });
+      assert(await siteFullscreen('进入网页全屏'), 'site full screen button missing');
+      const fullOn = await until(
+        async () => {
+          const v = await immersive();
+          return v.bar === 'none' && v.fullScreen ? v : false;
+        },
+        'web full screen on',
+        6000
+      );
+      assert(await siteFullscreen('退出网页全屏'), 'site full screen exit button missing');
+      const fullOff = await until(
+        async () => {
+          const v = await immersive();
+          return v.bar !== 'none' && !v.fullScreen ? v : false;
+        },
+        'web full screen off',
+        6000
+      );
+      step('web-fullscreen', { fullOn, fullOff });
       await click('mute');
       await until(() => tryout.model.contents.isAudioMuted(), 'mute', 3000);
       await click('mute');

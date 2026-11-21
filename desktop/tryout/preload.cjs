@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('l2dTryout', {
   setFavorite: (id, on) => ipcRenderer.invoke('tryout:favorite-set', id, on),
   onFavorites: callback => listen('tryout:favorites', callback),
   onShown: callback => listen('tryout:shown', callback),
+  onImmersive: callback => listen('tryout:immersive', callback),
   onState: callback => listen('tryout:state', callback),
   onSelect: callback => listen('tryout:select-request', callback),
   onClose: callback => listen('tryout:prepare-close', callback)

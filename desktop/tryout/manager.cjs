@@ -57,6 +57,10 @@ class TryoutManager {
     this.window.on('resize', () => this.layout());
     for (const event of ['maximize', 'unmaximize', 'enter-full-screen', 'leave-full-screen'])
       this.window.on(event, () => this.layout());
+    // Full screen ended some other way (e.g. by Windows): leave the site's "网页全屏" too.
+    this.window.on('leave-full-screen', () => {
+      if (this.immersive) this.model?.exitWebFullscreen();
+    });
     this.register();
   }
   refreshCatalog(catalog) {
@@ -189,7 +193,19 @@ class TryoutManager {
     if (!this.shell || this.window.isDestroyed()) return;
     const [width, height] = this.window.getContentSize();
     this.shell.setBounds({ x: 0, y: 0, width, height });
-    this.model?.setToolbarHidden(this.window.isMaximized() || this.window.isFullScreen()).catch(() => {});
+    // During the site's own "网页全屏" the site lays the page out itself.
+    this.model
+      ?.setToolbarHidden((this.window.isMaximized() || this.window.isFullScreen()) && !this.immersive)
+      .catch(() => {});
+  }
+  // The site's "网页全屏": the window goes full screen and the tryout's top bar hides, so the
+  // model fills the screen. Leaving it restores the window (maximized stays maximized).
+  setImmersive(on) {
+    if (Boolean(this.immersive) === Boolean(on) || this.window.isDestroyed()) return;
+    this.immersive = Boolean(on);
+    this.send('tryout:immersive', this.immersive);
+    if (this.window.isFullScreen() !== this.immersive) this.window.setFullScreen(this.immersive);
+    this.layout();
   }
   show() {
     if (!this.shell) return;
@@ -204,6 +220,8 @@ class TryoutManager {
   hide() {
     if (!this.shell || !this.active) return;
     this.active = false;
+    this.model.exitWebFullscreen();
+    this.setImmersive(false);
     this.model.setSuspended(true);
     this.shell.setVisible(false);
     if (!this.window.isDestroyed()) this.window.webContents.focus();
@@ -243,6 +261,7 @@ class TryoutManager {
           : 'persist:l2d-sample-online-v1'
     });
     this.model.on('state', state => this.send('tryout:state', state));
+    this.model.on('web-fullscreen', on => this.setImmersive(on));
     contents.setWindowOpenHandler(() => ({ action: 'deny' }));
     contents.on('will-navigate', (event, url) => {
       if (url !== pageUrl) event.preventDefault();

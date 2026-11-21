@@ -196,6 +196,8 @@
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!picker.open&&!event.defaultPrevented)close();});
   api.onShown(()=>{enter();if(!picker.open)api.occlude(false).catch(showError);sendBounds();});
   api.onState(renderState);api.onSelect(id=>selectSample(id));
+  // The site's "网页全屏": hide the top bar so the model fills the screen (desktop/tryout/manager.cjs).
+  api.onImmersive(on=>document.body.classList.toggle('immersive',Boolean(on)));
   api.onFavorites(ids=>{if(!favorites)return;favorites=new Set(ids);renderFavorite();if(picker.open)renderPicker();});
   renderState({phase:'connecting',message:'正在准备试玩台…',elapsedMs:0});
   api.init().then(async data=>{

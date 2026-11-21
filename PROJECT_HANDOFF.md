@@ -337,7 +337,7 @@
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
    - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 38（见第 19 节）。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 42（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -415,3 +415,5 @@
 **窗口最大化时藏起 l2d.su 的顶部工具栏（2026-11-21，分支 `feature/hide-site-toolbar-maximized`，用户要求）：** 试玩台窗口最大化或全屏时，模型页面顶上那一行网站工具栏（背景、全屏、主题、语言、设置）会被隐藏，模型区往上补满；窗口还原后恢复。实现：`model-view.cjs` 新增 `toolbarHiddenStyle`（`.browser-page-toolbar` 隐藏、`.model-workspace` 的 `top` 改为 8 px），和"收起动作栏"共用同一段注入样式，两者都由 `applyPanel` 按顺序替换（排队执行，避免同时切换时残留旧样式）；`manager.cjs` 在窗口大小变化、最大化 / 还原、进入 / 退出全屏时按 `isMaximized() || isFullScreen()` 调 `setToolbarHidden`，换皮肤后页面重新载入时也会重新注入。要换背景等网站设置，先把窗口还原。实测：最大化后工具栏隐藏、模型区从 (8,64) 变为 (8,8) 并铺满；最大化时展开 / 收起动作栏、切换皮肤都保持隐藏；还原后恢复原样。试玩台第 37 轮（regression）、第 38 轮（portraits）通过，**轮次编号已用到 38**。
 
 **1.8.2 发布（2026-11-21）：** 包含上面两项（PR #24、#25），没有其他改动。README 的截图仍引用 1.8.1 发行页的附件，界面没有可见变化，不需要重拍。
+
+**网站"网页全屏"时程序也全屏（2026-11-21，分支 `feature/tryout-web-fullscreen-main`，用户要求）：** 点 l2d.su 工具条的"进入网页全屏"后，网站只在自己的页面里铺满，试玩台顶栏（返回、皮肤名、工具按钮、窗口按钮）还留着。现在：网站进入网页全屏时，窗口 `setFullScreen(true)`、试玩台页面加 `body.immersive`（隐藏 `.topbar`，模型区去掉内边距和圆角），Windows 的窗口按钮在全屏时自动不显示；网站退出（右上角按钮或 `Esc`）时窗口恢复原状（原来最大化的回到最大化）。识别方法：网页全屏期间页面上有 `.browser-page-fullscreen-exit` 按钮，页面本身没有其他标记；`model-view.cjs` 在每次 `dom-ready` 注入一个 MutationObserver，状态变化时 `console.info('l2d-gallery:web-fullscreen:<true|false>')`，由 `console-message` 接住并发出 `web-fullscreen` 事件，`manager.cjs` 的 `setImmersive` 处理。返回图鉴时先点网站的退出按钮并退出全屏；换皮肤或重新载入时新页面从非全屏开始。网页全屏期间不套用"最大化隐藏工具条"的注入样式（网站自己排版）。实测：普通窗口和最大化窗口进入 / 退出、`Esc` 退出、全屏时返回图鉴再继续试玩、全屏时换皮肤都正常。`batch-self-test.cjs` 新增 `web-fullscreen` 步骤。试玩台第 41 轮（regression，16 步）、第 42 轮（portraits）通过；第 39、40 轮用在锐化分支（PR #27）。**轮次编号已用到 42**。

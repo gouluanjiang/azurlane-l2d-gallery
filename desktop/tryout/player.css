@@ -69,6 +69,7 @@ body[data-phase=ready] #loading-art{opacity:1}
 
 /* 进入与离开（整页是盖在图鉴上的一层） */
 body.entering .topbar{transform:translateY(-100%);opacity:0}
+body.immersive .topbar{display:none}body.immersive .workspace{padding:0}body.immersive .stage{border:0;border-radius:0}
 body.entering .workspace,body.leaving .workspace{opacity:0}
 body.leaving .topbar{opacity:0}
 
