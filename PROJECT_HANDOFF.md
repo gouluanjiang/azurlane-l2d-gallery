@@ -337,7 +337,7 @@
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
    - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 38（见第 19 节）。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 44（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -415,3 +415,8 @@
 **窗口最大化时藏起 l2d.su 的顶部工具栏（2026-11-21，分支 `feature/hide-site-toolbar-maximized`，用户要求）：** 试玩台窗口最大化或全屏时，模型页面顶上那一行网站工具栏（背景、全屏、主题、语言、设置）会被隐藏，模型区往上补满；窗口还原后恢复。实现：`model-view.cjs` 新增 `toolbarHiddenStyle`（`.browser-page-toolbar` 隐藏、`.model-workspace` 的 `top` 改为 8 px），和"收起动作栏"共用同一段注入样式，两者都由 `applyPanel` 按顺序替换（排队执行，避免同时切换时残留旧样式）；`manager.cjs` 在窗口大小变化、最大化 / 还原、进入 / 退出全屏时按 `isMaximized() || isFullScreen()` 调 `setToolbarHidden`，换皮肤后页面重新载入时也会重新注入。要换背景等网站设置，先把窗口还原。实测：最大化后工具栏隐藏、模型区从 (8,64) 变为 (8,8) 并铺满；最大化时展开 / 收起动作栏、切换皮肤都保持隐藏；还原后恢复原样。试玩台第 37 轮（regression）、第 38 轮（portraits）通过，**轮次编号已用到 38**。
 
 **1.8.2 发布（2026-11-21）：** 包含上面两项（PR #24、#25），没有其他改动。README 的截图仍引用 1.8.1 发行页的附件，界面没有可见变化，不需要重拍。
+
+**模拟真实使用后的两处优化（2026-11-21，分支 `feature/tryout-load-and-picker`）：** 用户要求在发版前像真实用户一样走一遍程序。图鉴首页、搜索（中文名、皮肤名片段）、无结果提示、筛选、试玩台、切换皮肤、返回与继续都正常；拼音和英文名搜不到，但中文用户用输入法输入中文即可，没有改。发现并修改两处：
+- **过期网页换地址太慢：** 打开安土「午夜的瑰色电梯」用了约 50 秒。诊断记录显示 l2d.su 的 CDN 返回了旧版网页，页面引用的脚本已不存在（控制台 "Failed to load module script"），程序要等 `stallMs`（30 秒）无进展才换到 `/cn/skins/` 地址。现在 `model-view.cjs` 在每次轮询时检查这条报错：页面还没挂载、本次还没换过地址时，立即清缓存并换地址（提示"在线页面已过期，正在换一个地址载入…"），`autoRetries` 记录 `staleScripts: true`。之后 CDN 恢复正常，无法再现，于是用 CDP 的 Fetch 拦截把首个地址的脚本改成返回 HTML 来模拟：0.9 秒即换地址，23 秒就绪（换地址时清了缓存，模型重新下载）；改动前同样情况约 32 秒才换。
+- **切换皮肤搜索后按回车：** 原来没反应。现在搜索框有内容时按回车直接玩第一个可玩的结果；输入法还在选字时（`isComposing`）不响应，空搜索框也不响应。
+试玩台第 43 轮（regression）、第 44 轮（portraits）通过；第 39–42 轮用在锐化分支（PR #27）和已关闭的网页全屏尝试（PR #28）。**轮次编号已用到 44**。

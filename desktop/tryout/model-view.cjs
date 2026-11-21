@@ -360,6 +360,11 @@ class ModelView extends EventEmitter {
           // Reload (at most twice) when nothing visible has changed for stallMs, instead of waiting out the deadline.
           const progressKey = `${ui.mounted}|${ui.title}|${ui.loading}|${ui.progress}`;
           const retries = this.attempt.autoRetries || [];
+          // After a site deploy a page (locally or at the CDN) can point at script files that no
+          // longer exist ("Failed to load module script ... text/html"); the page then never starts.
+          // Switch addresses as soon as that shows, rather than after stallMs without progress.
+          const staleScripts = this.attempt.consoleErrors.some(text => /Failed to load module script/.test(text));
+          const staleNow = staleScripts && !ui.mounted && !this.attempt.cacheCleared;
           if (progressKey !== this.attempt.progressKey) {
             this.attempt.progressKey = progressKey;
             this.attempt.progressAt = this.elapsed();
@@ -373,22 +378,23 @@ class ModelView extends EventEmitter {
             const reason = siteStatus.classifyAttempt(this.attempt, { online: net.isOnline() });
             this.fail(siteStatus.MESSAGES[reason], `SITE_${reason.toUpperCase()}`, reason);
             return;
-          } else if (retries.length < 2 && this.elapsed() - this.attempt.progressAt >= this.stallMs) {
-            this.attempt.autoRetries = [...retries, { atMs: this.elapsed(), stalledOn: progressKey.slice(0, 200) }];
+          } else if (retries.length < 2 && (staleNow || this.elapsed() - this.attempt.progressAt >= this.stallMs)) {
+            this.attempt.autoRetries = [
+              ...retries,
+              { atMs: this.elapsed(), stalledOn: progressKey.slice(0, 200), staleScripts: staleNow }
+            ];
             this.attempt.autoRetry = this.attempt.autoRetries[0];
             this.attempt.progressKey = null;
             this.attempt.controlsPrepared = false;
             this.publish({
               phase: 'connecting',
-              message: '模型资源下载停滞，正在自动重新载入…',
+              message: staleNow ? '在线页面已过期，正在换一个地址载入…' : '模型资源下载停滞，正在自动重新载入…',
               elapsedMs: this.elapsed()
             });
             armDeadline();
             this.record();
-            // After a site deploy a page (locally or at the CDN) can point at script files that no
-            // longer exist ("Failed to load module script ... text/html"). Then, or on the second
-            // retry, clear this session's cache and open the skin's other accepted address.
-            const staleScripts = this.attempt.consoleErrors.some(text => /Failed to load module script/.test(text));
+            // Stale scripts, or the second retry: clear this session's cache and open the skin's
+            // other accepted address.
             if (retries.length || staleScripts) {
               this.attempt.cacheCleared = true;
               await this.session.clearCache().catch(() => {});

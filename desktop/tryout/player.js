@@ -106,7 +106,13 @@
     $('picker-count').textContent=query||year!=='all'||favoritesOnly?`找到 ${rows.length} 款`:`全部 ${rows.length} 款，从新到旧`;$('picker-empty').hidden=rows.length>0;
     $('picker-favorites').hidden=!favorites;$('picker-favorites').setAttribute('aria-pressed',String(favoritesOnly));
   }
-  $('skin-search').addEventListener('input',renderPicker);$('skin-year').addEventListener('change',renderPicker);
+  $('skin-search').addEventListener('input',renderPicker);
+  // Enter plays the first match (not while an input method is still composing the text).
+  $('skin-search').addEventListener('keydown',event=>{
+    if(event.key!=='Enter'||event.isComposing||!$('skin-search').value.trim())return;
+    const first=[...picker.querySelectorAll('.sample-choice')].find(b=>!b.disabled&&b.offsetParent);
+    if(first){event.preventDefault();first.click();}
+  });$('skin-year').addEventListener('change',renderPicker);
   $('picker-favorites').addEventListener('click',()=>{favoritesOnly=!favoritesOnly;renderPicker();});
   const sendBounds=()=>{const rect=$('stage').getBoundingClientRect();api.bounds({x:rect.left+1,y:rect.top+1,width:rect.width-2,height:rect.height-2}).catch(showError);};
   new ResizeObserver(sendBounds).observe($('stage'));window.addEventListener('resize',sendBounds);
