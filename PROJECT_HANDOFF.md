@@ -337,7 +337,7 @@
    - 地址规则变了 → `desktop/tryout/samples.cjs` 的 `modelPaths` / `allowedModelUrl`。
    - 页面结构变了 → `desktop/tryout/model-view.cjs` 的 `embeddedStyle`、`panelHiddenStyle` 选择器（含深色配色与动作栏宽度那几条）、切换网站深色模式的按钮 `.browser-page-theme-toggle`，以及 `readiness.cjs` 的 `inspectScript`。
    - 站内搜索变了 → `desktop/tryout/site-lookup.cjs`。
-   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 36（见第 19 节）。
+   - 修好后验证：`desktop/run-batch-tests.ps1 -StartRound <未用过的编号> -Batch 5 -Mode regression -OnlySkin azl-e6548902747dbc36`（瑟堡，有图解），再用 `-Mode portraits -OnlySkin azl-a17232397b1db5bb`（金鹿号，双形态、无图解）。轮次编号不能重复，已用到 38（见第 19 节）。
 2. **自动收录失败**：看 Actions 日志；解析逻辑在 `scripts/lib/sources.mjs`（`parseWikiCatalog`、`parseAnnouncement`），先用 `tests/fixtures` 复现再改，`npm test` 通过后提 PR。
 3. **新皮肤一直试玩待核对**：人工在 l2d.su 找到对应皮肤后，往 `desktop/tryout/online-mapping-supplement.json` 加一条 `matched` 记录，写明 `onlineId` 与核对依据（先例：威严「突袭！黑暗基地！」701023）。
 4. **原图下载失败（图床换了）**：允许的图床在 `scripts/lib/transport.mjs` 的 `IMAGE_HOSTS`；`scripts/backfill-sources.mjs` 可按 SHA-1 重新把本地原图对应到 WIKI 文件。
@@ -411,3 +411,5 @@
 **没有改动的部分：** `scripts/`、`data/`、同步引擎、云端收录、试玩映射、版本号。诊断截图和三个方向的原型在仓库之外（`D:\code\l2d-diagnosis`）。
 
 **试玩台顶栏按钮点不动（2026-11-21，分支 `fix/tryout-topbar-clicks`）：** 去掉标题栏后，试玩台顶栏的返回、切换皮肤、上一款/下一款、收藏、静音、搜玩法视频都点不动，只有恰好落在图鉴顶栏按钮下方的几个能点。原因：试玩台是盖在图鉴页面上的另一个视图，但 Windows 判断"这里是不是拖动区域"时仍会算上被盖住的图鉴页面的 `.top` 拖动区；而页面被盖住后不再上报拖动区的变化，所以打开后再改也没用。修法：`renderer.js` 打开试玩台时已有的 `tryout-leaving` 类（淡出动画用，试玩台显示期间一直保留，返回图鉴才去掉）同时让 `.top` 和 `.viewer-head` 全部变为 `no-drag`（`desktop.css`），并保证至少等两帧再打开试玩台（减少动态效果时原来是立即打开），让页面在还可见时上报新的拖动区。实测：真实鼠标点试玩台顶栏 9 个可用按钮全部生效（"上一款"在第一款时本来就禁用），下一款/上一款切换、切换皮肤弹窗、返回图鉴正常；用"继续试玩"再次进入后同样正常；回到图鉴后顶栏按钮都能点，拖动顶栏空白处窗口跟着移动。试玩台第 35 轮（regression）、第 36 轮（portraits）通过，**轮次编号已用到 36**。
+
+**窗口最大化时藏起 l2d.su 的顶部工具栏（2026-11-21，分支 `feature/hide-site-toolbar-maximized`，用户要求）：** 试玩台窗口最大化或全屏时，模型页面顶上那一行网站工具栏（背景、全屏、主题、语言、设置）会被隐藏，模型区往上补满；窗口还原后恢复。实现：`model-view.cjs` 新增 `toolbarHiddenStyle`（`.browser-page-toolbar` 隐藏、`.model-workspace` 的 `top` 改为 8 px），和"收起动作栏"共用同一段注入样式，两者都由 `applyPanel` 按顺序替换（排队执行，避免同时切换时残留旧样式）；`manager.cjs` 在窗口大小变化、最大化 / 还原、进入 / 退出全屏时按 `isMaximized() || isFullScreen()` 调 `setToolbarHidden`，换皮肤后页面重新载入时也会重新注入。要换背景等网站设置，先把窗口还原。实测：最大化后工具栏隐藏、模型区从 (8,64) 变为 (8,8) 并铺满；最大化时展开 / 收起动作栏、切换皮肤都保持隐藏；还原后恢复原样。试玩台第 37 轮（regression）、第 38 轮（portraits）通过，**轮次编号已用到 38**。

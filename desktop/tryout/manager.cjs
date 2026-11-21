@@ -55,6 +55,8 @@ class TryoutManager {
     );
     this.selected = this.samples[0];
     this.window.on('resize', () => this.layout());
+    for (const event of ['maximize', 'unmaximize', 'enter-full-screen', 'leave-full-screen'])
+      this.window.on(event, () => this.layout());
     this.register();
   }
   refreshCatalog(catalog) {
@@ -187,6 +189,7 @@ class TryoutManager {
     if (!this.shell || this.window.isDestroyed()) return;
     const [width, height] = this.window.getContentSize();
     this.shell.setBounds({ x: 0, y: 0, width, height });
+    this.model?.setToolbarHidden(this.window.isMaximized() || this.window.isFullScreen()).catch(() => {});
   }
   show() {
     if (!this.shell) return;
